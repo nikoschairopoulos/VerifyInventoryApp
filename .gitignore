@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+*.env
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+media/
+static/
+
+# Vue.js
+/node_modules/
+/dist/
+
+# IDE files
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Others
+.DS_Store
+Thumbs.db

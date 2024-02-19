@@ -1,0 +1,34 @@
+<template>
+  <div class="main">
+    <Navbar />
+    <router-view/>
+
+    <div class="footercontainer">
+      <footer class="pagefooter">
+          <p>© 2024 VERIFY- CERTH</p>
+      </footer>
+    </div>
+  
+  </div>
+
+</template>
+
+<script>
+import Navbar from './components/Navbar.vue'
+
+export default {
+  components: { Navbar }
+}
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0 auto;
+  color: #555;
+}
+
+
+</style>
