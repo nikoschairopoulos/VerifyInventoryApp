@@ -49,40 +49,78 @@
                 <button class="btn btn-danger" style="margin-right:2px;" @click="deleteComponent(component.id)">
                         Delete
                 </button>
-                <button class="btn btn-info" @mouseover="showDetails(component)" @mouseleave="dontshowDetails">
+                <button type="button" class="btn btn-primary" @click="setDetailsAndShowModal(component)" >
                         Info
                 </button>
                 </td>
           </tr>
         </tbody>
       </table>
-      
-      <div v-if="toShow" class="infocart">
-        <div class="group1">
-          <strong>name</strong>:{{detailsComp.name}} <br>
-          <strong>component_type</strong>:{{detailsComp.component_type}}  <br>
-          <strong>component_subtype</strong>:{{detailsComp.component_subtype}}<br>
-          <strong>capex_per_ugs</strong>:{{detailsComp.capex_per_ugs}}  <br>
-          <strong>opex_per_capex</strong>:{{detailsComp.opex_per_capex}}  <br>
-          <strong>embodied_co2_per_ugs</strong>:{{detailsComp.embodied_co2_per_ugs}}  <br> 
-          <strong>embodied_pe_per_ugs</strong>:{{detailsComp.embodied_pe_per_ugs}}  <br>
-          <strong>lifetime</strong>:{{detailsComp.lifetime}}  <br> 
-          <strong>pref_cost</strong>:{{detailsComp.pref_cost}}  <br>
-          <strong>Bibliography</strong>:{{detailsComp.bibliography}}  <br>
-        </div>
-        <div class="group2">
-        <strong>pref_env</strong>:{{detailsComp.pref_env}}  <br>
-        <strong>scale_cost</strong>:{{detailsComp.scale_cost}}  <br>
-        <strong>scale_env</strong>:{{detailsComp.scale_env}}  <br>
-        <strong>major_upgrade_point</strong>:{{detailsComp.major_upgrade_point}}  <br>
-        <strong>major_upgrade_share</strong>:{{detailsComp.major_upgrade_share}}  <br>
-        <strong>annual_performance_degradation</strong>:{{detailsComp.annual_performance_degradation}}<br>
-        <strong>replace_or_die</strong>:{{detailsComp.replace_or_die}}<br>
-        <strong>SHEET_TYPE</strong>:{{detailsComp.SHEET_TYPE}}<br>
-        <strong>IS_MAIN_INVENTORY</strong>:{{detailsComp.IS_MAIN_INVENTORY}}  <br>
-        <strong>Description</strong>:{{detailsComp.description}}<br>
-        </div>
+
+       <!-- Modal-->
+       <div v-if="detailsComp" class="modal" role="document" :class="{ 'is-active': showModal }">
+       <div class="modal-background" @click="closeModal"></div>
+       <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Component Details</p>
+        </header>
+            <div class="modal-card-body">
+              <div class="group1">
+                  
+                        <label for="type" class="form-label">Component Type:</label>
+                        <input type="text" class="form-control" id="type" v-model="detailsComp.component_type" readonly="true">
+                  
+                        <label for="type" class="form-label">Component Subtype:</label>
+                        <input type="text" class="form-control" id="type" v-model="detailsComp.component_subtype">
+              
+                        <label for="quantity" class="form-label">CAPEX/UGS:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.capex_per_ugs" min="0">
+                  
+                 
+                        <label for="quantity" class="form-label">OPEX_PER_CAPEX[%100]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.opex_per_capex" min="0">
+                
+                 
+                        <label for="quantity" class="form-label">Embodied CO2/UGS:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.embodied_co2_per_ugs" min="0">
+                
+                        <label for="quantity" class="form-label">Embodied Pe/UGS:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.embodied_pe_per_ugs" min="0">
+                 
+                        <label for="quantity" class="form-label">Component Lifetime[years]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.lifetime" min="0">
+               
+            </div>
+            <div class="group2">
+                
+                        <label for="quantity" class="form-label">Pref Cost:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.pref_cost" min="0">
+                 
+                        <label for="quantity" class="form-label">Pref Env:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.pref_env" min="0">
+                  
+                        <label for="quantity" class="form-label">Scale Cost:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.scale_cost" min="0">
+                  
+                        <label for="quantity" class="form-label">Scale Env:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.scale_env" min="0">
+                  
+                        <label for="quantity" class="form-label">Major Upgrade Point[years]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.major_upgrade_point" min="0">
+                
+                        <label for="quantity" class="form-label">Major Upgrade Share[%100]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.major_upgrade_share" min="0">
+    
+                        <label for="quantity" class="form-label">Anuual Performance Degradation[%100]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.annual_performance_degradation" min="0"> 
+             
+                  </div>
+            </div> 
       </div>
+    </div>
+      
+
+
 
     </div>
   </template>
@@ -101,7 +139,8 @@ export default {
                  componentsPerType:[],
                  SHEET_TYPE:"all types",
                  detailsComp:null,
-                 toShow:false
+                 toShow:false,
+                 showModal:false
 
         };
     },
@@ -144,14 +183,18 @@ export default {
             this.updateComponentMode = true;
             this.EditedComponent = this.components.filter(comp=>comp.id===componentId)[0]   
         },
-        showDetails(component){
-          this.toShow=true
-          this.detailsComp=component
-          
-        },
         dontshowDetails(){
           this.toShow=false
-        }
+        },
+        closeModal() {
+          this.showModal = false;
+        },
+        setDetailsAndShowModal(component) {
+          this.detailsComp = component;
+          console.log(this.detailsComp)
+          this.showModal = true;
+  }
+
     },
     components: { UpdateComponent }
 } 
@@ -181,12 +224,6 @@ th {
   background-color: #f2f2f2;
 }
 
-.mb-3{
-        width: 100%;             /* Make each form element take full width on smaller screens */
-        box-sizing: border-box;  /* Include padding and border in the width */
-        margin-left: 0.5%;
-
-    }
 
     .table-responsive {
     display: block;
@@ -208,8 +245,51 @@ th {
   background-color: aliceblue;
 }
 .group2{
-  margin-left: 10px;
+  margin-right: 10px;
+  max-height: 70%;
 }
 
+.group1{
+  margin-left: 10px;
+  max-height: 70%;
+}
+
+.modal {
+  display: none;
+}
+
+.modal.is-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+.modal-card {
+  width: 50%;
+  background-color:aliceblue;
+  border-radius: 5px;
+}
+
+.modal-card-head {
+  background: #F7941E;
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+}
+
+.modal-card-body {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px; 
+}
 
 </style>
