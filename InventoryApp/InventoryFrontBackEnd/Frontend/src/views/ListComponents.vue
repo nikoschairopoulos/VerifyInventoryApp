@@ -198,14 +198,11 @@ th {
 }
 .infocart{
   box-sizing: content-box;
-  position: sticky;
-  bottom: 50%;
-  left:50%;
+  position: fixed;
+  bottom: 20%;
+  left:10%;
   border:green solid 2px;
-  width:50%;
   margin-top: 5%;
-  margin-left: auto;
-  margin-right: auto;
   display:flex;
   justify-content: space-around;
   background-color: aliceblue;

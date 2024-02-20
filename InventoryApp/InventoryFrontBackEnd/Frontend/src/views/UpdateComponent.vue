@@ -34,10 +34,6 @@
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
 
-            <div class="mb-3">
-                <label for="quantity" class="form-label">installed_ugs: <strong>{{ ugs_header }}</strong></label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="installed_ugs" min="0">
-            </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">CAPEX/UGS:</label>
@@ -63,6 +59,12 @@
                 <label for="quantity" class="form-label">Component Lifetime[years]:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0">
             </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
+                <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
+            </div>
+
 
             <button type="submit" class="btn btn-primary">Update Component</button>
 
@@ -126,11 +128,7 @@
            
             <!-- ... Repeat the pattern for other form elements ... -->
 
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
-                <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
-            </div>
-
+           
             
             
     </div>
@@ -149,7 +147,6 @@ export default {
         name: this.component.name,
         component_type: this.component.component_type,
         component_subtype: this.component.component_subtype,
-        installed_ugs: this.component.installed_ugs,
         capex_per_ugs: this.component.capex_per_ugs,
         opex_per_capex: this.component.opex_per_capex,
         embodied_co2_per_ugs: this.component.embodied_co2_per_ugs,

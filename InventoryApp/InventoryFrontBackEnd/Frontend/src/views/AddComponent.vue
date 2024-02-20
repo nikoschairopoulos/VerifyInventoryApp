@@ -68,7 +68,13 @@
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0">
             </div>
 
+            <div class="mb-3 form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
+                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
+                <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
+            </div>
+
             <button type="submit" class="btn btn-primary">Create Component</button>
+
 
         </div>
         <div class="group2">
@@ -130,10 +136,6 @@
            
             <!-- ... Repeat the pattern for other form elements ... -->
 
-            <div class="mb-3 form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
-                <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
-            </div>
 
             
             
