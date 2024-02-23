@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import MapChart from 'vue-map-chart'
 import Home from '../views/Home.vue'
 import AddComponent from '../views/AddComponent.vue'
 import ListComponents from '../views/ListComponents'
 import ListMyInventories from '../views/ListMyInventories'
 import CreateInventory from '../views/CreateInventory'
+import CountriesFactors from '../views/CountriesFactors'
 
 
 
@@ -35,6 +37,11 @@ const routes = [
     path: '/create-inventory',
     name: 'Create Inventory',
     component: CreateInventory
+  },
+  {
+    path: '/fuel-factors',
+    name: 'factors',
+    component: CountriesFactors
   },
 
 ]

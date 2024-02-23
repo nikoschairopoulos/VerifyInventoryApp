@@ -5,7 +5,7 @@
 
     <div class="footercontainer">
       <footer class="pagefooter">
-          <p>© 2024 VERIFY- CERTH</p>
+          <p style="color:greenyellow;">© 2024 VERIFY- CERTH</p>
       </footer>
     </div>
   

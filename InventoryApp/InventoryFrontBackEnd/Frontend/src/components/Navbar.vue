@@ -4,6 +4,7 @@
     <router-link :to="{ name: 'ListMyInventories' }">My Inventories</router-link>
     <router-link :to="{ name: 'AddComponent' }">Create Component</router-link>
     <router-link :to="{ name: 'ListComponents' }">Edit Component</router-link>    
+    <router-link :to="{ name: 'factors' }">Fuel Factors</router-link>    
     <button class="btn btn-outline-secondary" @click="logout">Logout</button>
   </nav>
 </template>

@@ -53,6 +53,19 @@ class Inventory(models.Model):
     def __str__(self):
         return f"{self.name}"
     
+class Factor(models.Model):
+    country = models.CharField(25)
+    fuel    = models.CharField(25)
+    co2_factor = models.FloatField() 
+    primary_energy_factor = models.FloatField()
+    class Meta:
+        # Define a composite primary key from field1 and field2
+        constraints = [
+            models.UniqueConstraint(fields=['country', 'fuel'], name='composite_pk')
+        ]
+
+
+    
 
 
 

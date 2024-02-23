@@ -17,7 +17,7 @@
 
             <div class="mb-3">
                 <label for="Choose Technology" class="form-label">Choose Technology:</label>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select">
+                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
                     <option value="Glazing">Glazing</option>
@@ -32,12 +32,12 @@
 
             <div class="mb-3">
                 <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type:</label>
-                <input type="text" class="form-control" id="type" v-model="component_type">
+                <input type="text" class="form-control" id="type" v-model="component_type" required>
             </div>
 
             <div class="mb-3">
                 <label for="type" class="form-label" @mouseover="explain('subtype')" @mouseleave="dontExplain">Component Subtype:</label>
-                <input type="text" class="form-control" id="type" v-model="component_subtype">
+                <input type="text" class="form-control" id="type" v-model="component_subtype" required>
             </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
@@ -45,31 +45,31 @@
 
             <div class="mb-3" @mouseover="explain('CAPEX/UGS')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">CAPEX/UGS <strong>[€/{{ ugs_header }}]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" min="0" required>
             </div>
             
             <div class="mb-3" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">OPEX_PER_CAPEX %100:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" required>
             </div>
 
             <div class="mb-3" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label" >Embodied CO2/UGS<strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0" required>
             </div>
 
             <div class="mb-3" @mouseover="explain('embodied_pe_per_ugs')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">Embodied Pe/UGS <strong>[GJ/{{ ugs_header }}]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Component Lifetime <strong>[years]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
             </div>
 
             <div class="mb-3 form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
+                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true" >
                 <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
             </div>
 
@@ -81,42 +81,42 @@
 
             <div class="mb-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">Pref Cost <strong>[{{ ugs_header }}]</strong> :</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
             </div>
             <div class="mb-3" @mouseover="explain('pref_env')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">Pref Env <strong>[{{ ugs_header }}]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label" @mouseover="explain('scale_cost')" @mouseleave="dontExplain">Scale Cost:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label" @mouseover="explain('scale_env')" @mouseleave="dontExplain">Scale Env:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_point')" @mouseleave="dontExplain">Major Upgrade Point<strong> [years]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_share')" @mouseleave="dontExplain">Major Upgrade Share %:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label" @mouseover="explain('annual_performance_degradation')" @mouseleave="dontExplain">Anuual Performance Degradation %:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" required>
             </div>
             
             <!-- ... Sheet Type ... -->
             <div class="mb-3">
                 <label for="EOL_ACTION" class="form-label">EOL ACTION:</label>
-                <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select">
+                <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select" required>
                     <option value="replace">replace</option>
                     <option value="die">die</option>
                 </select>
@@ -199,16 +199,10 @@ export default {
 
         try{
             const {data} = await axios.post('http://127.0.0.1:8000/api/component/',dataObject)
-                //this.$refs.anyName.reset();
-                for (let elem in this.$data) {this[elem] = null;}
                 alert("Success")
-                this.IS_MAIN_INVENTORY = false
                 this.$router.push({ name:'Home'}); //here add the router name from router/index.js
             }catch(error){
                 console.log(error)
-                this.$refs.anyName.reset();
-                //for (let elem in this.$data) {this[elem] = null;}
-                this.IS_MAIN_INVENTORY = false
                 alert("Error")
         }        
     },
@@ -279,6 +273,22 @@ export default {
     dontExplain(){
         this.explanationMode=false
     }
+  },
+  mounted(){
+
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+        });
+        })();
   },
   watch: {
     SHEET_TYPE(newValue) {

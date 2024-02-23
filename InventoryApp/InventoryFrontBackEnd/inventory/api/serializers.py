@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.utils.timesince import timesince
 from rest_framework import serializers
-from inventory.models import Inventory,Component
+from inventory.models import Inventory,Component,Factor
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 
@@ -17,10 +17,6 @@ class ComponentSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         obj =  super().update(instance, validated_data)
         return obj
-
-
-
-
 
 class InventorySerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True,read_only=True)
@@ -66,7 +62,15 @@ class InventorySerializer(serializers.ModelSerializer):
         return to_return
     '''
 
-    
+class FactorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Factor
+        fields='__all__'
+    def create(self, validated_data):
+        return super().create(validated_data)
+    def update(self, instance, validated_data):
+        obj =  super().update(instance, validated_data)
+        return obj
 
 
     

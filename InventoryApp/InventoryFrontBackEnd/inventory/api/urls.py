@@ -2,7 +2,8 @@ from inventory.api.views import (
           ComponentViewSet,
           InventoryViewSet,
           ListInventory,
-          LIBRARY_VERIFY)
+          LIBRARY_VERIFY,
+          FactorViewSet)
 #from django.urls import path
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
@@ -11,6 +12,7 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r"component",ComponentViewSet )
 router.register(r"inventory", InventoryViewSet)
+router.register(r"factor",FactorViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

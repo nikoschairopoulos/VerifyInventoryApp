@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import mixins
-from inventory.api.serializers import ComponentSerializer,InventorySerializer
+from inventory.api.serializers import ComponentSerializer,InventorySerializer,FactorSerializer
 from inventory.models import Component,Inventory
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from inventory.models import Inventory
+from inventory.models import Factor
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 
 
@@ -28,6 +29,11 @@ class InventoryViewSet(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user) #Additionally author is added (this is added procedure after serializer) (not implemented at serializer)
 
+
+class FactorViewSet(ModelViewSet):
+    queryset = Factor.objects.all()
+    serializer_class = FactorSerializer
+    #permission_classes = [IsAuthenticated]
 
 
                                             ####CUSTOM VIEWS (NON MODELS)####:
