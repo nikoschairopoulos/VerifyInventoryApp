@@ -1,8 +1,9 @@
 <template>
     <div class="tablecontainer">
 
+      <div class="choose_option">
       <div class="mb-3" v-if="!updateComponentMode">
-                <label for="Choose Technology" class="form-label">Choose Technology:</label>
+                <label for="Choose Technology" class="form-label">Choose Technology:</label><br>
                 <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
@@ -16,6 +17,7 @@
                     <option value="Other">Other</option>
                 </select>
             </div>
+      </div>
 
 
       <UpdateComponent v-if="updateComponentMode" header="Update Component" :component="EditedComponent" />
@@ -43,10 +45,10 @@
                 <td class="text-center">{{ component.SHEET_TYPE }}</td>
                 <td class="text-center">{{ component.IS_MAIN_INVENTORY }}</td>
                 <td>
-                    <button class="btn btn-primary" style="margin-right:2px;" @click="updateComponent(component.id)">
+                    <button class="btn btn-primary" style="margin-right:5px;" @click="updateComponent(component.id)">
                         Edit
                     </button>
-                <button class="btn btn-danger" style="margin-right:2px;" @click="deleteComponent(component.id)">
+                <button class="btn btn-danger" style="margin-right:5px;" @click="deleteComponent(component.id)">
                         Delete
                 </button>
                 <button type="button" class="btn btn-primary" @click="setDetailsAndShowModal(component)" >
@@ -62,7 +64,7 @@
        <div class="modal-background" @click="closeModal"></div>
        <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Component Details</p>
+          <h2 class="modal-card-title">Component Details</h2>
         </header>
             <div class="modal-card-body">
               <div class="group1">
@@ -206,17 +208,15 @@ export default {
 <style scoped>
 /* Add styles as needed */
 .tablecontainer{
-
-    width:100;
+  display: flex;
+  width: 100%;
 }
 table {
   border-collapse: collapse;
-  border:4px solid grey;
 }
 
 th, td {
   border: 1px solid #ddd;
-  padding: 6px;
   text-align: center;
 }
 
@@ -226,9 +226,8 @@ th {
 
 
     .table-responsive {
-    display: block;
-    width: fit-content;
-    margin:0 auto;
+    width: 80%;
+    margin: 0 auto;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -280,7 +279,7 @@ th {
 }
 
 .modal-card-head {
-  background: #F7941E;
+  background: #221ef7;
             color: #fff;
             font-size: 20px;
             text-align: center;
@@ -290,6 +289,11 @@ th {
   display: flex;
   justify-content: space-between;
   padding: 20px; 
+}
+
+.choose_option{
+  position: relative;
+  left: 0%;
 }
 
 </style>

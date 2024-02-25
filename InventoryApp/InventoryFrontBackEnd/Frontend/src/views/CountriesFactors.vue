@@ -137,7 +137,7 @@
             fuel:null,
             country:null,
             factorsdb:[],
-            infoObj:null
+            infoObj:{'LS':-100}
         }
     },
     mounted() {
@@ -193,7 +193,8 @@
             }        
     },
     fillDataofCountry(){
-        try{        
+        try{    
+            this.infoObj={} 
             let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel)
             this.pef  = obj[0].primary_energy_factor
             this.co2  = obj[0].co2_factor
@@ -202,10 +203,9 @@
             //after updating co2 for the Map:
             console.log("there  data for this country fuel combination")
             let countryname = this.getCountryCodeOrName(this.country)[1]
-            this.infoObj={}
             this.infoObj[countryname]=this.co2;
             this.infoObj['LS']=-100;
-            //console.log("the country name is ==========",this.infoObj)
+            console.log("the country name is ==========",this.infoObj)
         }catch(e){
             console.log(e)
             this.co2=null;
@@ -538,7 +538,7 @@
 </script>
 
 
-<style>
+<style scoped>
 .input-form{
     margin: 0 auto;
     width:50%;

@@ -8,11 +8,11 @@
         </div>
     </div>
     
-    <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-    <div class="group1">    
-            <div class="mb-3">
+    <form ref="anyName" class="container mt-4 needs-validation" id="component" novalidate  @submit.prevent="handleSubmit">
+    <div class="col-6">    
+            <div class="mb-3 mt-3">
                 <label for="name" class="form-label">Name:</label>
-                <input type="text" class="form-control" id="name" v-model="name">
+                <input type="text" class="form-control" id="name" v-model="name" required>
             </div>
 
             <div class="mb-3">
@@ -77,9 +77,9 @@
 
 
         </div>
-        <div class="group2">
+        <div class="col-6">
 
-            <div class="mb-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
+            <div class="mb-3 mt-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">Pref Cost <strong>[{{ ugs_header }}]</strong> :</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
             </div>
@@ -132,13 +132,10 @@
                 <label for="description" style="display:block;">Description:</label>
                 <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
             </div>
+            
         
            
-            <!-- ... Repeat the pattern for other form elements ... -->
-
-
-            
-            
+            <!-- ... Repeat the pattern for other form elements ... -->       
     </div>
 </form>
 </div>
@@ -324,30 +321,21 @@ export default {
         width: 50%;
         background-color:aliceblue;
         border: 1px solid lightsteelblue;
-        display: flex;
-        justify-content: space-evenly;
         border-radius: 1%;
     
     }
     /* Apply different styles for smaller viewports */
-  @media (max-width: 768px) {
-    #component {
-        width: 80%;  /* Adjust the width for smaller screens */
-    }
-
-    .mb-3 {
-        width: 100%;             /* Make each form element take full width on smaller screens */
-        box-sizing: border-box;  /* Include padding and border in the width */
-        margin-bottom: 10px;     /* Adjust the margin between form elements */
-    }
-
- 
+  @media (max-width: 1000px) { 
   }
   .explanation{
     margin-left: 4%;
     position:fixed;
     width:20%;
     background-color: palegreen;
+  }
+
+  .mb-3{
+    width: 75%;
   }
 
   #w3review{

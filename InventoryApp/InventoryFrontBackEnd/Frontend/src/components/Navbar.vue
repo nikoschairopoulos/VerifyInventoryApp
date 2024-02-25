@@ -5,7 +5,7 @@
     <router-link :to="{ name: 'AddComponent' }">Create Component</router-link>
     <router-link :to="{ name: 'ListComponents' }">Edit Component</router-link>    
     <router-link :to="{ name: 'factors' }">Fuel Factors</router-link>    
-    <button class="btn btn-outline-secondary" @click="logout">Logout</button>
+    <button id="logoutbtn" class="btn btn-outline-secondary" @click="logout">Logout</button>
   </nav>
 </template>
 
@@ -51,7 +51,9 @@ export default {
 <style>
   .main-nav {
     text-align: center;
-    margin: 40px auto;
+    background-color: yellow;
+    padding: 1%;
+    margin-bottom: 10px;
   }
   .main-nav a {
     display: inline-block;
@@ -64,4 +66,35 @@ export default {
     border-bottom: 2px solid #00ce89;
     padding-bottom: 4px;
   }
+  .options{
+    position: relative;
+    left:30%;
+    margin-right: 2px;
+  }
+  #logoutbtn{
+    position: absolute;
+    right: 4px;
+  }
+  @media (max-width: 750px){
+    .main-nav {
+    width:120%;
+    display: flex;
+    justify-content:start;
+    flex-direction: column-reverse;
+    text-align: left;
+    background-color: yellow;
+    margin-bottom: 10px;
+  }
+  a.router-link-active {
+    display: none;
+  }
+
+  #logoutbtn{
+    display: inline-block;
+  }
+  a.router-link-hover{
+    font-size: 150;
+  }
+    
+}
 </style>

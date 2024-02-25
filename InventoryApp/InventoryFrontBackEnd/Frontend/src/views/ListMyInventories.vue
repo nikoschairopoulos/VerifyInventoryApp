@@ -98,6 +98,7 @@ export default {
     margin-bottom: 1%;
     width: 10%;
     background: mediumblue;
+    box-sizing: content-box;
 }
 
 

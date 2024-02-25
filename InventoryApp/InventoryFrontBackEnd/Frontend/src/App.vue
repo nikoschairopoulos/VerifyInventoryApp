@@ -1,6 +1,9 @@
 <template>
+  
   <div class="main">
-    <Navbar />
+    <div>
+      <Navbar />
+    </div>
     <router-view/>
 
     <div class="footercontainer">
