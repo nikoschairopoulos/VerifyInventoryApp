@@ -3,7 +3,7 @@
     <router-link :to="{ name: 'Home' }">Home</router-link>
     <router-link :to="{ name: 'ListMyInventories' }">My Inventories</router-link>
     <router-link :to="{ name: 'AddComponent' }">Create Component</router-link>
-    <router-link :to="{ name: 'ListComponents' }">Edit Component</router-link>    
+    <router-link :to="{ name: 'ListComponents' }">Inventory Library</router-link>    
     <router-link :to="{ name: 'factors' }">Fuel Factors</router-link>    
     <button id="logoutbtn" class="btn btn-outline-secondary" @click="logout">Logout</button>
   </nav>
@@ -53,7 +53,7 @@ export default {
     text-align: center;
     background-color: yellow;
     padding: 1%;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
   }
   .main-nav a {
     display: inline-block;

@@ -1,6 +1,10 @@
 <template>
+  <div>
+    <UpdateComponent v-if="updateComponentMode" header="Update Component" :component="EditedComponent" />
+   
+   
+   
     <div class="tablecontainer">
-
       <div class="choose_option">
       <div class="mb-3" v-if="!updateComponentMode">
                 <label for="Choose Technology" class="form-label">Choose Technology:</label><br>
@@ -17,13 +21,7 @@
                     <option value="Other">Other</option>
                 </select>
             </div>
-      </div>
-
-
-      <UpdateComponent v-if="updateComponentMode" header="Update Component" :component="EditedComponent" />
-
-     
-     
+      </div>  
       <table class="table-responsive" v-if="!updateComponentMode">
         <thead class="thead-dark">
           <tr>
@@ -124,8 +122,9 @@
 
 
 
-    </div>
-  </template>
+  </div>
+</div>
+</template>
   
   
 

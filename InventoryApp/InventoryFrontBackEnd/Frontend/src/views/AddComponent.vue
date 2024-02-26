@@ -77,7 +77,7 @@
 
 
         </div>
-        <div class="col-6">
+        <div  id="group2" class="col-6">
 
             <div class="mb-3 mt-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
                 <label for="quantity" class="form-label">Pref Cost <strong>[{{ ugs_header }}]</strong> :</label>
@@ -319,8 +319,10 @@ export default {
     }
     #component {
         width: 50%;
-        background-color:aliceblue;
-        border: 1px solid lightsteelblue;
+        background-color: aliceblue;
+        border: 2px solid lightsteelblue;
+        display: flex;
+        justify-content: space-evenly;
         border-radius: 1%;
     
     }
@@ -335,11 +337,21 @@ export default {
   }
 
   .mb-3{
-    width: 75%;
+    width: 60%;
   }
 
   #w3review{
     text-align:left;
+  }
+  #group2{
+    margin-right: -18%;
+  }
+
+  #bibliography{
+    width:100%;
+  }
+  #description{
+    width:100%;
   }
 
   </style>

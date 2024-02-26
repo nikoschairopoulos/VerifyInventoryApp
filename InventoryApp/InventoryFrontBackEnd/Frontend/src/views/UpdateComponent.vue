@@ -1,7 +1,7 @@
 <template>
     <div container>
     <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-    <div class="group1">    
+    <div class="col-6">    
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
@@ -69,7 +69,7 @@
             <button type="submit" class="btn btn-primary">Update Component</button>
 
         </div>
-        <div class="group2">
+        <div class="col-6" id="group2">
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Pref Cost:</label>
@@ -187,9 +187,10 @@ export default {
 
 </script>
 
-  <style >
+ 
+<style >
 
-    h1{
+h1{
         text-align: center;
     }
     #component {
@@ -198,24 +199,36 @@ export default {
         border: 2px solid lightsteelblue;
         display: flex;
         justify-content: space-evenly;
-        border-radius: 2%;
+        border-radius: 1%;
     
     }
     /* Apply different styles for smaller viewports */
-  @media (max-width: 768px) {
-    #component {
-        width: 80%;  /* Adjust the width for smaller screens */
-    }
-
-    .mb-3 {
-        width: 100%;             /* Make each form element take full width on smaller screens */
-        box-sizing: border-box;  /* Include padding and border in the width */
-        margin-bottom: 10px;     /* Adjust the margin between form elements */
-    }
-
- 
+  @media (max-width: 1000px) { 
   }
-  </style>
+  .explanation{
+    margin-left: 4%;
+    position:fixed;
+    width:20%;
+    background-color: palegreen;
+  }
+
+  .mb-3{
+    width: 60%;
+  }
+
+  #w3review{
+    text-align:left;
+  }
+  #group2{
+    margin-right: -18%;
+  }
+
+  #bibliography{
+    width:100%;
+  }
+  #description{
+    width:100%;
+  }
 
 
-    
+</style>
