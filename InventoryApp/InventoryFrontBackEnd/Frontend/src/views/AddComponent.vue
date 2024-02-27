@@ -9,7 +9,7 @@
     </div>
     
     <div class="input-form" @submit.prevent="handleSubmit">
-        <form ref="anyName" class="container mt-4 needs-validation" id="component" novalidate>
+        <form ref="anyName" class="container mt-4 needs-validation" id="component">
         <div class="col-6">    
                 <div class="mb-3 mt-3">
                     <label for="name" class="form-label">Name:</label>
@@ -51,7 +51,7 @@
                 
                 <div class="mb-3" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
                     <label for="quantity" class="form-label">OPEX_PER_CAPEX %100:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="1" required>
                 </div>
 
                 <div class="mb-3" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="mb-3 form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
-                    <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true" >
+                    <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false" >
                     <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
                 </div>
 
@@ -106,12 +106,12 @@
 
                 <div class="mb-3">
                     <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_share')" @mouseleave="dontExplain">Major Upgrade Share %:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="1" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="quantity" class="form-label" @mouseover="explain('annual_performance_degradation')" @mouseleave="dontExplain">Anuual Performance Degradation %:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="1" required>
                 </div>
                 
                 <!-- ... Sheet Type ... -->
@@ -275,20 +275,6 @@ export default {
     }
   },
   mounted(){
-
-    (function() {
-        'use strict';
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-            }, false);
-        });
-        })();
   },
   watch: {
     SHEET_TYPE(newValue) {

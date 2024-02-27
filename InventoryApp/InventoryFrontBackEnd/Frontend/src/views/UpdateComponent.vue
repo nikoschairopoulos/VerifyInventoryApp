@@ -37,12 +37,12 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">CAPEX/UGS:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0" >
             </div>
             
             <div class="mb-3">
                 <label for="quantity" class="form-label">OPEX_PER_CAPEX[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="1">
             </div>
 
             <div class="mb-3">
@@ -61,7 +61,7 @@
             </div>
 
             <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" required value="true">
+                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false">
                 <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
             </div>
 
@@ -102,7 +102,7 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Anuual Performance Degradation[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="1">
             </div>
             
             <!-- ... Sheet Type ... -->
