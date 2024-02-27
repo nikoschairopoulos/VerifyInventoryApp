@@ -9,7 +9,7 @@
 
             <div class="mb-3">
                 <label for="Choose Technology" class="form-label">Choose Technology:</label>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select">
+                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
                     <option value="Glazing">Glazing</option>
@@ -24,12 +24,12 @@
 
             <div class="mb-3">
                 <label for="type" class="form-label">Component Type:</label>
-                <input type="text" class="form-control" id="type" v-model="component_type">
+                <input type="text" class="form-control" id="type" v-model="component_type" required>
             </div>
 
             <div class="mb-3">
                 <label for="type" class="form-label">Component Subtype:</label>
-                <input type="text" class="form-control" id="type" v-model="component_subtype">
+                <input type="text" class="form-control" id="type" v-model="component_subtype" required>
             </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
@@ -37,31 +37,31 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">CAPEX/UGS:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0">
             </div>
             
             <div class="mb-3">
                 <label for="quantity" class="form-label">OPEX_PER_CAPEX[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Embodied CO2/UGS:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Embodied Pe/UGS:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Component Lifetime[years]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" required min="0">
             </div>
 
             <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="true">
+                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" required value="true">
                 <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
             </div>
 
@@ -73,36 +73,36 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Pref Cost:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" required min="0">
             </div>
             <div class="mb-3">
                 <label for="quantity" class="form-label">Pref Env:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Scale Cost:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Scale Env:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Major Upgrade Point[years]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Major Upgrade Share[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Anuual Performance Degradation[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0">
             </div>
             
             <!-- ... Sheet Type ... -->
