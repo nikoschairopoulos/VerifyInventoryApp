@@ -155,7 +155,7 @@
         });
         })();
 
-        axios.get('http://127.0.0.1:8000/api/factor/')
+        axios.get(`${TARGET_IP}/api/factor/`)
             .then(response => {
             for (let comp of response.data) {
                 this.factorsdb.push(comp);
@@ -185,7 +185,7 @@
             }
                 let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel )
                 console.log("i try to send data at the Backend....",this.$data)
-                const {data} = await axios.put(`http://127.0.0.1:8000/api/factor/${obj[0].id}/`,dataObject)
+                const {data} = await axios.put(`${TARGET_IP}/api/factor/${obj[0].id}/`,dataObject)
                     alert("Success")
                     this.$router.push({ name:'Home'}); //here add the router name from router/index.js
                 }catch(error){

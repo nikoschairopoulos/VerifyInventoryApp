@@ -195,7 +195,7 @@ export default {
         }
 
         try{
-            const {data} = await axios.post('http://127.0.0.1:8000/api/component/',dataObject)
+            const {data} = await axios.post(`${TARGET_IP}/api/component/`,dataObject)
                 alert("Success")
                 this.$router.push({ name:'Home'}); //here add the router name from router/index.js
             }catch(error){

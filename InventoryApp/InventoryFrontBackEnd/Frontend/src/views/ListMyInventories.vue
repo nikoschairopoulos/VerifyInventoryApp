@@ -48,7 +48,7 @@ export default {
         }
     },
     mounted() {
-        axios.get('http://127.0.0.1:8000/api/userInventories/')
+        axios.get(`${TARGET_IP}/api/userInventories/`)
             .then(response => {
             for (let inv of response.data) {
                 this.inventoriesList.push(inv)
@@ -73,7 +73,7 @@ export default {
             let check = window.prompt(`Please Enter "y" if you want to delete the component (Name:${comp[0].name})  else press "n":`, "");
             if (check === "y") {
                 await axios
-                    .delete(`http://127.0.0.1:8000/api/inventory/${inventoryId}/`)
+                    .delete(`${TARGET_IP}/api/inventory/${inventoryId}/`)
                     .then(()=>this.refreshlist(inventoryId))
                     .catch(error => {
                           console.error('Error fetching data:', error)})}

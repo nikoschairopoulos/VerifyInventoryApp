@@ -111,7 +111,7 @@ export default {
         };
     },
     mounted() {
-        axios.get('http://127.0.0.1:8000/api/component/')
+        axios.get(`${TARGET_IP}/api/component/`)
             .then(response => {
             for (let comp of response.data) {
                 this.components.push(comp);
@@ -168,7 +168,7 @@ export default {
                 console.log(inventory)
                     try{
                         console.log('wait to create inventory')
-                        const {data} = await axios.post('http://127.0.0.1:8000/api/inventory/',inventory);
+                        const {data} = await axios.post(`${TARGET_IP}/api/inventory/`,inventory);
                         alert("Success!")
                         this.$router.push({ name:'Home'}); //here add the router name from router/index.js
                     }catch(error){

@@ -173,7 +173,7 @@ export default {
     async handleSubmit(){ 
         const dataObject = this.$data;
         try{
-            const {data} = await axios.put(`http://127.0.0.1:8000/api/component/${this.ID}/`,dataObject)
+            const {data} = await axios.put(`${TARGET_IP}/api/component/${this.ID}/`,dataObject)
                 alert("Success")
                 this.$router.push({ name:'Home'}); //here add the router name from router/index.js
             }catch(error){

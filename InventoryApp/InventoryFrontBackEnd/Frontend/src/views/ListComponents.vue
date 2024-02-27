@@ -177,7 +177,7 @@ export default {
             let check = window.prompt(`Please Enter "y" if you want to delete the component (Name:${comp[0].name})  else press "n":`, "");
             if (check === "y") {
                 await axios
-                    .delete(`http://127.0.0.1:8000/api/component/${componentId}/`)
+                    .delete(`${TARGET_IP}/api/component/${componentId}/`)
                     .then(()=>this.refreshlist(componentId))
                     .catch(error => {
                           console.error('Error fetching data:', error)})}},
