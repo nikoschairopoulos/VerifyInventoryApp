@@ -129,7 +129,8 @@
   
 
 <script>
-import { axios } from "@/common/api.service.js";
+import { axios} from "@/common/api.service.js";
+import {TARGET_IP} from "@/common/request_configs.js"
 import UpdateComponent from './UpdateComponent.vue';
 export default {
     name:"ListComponents",
@@ -146,7 +147,8 @@ export default {
         };
     },
     mounted() {
-        axios.get('http://127.0.0.1:8000/api/component/')
+        console.log(`${TARGET_IP}/api/component/`,'------------------------------')
+        axios.get(`${TARGET_IP}/api/component/`)
             .then(response => {
             for (let comp of response.data) {
                 this.components.push(comp);
