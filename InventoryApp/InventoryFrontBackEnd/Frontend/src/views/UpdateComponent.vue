@@ -138,6 +138,7 @@
 </template>
 <script>
 import { axios } from "@/common/api.service.js";
+import {TARGET_IP} from "@/common/request_configs.js"
 export default {
   name: 'UpdateComponent',
   props:['header','component'],

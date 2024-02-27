@@ -36,6 +36,7 @@
 
 <script>
 import { axios } from "@/common/api.service.js";
+import {TARGET_IP} from "@/common/request_configs.js"
 import UpdateInventory from "./UpdateInventory";
 export default {
     name:"ListMyInventories",

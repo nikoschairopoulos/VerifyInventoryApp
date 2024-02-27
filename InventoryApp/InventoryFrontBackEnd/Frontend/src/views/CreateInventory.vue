@@ -95,6 +95,7 @@
 
 <script>
 import { axios } from "@/common/api.service.js";
+import {TARGET_IP} from "@/common/request_configs.js"
 import UpdateComponent from './UpdateComponent.vue';
 export default {
     name:"CreateInventory",
