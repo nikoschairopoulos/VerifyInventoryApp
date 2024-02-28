@@ -97,7 +97,7 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Major Upgrade Share[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="1">
             </div>
 
             <div class="mb-3">
