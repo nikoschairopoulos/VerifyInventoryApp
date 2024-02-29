@@ -22,7 +22,8 @@
                 </select>
             </div>
       </div>  
-      <table class="table-responsive" v-if="!updateComponentMode">
+      <div class="table-responsive">
+      <table class=" table  table-hover" v-if="!updateComponentMode">
         <thead class="thead-dark">
           <tr>
             <th scope="col" class="text-center">Name</th>
@@ -56,6 +57,7 @@
           </tr>
         </tbody>
       </table>
+    </div>
 
        <!-- Modal-->
        <div v-if="detailsComp" class="modal" role="document" :class="{ 'is-active': showModal }">
@@ -212,6 +214,7 @@ export default {
   display: flex;
   width: 100%;
 }
+
 table {
   border-collapse: collapse;
 }
@@ -227,11 +230,8 @@ th {
 
 
     .table-responsive {
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 .infocart{
   box-sizing: content-box;
