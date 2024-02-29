@@ -21,6 +21,8 @@
                     <option value="Other">Other</option>
                 </select>
             </div>
+            <hr style="color: green;">
+            
       </div>  
       <div class="table-responsive">
       <table class=" table  table-hover" v-if="!updateComponentMode">
@@ -211,7 +213,6 @@ export default {
 <style scoped>
 /* Add styles as needed */
 .tablecontainer{
-  display: flex;
   width: 100%;
 }
 
@@ -293,6 +294,7 @@ th {
 }
 
 .choose_option{
+  background: lightsteelblue;
   position: relative;
   left: 0%;
 }

@@ -9,7 +9,7 @@
     </div>
     
     <div class="input-form" @submit.prevent="handleSubmit">
-        <form ref="anyName" class="container mt-4 needs-validation" id="component">
+        <form ref="anyName" class="container mt-4 needs-validation" novalidate id="component">
         <div class="col-6"> 
             <p><strong>All fields with * are Mandatory</strong></p>   
                 <div class="mb-3 mt-3">
@@ -277,6 +277,19 @@ export default {
     }
   },
   mounted(){
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+            }, false);
+        });
+        })();
   },
   watch: {
     SHEET_TYPE(newValue) {
