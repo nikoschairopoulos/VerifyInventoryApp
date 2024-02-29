@@ -10,14 +10,15 @@
     
     <div class="input-form" @submit.prevent="handleSubmit">
         <form ref="anyName" class="container mt-4 needs-validation" id="component">
-        <div class="col-6">    
+        <div class="col-6"> 
+            <p><strong>All fields with * are Mandatory</strong></p>   
                 <div class="mb-3 mt-3">
-                    <label for="name" class="form-label">Name:</label>
+                    <label for="name" class="form-label">Name*:</label>
                     <input type="text" class="form-control" id="name" v-model="name" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="Choose Technology" class="form-label">Choose Technology:</label>
+                    <label for="Choose Technology" class="form-label">Choose Technology*:</label>
                     <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                         <option value="El. Generators">Electrical Generators</option>
                         <option value="Thermal Sources">Thermal Sources</option>
@@ -32,12 +33,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type:</label>
+                    <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label>
                     <input type="text" class="form-control" id="type" v-model="component_type" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="type" class="form-label" @mouseover="explain('subtype')" @mouseleave="dontExplain">Component Subtype:</label>
+                <div v-if="showSubtype" class="mb-3">
+                    <label for="type" class="form-label" id="subtype_element" @mouseover="explain('subtype')" @mouseleave="dontExplain">Component Subtype* :</label>
                     <input type="text" class="form-control" id="type" v-model="component_subtype" required>
                 </div>
 
@@ -45,27 +46,27 @@
 
 
                 <div class="mb-3" @mouseover="explain('CAPEX/UGS')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label">CAPEX/UGS <strong>[€/{{ ugs_header }}]</strong>:</label>
+                    <label for="quantity" class="form-label">CAPEX/UGS* <strong>[€/{{ ugs_header }}]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="validationCustom01" v-model="capex_per_ugs" min="0" required>
                 </div>
                 
                 <div class="mb-3" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label">OPEX_PER_CAPEX %100:</label>
+                    <label for="quantity" class="form-label">OPEX_PER_CAPEX* %100:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="1" required>
                 </div>
 
                 <div class="mb-3" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label" >Embodied CO2/UGS<strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
+                    <label for="quantity" class="form-label" >Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0" required>
                 </div>
 
                 <div class="mb-3" @mouseover="explain('embodied_pe_per_ugs')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label">Embodied Pe/UGS <strong>[GJ/{{ ugs_header }}]</strong>:</label>
+                    <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label">Component Lifetime <strong>[years]</strong>:</label>
+                    <label for="quantity" class="form-label">Component Lifetime* <strong>[years]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
                 </div>
 
@@ -81,42 +82,42 @@
             <div  id="group2" class="col-6">
 
                 <div class="mb-3 mt-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label">Pref Cost <strong>[{{ ugs_header }}]</strong> :</label>
+                    <label for="quantity" class="form-label">Pref Cost* <strong> [{{ ugs_header }}]</strong> :</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
                 </div>
                 <div class="mb-3" @mouseover="explain('pref_env')" @mouseleave="dontExplain">
-                    <label for="quantity" class="form-label">Pref Env <strong>[{{ ugs_header }}]</strong>:</label>
+                    <label for="quantity" class="form-label">Pref Env* <strong> [{{ ugs_header }}]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label" @mouseover="explain('scale_cost')" @mouseleave="dontExplain">Scale Cost:</label>
+                    <label for="quantity" class="form-label" @mouseover="explain('scale_cost')" @mouseleave="dontExplain">Scale Cost*:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" min="0" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label" @mouseover="explain('scale_env')" @mouseleave="dontExplain">Scale Env:</label>
+                    <label for="quantity" class="form-label" @mouseover="explain('scale_env')" @mouseleave="dontExplain">Scale Env*:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" min="0" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_point')" @mouseleave="dontExplain">Major Upgrade Point<strong> [years]</strong>:</label>
+                    <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_point')" @mouseleave="dontExplain">Major Upgrade Point* <strong> [years]</strong>:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_share')" @mouseleave="dontExplain">Major Upgrade Share %:</label>
+                    <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_share')" @mouseleave="dontExplain">Major Upgrade Share* %:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="1" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="quantity" class="form-label" @mouseover="explain('annual_performance_degradation')" @mouseleave="dontExplain">Anuual Performance Degradation %:</label>
+                    <label for="quantity" class="form-label" @mouseover="explain('annual_performance_degradation')" @mouseleave="dontExplain">Anuual Performance Degradation* %:</label>
                     <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="1" required>
                 </div>
                 
                 <!-- ... Sheet Type ... -->
                 <div class="mb-3">
-                    <label for="EOL_ACTION" class="form-label">EOL ACTION:</label>
+                    <label for="EOL_ACTION" class="form-label">EOL ACTION*:</label>
                     <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select" required>
                         <option value="replace">replace</option>
                         <option value="die">die</option>
@@ -174,7 +175,8 @@ export default {
         bibliography:null,
         ugs_header:null,
         explainMessage:null,
-        explanationMode:false
+        explanationMode:false,
+        showSubtype:true
     } 
   },
   methods:{
@@ -280,20 +282,29 @@ export default {
     SHEET_TYPE(newValue) {
         if( newValue=="El. Generators" || newValue=="Thermal Sources" || newValue=='PCM' || newValue=='Ventilation'){
             this.ugs_header = 'kW'
+            this.showSubtype=true;
         }else if(newValue=="Water Storage"){
             this.ugs_header='Litre'
+            this.showSubtype=true;
         }
         else if(newValue=='El. Storage'){
             this.ugs_header='kWh'
+            this.showSubtype=true;
         }
         else if(newValue=='Insulation'){
             this.ugs_header='m\u00B3'
+            this.showSubtype=true;
         }
         else if(newValue=='Glazing'){
             this.ugs_header='m\u00B2'
+            this.showSubtype=true;
         }
         else if(newValue=='Other'){
             this.ugs_header='UGS'
+            this.showSubtype=true;
+        }
+        if(newValue=='Ventilation'){
+            this.showSubtype=false;
         }
     }
   }
