@@ -186,7 +186,7 @@ width:100;
 table {
 margin-left: 0.5%;
 border-collapse: collapse;
-border:4px solid grey;
+border:0.5px solid grey;
 }
 
 th, td {
@@ -225,6 +225,7 @@ width: fit-content;
 overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 -ms-overflow-style: -ms-autohiding-scrollbar;
+max-height: 600px;
 }
 
 </style>

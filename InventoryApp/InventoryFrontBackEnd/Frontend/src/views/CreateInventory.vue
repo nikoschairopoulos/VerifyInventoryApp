@@ -199,11 +199,13 @@ export default {
     display:flex;
     justify-content: space-around;
     width:100;
+    
 }
 table {
   margin-left: 0.5%;
   border-collapse: collapse;
-  border:4px solid grey;
+  border:0.5px solid grey;
+  max-height: 600px;
 }
 
 th, td {
