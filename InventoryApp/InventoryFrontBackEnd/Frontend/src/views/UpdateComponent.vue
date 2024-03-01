@@ -41,7 +41,7 @@
             </div>
             
             <div class="mb-3">
-                <label for="quantity" class="form-label">OPEX_PER_CAPEX*[%100]:</label>
+                <label for="quantity" class="form-label">OPEX_PER_CAPEX*[%100]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
@@ -96,12 +96,12 @@
             </div>
 
             <div class="mb-3">
-                <label for="quantity" class="form-label">Major Upgrade Share*[%100]:</label>
+                <label for="quantity" class="form-label">Major Upgrade Share*[%100]: <span v-if="major_upgrade_share>100 || major_upgrade_share <0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="100">
             </div>
 
             <div class="mb-3">
-                <label for="quantity" class="form-label">Anuual Performance Degradation*[%100]:</label>
+                <label for="quantity" class="form-label">Anuual Performance Degradation*[%100]: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             

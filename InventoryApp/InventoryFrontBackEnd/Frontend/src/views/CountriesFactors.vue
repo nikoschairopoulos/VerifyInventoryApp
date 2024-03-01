@@ -104,7 +104,7 @@
         <hr>
         <h4 style="text-align:center;">CO2 MAP</h4>
         <hr>
-        <div v-if='infoObj'>
+        <div v-if='infoObj' id="map">
             <MapChart
                 :countryData="this.infoObj"
                 highColor="#ff0000"
@@ -125,6 +125,7 @@
 <script>
     import { axios } from "@/common/api.service.js";
     import {TARGET_IP} from "@/common/request_configs.js"
+    import { onUnmounted } from "vue";
     import MapChart from 'vue-map-chart'
 
     export default {
@@ -142,6 +143,7 @@
         }
     },
     mounted() {
+
         (function() {
         'use strict';
         var forms = document.querySelectorAll('.needs-validation');
@@ -168,13 +170,24 @@
             console.error('Error fetching data:', error);
         });
 
-    },watch:{
+    },
+    beforeUnmount(){
+        // *******PROPABLY THERE IS A BUH WITH MAP CHART COMPONENT *****
+      try{
+        let countryname = this.getCountryCodeOrName(this.country)[1]
+        this.infoObj[countryname]=0;
+      //location.reload()
+      }
+      catch(e){
+        console.log(e)
+      }
+    },
+    watch:{
         fullName(newValue){
             console.log("change at country-fuel combination have been detected")
             this.fillDataofCountry()
          }
-    }
-    ,
+    },
     methods:{
         async handleSubmit(){ 
             try{
