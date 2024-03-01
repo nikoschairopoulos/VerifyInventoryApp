@@ -42,7 +42,7 @@
             
             <div class="mb-3">
                 <label for="quantity" class="form-label">OPEX_PER_CAPEX*[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="1">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
             <div class="mb-3">
@@ -97,12 +97,12 @@
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Major Upgrade Share*[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="1">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="100">
             </div>
 
             <div class="mb-3">
                 <label for="quantity" class="form-label">Anuual Performance Degradation*[%100]:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="1">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             
             <!-- ... Sheet Type ... -->
@@ -149,7 +149,7 @@ export default {
         component_type: this.component.component_type,
         component_subtype: this.component.component_subtype,
         capex_per_ugs: this.component.capex_per_ugs,
-        opex_per_capex: this.component.opex_per_capex,
+        opex_per_capex: this.component.opex_per_capex * 100,
         embodied_co2_per_ugs: this.component.embodied_co2_per_ugs,
         embodied_pe_per_ugs: this.component.embodied_pe_per_ugs,
         lifetime: this.component.lifetime,
@@ -158,8 +158,8 @@ export default {
         scale_cost: this.component.scale_cost,
         scale_env: this.component.scale_env,
         major_upgrade_point: this.component.major_upgrade_point,
-        major_upgrade_share: this.component.major_upgrade_share,
-        annual_performance_degradation: this.component.annual_performance_degradation,
+        major_upgrade_share: this.component.major_upgrade_share *100,
+        annual_performance_degradation: this.component.annual_performance_degradation *100,
         replace_or_die: this.component.replace_or_die,
         SHEET_TYPE: this.component.SHEET_TYPE,
         IS_MAIN_INVENTORY: this.component.IS_MAIN_INVENTORY,
@@ -179,6 +179,9 @@ export default {
     async handleSubmit(){ 
         const dataObject = this.$data;
         try{
+            dataObject.opex_per_capex/=100
+            dataObject.annual_performance_degradation/=100
+            dataObject.major_upgrade_share/=100
             const {data} = await axios.put(`${TARGET_IP}/api/component/${this.ID}/`,dataObject)
                 alert("Success")
                 //this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js

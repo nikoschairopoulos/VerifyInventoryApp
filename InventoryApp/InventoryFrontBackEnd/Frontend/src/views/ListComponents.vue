@@ -197,12 +197,18 @@ export default {
           this.showModal = false;
         },
         setDetailsAndShowModal(component) {
-          this.detailsComp = component;
+          this.detailsComp = JSON.parse(JSON.stringify(component));
+          this.detailsComp.opex_per_capex*=100;
+          this.detailsComp.annual_performance_degradation*=100;
+          this.detailsComp.major_upgrade_share*=100
+
           console.log(this.detailsComp)
           this.showModal = true;
   }
 
     },
+    computed: {
+  },
     components: { UpdateComponent }
 } 
 </script>

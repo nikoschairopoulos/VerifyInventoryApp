@@ -52,7 +52,7 @@
                 
                 <div class="mb-3" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
                     <label for="quantity" class="form-label">OPEX_PER_CAPEX* %100:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="1" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="100" required>
                 </div>
 
                 <div class="mb-3" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
@@ -107,12 +107,12 @@
 
                 <div class="mb-3">
                     <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_share')" @mouseleave="dontExplain">Major Upgrade Share* %:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="1" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="quantity" class="form-label" @mouseover="explain('annual_performance_degradation')" @mouseleave="dontExplain">Anuual Performance Degradation* %:</label>
-                    <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="1" required>
+                    <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="100" required>
                 </div>
                 
                 <!-- ... Sheet Type ... -->
@@ -200,6 +200,9 @@ export default {
         }
 
         try{
+            dataObject.opex_per_capex/=100;
+            dataObject.major_upgrade_share/=100;
+            dataObject.annual_performance_degradation/=100;
             const {data} = await axios.post(`${TARGET_IP}/api/component/`,dataObject)
                 alert("Success")
                 this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
