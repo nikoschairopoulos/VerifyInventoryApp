@@ -96,6 +96,7 @@ export default {
 #inventorycreate{
     display: block;
     margin: 0 auto;
+    margin-top: 6px;
     margin-bottom: 1%;
     width: 10%;
     background: mediumblue;
