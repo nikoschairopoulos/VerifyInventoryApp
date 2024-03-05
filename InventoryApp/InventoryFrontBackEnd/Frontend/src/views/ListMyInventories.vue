@@ -1,13 +1,10 @@
 <template>
 <div class="invcontainer">
     
-    <div v-if="!updateMode">
+    <div>
         <button type="button" class="btn btn-success" id="inventorycreate" @click="createInventory()">Create New Inventory</button>
     </div>
-    <div v-if="updateMode">
-        <UpdateInventory :inventoryElement="inventoryToUpdate" />
-    </div>
-    <ul v-else class="list-group">
+    <ul class="list-group">
         <div v-for="item in inventoriesList" :key="item.id">
             <li class="list-group-item active" id="listelement" >
                 <div class="info">
@@ -79,12 +76,15 @@ export default {
                     .catch(error => {
                           console.error('Error fetching data:', error)})}
         },
-        updateInventory(inventoryToUpdate){
-            this.updateMode=true
-            this.inventoryToUpdate = inventoryToUpdate
+        updateInventory(inventoryElement){
+            console.log('redirection at Update Inventory Component')
+            console.log({obj:{... inventoryElement}})
+            this.$router.push({ name:'Update Inventory',
+                                params:{id:inventoryElement.id}});
         }
     }
 }
+//this.$router.push({ name:'Update Inventory',params:{obj:{...inventoryInfo}}});
 </script>
 
 <style scoped>

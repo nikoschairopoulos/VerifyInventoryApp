@@ -94,17 +94,32 @@ import { axios } from "@/common/api.service.js";
 import {TARGET_IP} from "@/common/request_configs.js"
 export default {
     name:"UpdateInventory",
-    props:['inventoryElement'],
+    props:["id"],
     data() {
         return { components: [],
                  componentsPerType:[],
                  SHEET_TYPE:"all types",
-                 YouHaveAddComponent:true,
-                 inventoryComponents:this.inventoryElement.components, // is the components added to inventory (list of json) 
-                 INVENTORY_ID_COMPONENT:new Set()
+                 YouHaveAddComponent:true, // is the components added to inventory (list of json) 
+                 INVENTORY_ID_COMPONENT:new Set(),
+                 inventoryElement: {},
+                 inventoryComponents:[],
         };
     },
-    mounted() {
+    async created(){
+
+        try {
+            console.log("inside created")
+            let response = await axios.get(`${TARGET_IP}/api/inventory/${this.$route.params.id}/`);
+            console.log("inside created after axios request")
+            this.inventoryElement = response.data;
+            this.inventoryComponents = response.data.components;
+            console.log(this.inventoryComponents)
+            console.log("successfully fetched", response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+        console.log(this.inventoryElement,"inside mounted")
         let tempIdCollection = this.inventoryElement.components.map((comp)=>comp.id) // is the components list of json
         this.INVENTORY_ID_COMPONENT = new Set(tempIdCollection) // is for the components_collection
         console.log("comp:",this.inventoryComponents)
@@ -119,9 +134,9 @@ export default {
         })
             .catch(error => {
             console.error('Error fetching data:', error);
-        });
+        })},
         
-    },
+
     methods: {
         updateTypeofComponentToRender(){
         if(this.SHEET_TYPE==="all types"){this.componentsPerType=this.components}
@@ -159,8 +174,7 @@ export default {
                         console.log('wait to create inventory')
                         const {data} = await axios.put(`${TARGET_IP}/api/inventory/${this.inventoryElement.id}/`,inventory);
                         alert("Success!")
-                        //this.$router.push({ name:'ListMyInventories'}); //here add the router name from router/index.js
-                        location.reload(); 
+                        this.$router.push({ name:'ListMyInventories'}); //here add the router name from router/index.js
                     }catch(error){
                         console.log(error)
                         alert("Error")
