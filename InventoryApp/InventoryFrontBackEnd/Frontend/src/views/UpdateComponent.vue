@@ -141,40 +141,71 @@ import { axios } from "@/common/api.service.js";
 import {TARGET_IP} from "@/common/request_configs.js"
 export default {
   name: 'UpdateComponent',
-  props:['header','component'],
   data(){
     return{
-        ID: this.component.id,
-        name: this.component.name,
-        component_type: this.component.component_type,
-        component_subtype: this.component.component_subtype,
-        capex_per_ugs: this.component.capex_per_ugs,
-        opex_per_capex: this.component.opex_per_capex * 100,
-        embodied_co2_per_ugs: this.component.embodied_co2_per_ugs,
-        embodied_pe_per_ugs: this.component.embodied_pe_per_ugs,
-        lifetime: this.component.lifetime,
-        pref_cost: this.component.pref_cost,
-        pref_env: this.component.pref_env,
-        scale_cost: this.component.scale_cost,
-        scale_env: this.component.scale_env,
-        major_upgrade_point: this.component.major_upgrade_point,
-        major_upgrade_share: this.component.major_upgrade_share *100,
-        annual_performance_degradation: this.component.annual_performance_degradation *100,
-        replace_or_die: this.component.replace_or_die,
-        SHEET_TYPE: this.component.SHEET_TYPE,
-        IS_MAIN_INVENTORY: this.component.IS_MAIN_INVENTORY,
-        bibliography:this.component.bibliography,
-        description:this.component.description,
-        showSubtype:true
+        ID: null,
+        name:null,
+        component_type:null, 
+        component_subtype:null, 
+        capex_per_ugs:null,
+        opex_per_capex:null, 
+        embodied_co2_per_ugs:null, 
+        embodied_pe_per_ugs:null, 
+        lifetime: null,
+        pref_cost: null,
+        pref_env: null,
+        scale_cost:null, 
+        scale_env: null,
+        major_upgrade_point:null, 
+        major_upgrade_share:null, 
+        annual_performance_degradation:null, 
+        replace_or_die:null, 
+        SHEET_TYPE:null, 
+        IS_MAIN_INVENTORY:null, 
+        bibliography:null,
+        description:null,
+        showSubtype:true,
+        component:{}
     } 
   },
-  mounted(){
-    console.log("UPDATE COMPONENT")
-        if(this.component.SHEET_TYPE==='Ventilation'){
-            this.showSubtype=false;
+  async created(){
+
+    try {
+            console.log("inside created")
+            let response = await axios.get(`${TARGET_IP}/api/component/${this.$route.params.id}/`);
+            console.log("inside created after axios request")
+            this.component = response.data;
+            console.log("successfully fetched", response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-        console.log("inside:",this.component)
-    },
+
+    this.ID = this.component.id
+    this.name = this.component.name
+    this.component_type =  this.component.component_type
+    this.component_subtype =  this.component.component_subtype
+    this.capex_per_ugs =  this.component.capex_per_ugs
+    this.opex_per_capex =  this.component.opex_per_capex * 100
+    this.embodied_co2_per_ugs =  this.component.embodied_co2_per_ugs
+    this.embodied_pe_per_ugs = this.component.embodied_pe_per_ugs
+    this.lifetime =  this.component.lifetime
+    this.pref_cost =  this.component.pref_cost
+    this.pref_env =  this.component.pref_env
+    this.scale_cost =  this.component.scale_cost
+    this.scale_env =  this.component.scale_env
+    this.major_upgrade_point =  this.component.major_upgrade_point
+    this.major_upgrade_share =  this.component.major_upgrade_share *100
+    this.annual_performance_degradation =  this.component.annual_performance_degradation *100
+    this.replace_or_die =  this.component.replace_or_die
+    this.SHEET_TYPE =  this.component.SHEET_TYPE
+    this.IS_MAIN_INVENTORY =  this.component.IS_MAIN_INVENTORY
+    this.bibliography = this.component.bibliography
+    this.description = this.component.description
+    if(this.component.SHEET_TYPE==='Ventilation'){
+        this.showSubtype=false;
+    }
+    console.log("inside:",this.component)
+  },
   methods:{
     async handleSubmit(){ 
         const dataObject = this.$data;
@@ -184,8 +215,7 @@ export default {
             dataObject.major_upgrade_share/=100
             const {data} = await axios.put(`${TARGET_IP}/api/component/${this.ID}/`,dataObject)
                 alert("Success")
-                //this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
-                location.reload();
+                this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
             }catch(error){
                 console.log(error)
                 alert("Error")

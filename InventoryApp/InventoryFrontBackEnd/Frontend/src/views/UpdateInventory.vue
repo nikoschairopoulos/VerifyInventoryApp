@@ -99,10 +99,10 @@ export default {
         return { components: [],
                  componentsPerType:[],
                  SHEET_TYPE:"all types",
-                 YouHaveAddComponent:true, // is the components added to inventory (list of json) 
+                 YouHaveAddComponent:true,  // is the components added to inventory (list of json) 
                  INVENTORY_ID_COMPONENT:new Set(),
-                 inventoryElement: {},
-                 inventoryComponents:[],
+                 inventoryElement: {},     // initialize there --> setting inside created
+                 inventoryComponents:[],   // initialize here  --> setting inside created
         };
     },
     async created(){

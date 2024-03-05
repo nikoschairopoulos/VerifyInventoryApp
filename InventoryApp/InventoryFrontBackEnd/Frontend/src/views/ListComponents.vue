@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <UpdateComponent v-if="updateComponentMode" header="Update Component" :component="EditedComponent" />
-   
-   
-   
+  <div>   
     <div class="tablecontainer">
       <div class="choose_option">
-      <div class="mb-3" v-if="!updateComponentMode">
+      <div class="mb-3">
                 <label for="Choose Technology" class="form-label">Choose Technology:</label><br>
                 <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
@@ -25,7 +21,7 @@
             
       </div>  
       <div class="table-responsive">
-      <table class=" table  table-hover" v-if="!updateComponentMode">
+      <table class=" table  table-hover">
         <thead class="thead-dark">
           <tr>
             <th scope="col" class="text-center">Name</th>
@@ -165,6 +161,7 @@ export default {
             console.error('Error fetching data:', error);
         });
     },
+
     methods: {
         updateTypeofComponentToRender(){
           if(this.SHEET_TYPE==="all types"){this.componentsPerType=this.components}
@@ -187,8 +184,13 @@ export default {
                           console.error('Error fetching data:', error)})}},
         
         updateComponent(componentId) {
-            this.updateComponentMode = true;
-            this.EditedComponent = this.components.filter(comp=>comp.id===componentId)[0]   
+            // find the component from its Id:
+            //this.EditedComponent = this.components.filter(comp=>comp.id===componentId)[0]
+            
+            //make the request to the router with query paramas: id 
+            console.log("i will update this component ",componentId)
+            this.$router.push({ name:'Update Component',
+                                params:{id:componentId}});   
         },
         dontshowDetails(){
           this.toShow=false

@@ -7,6 +7,7 @@ import ListMyInventories from '../views/ListMyInventories'
 import CreateInventory from '../views/CreateInventory'
 import CountriesFactors from '../views/CountriesFactors'
 import UpdateInventory from '@/views/UpdateInventory.vue'
+import UpdateComponent from '@/views/UpdateComponent.vue'
 
 
 
@@ -44,6 +45,12 @@ const routes = [
     path: '/update-inventory?id=:id',
     name: 'Update Inventory',
     component: UpdateInventory,
+  },
+
+  {
+    path: '/update-component?id=:id',
+    name: 'Update Component',
+    component: UpdateComponent,
   },
 
   {

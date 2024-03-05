@@ -201,7 +201,7 @@
                 console.log("i try to send data at the Backend....",this.$data)
                 const {data} = await axios.put(`${TARGET_IP}/api/factor/${obj[0].id}/`,dataObject)
                     alert("Success")
-                    this.$router.push({ name:'Home'}); //here add the router name from router/index.js
+                    window.location.reload() //here add the router name from router/index.js
                 }catch(error){
                     alert("Error")
             }        
