@@ -2,9 +2,6 @@
   <div class="home">
       <img src="../../public/figure5.png" >
     </div>
-
-
-
 </template>
 
 <script>

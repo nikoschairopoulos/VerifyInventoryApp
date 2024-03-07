@@ -38,7 +38,7 @@ class FactorViewSet(ModelViewSet):
 
                                             ####CUSTOM VIEWS (NON MODELS)####:
 
-
+#take the inventories of a user:
 class ListInventory(APIView):
     def get(self,request):
         items = Inventory.objects.filter(author__username=request.user.username)
@@ -71,5 +71,24 @@ class LIBRARY_VERIFY(APIView):
         # to do --> this functio group by the inventory
 
 
+#take all the components of a technology
+#/api/component/variable
+#variable: take sheet type values
+class Components_by_technology(APIView):
+    #define http methods:
+    def get(self,request,Technology_key):
+        items = Component.objects.filter(SHEET_TYPE=Technology_key) # filter to fetch the python objects you want
+        components = ComponentSerializer(items,many=True)           # serialize the components -> taking the serialize indide it .data have the dicts
+        return Response(components.data)                            # return response
+             
 
+class Inventory_technologies(APIView):
+    def get(self,request):
+        technologies = []
+        items = Component.objects.all()
+        components = ComponentSerializer(items,many=True)
+        for comp in components.data:
+            if comp['SHEET_TYPE'] not in technologies:
+                technologies.append(comp['SHEET_TYPE'])
+        return Response(technologies)
 

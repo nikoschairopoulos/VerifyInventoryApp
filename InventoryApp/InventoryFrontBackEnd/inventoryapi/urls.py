@@ -19,6 +19,7 @@ from django.urls import include, path, re_path
 from django_registration.backends.one_step.views import RegistrationView
 from users.forms import CustomUserForm
 from core.views import IndexTemplateView
+from rest_auth.views import LoginView
 
 
 urlpatterns=[
@@ -26,6 +27,7 @@ urlpatterns=[
     path('api/',include('inventory.api.urls')),
     path("accounts/", include("django.contrib.auth.urls")),  # Here uses the templates/registration/login.html (overrides) (login - log out)
     path("api-auth/", include("rest_framework.urls")),
+    path("api/rest-auth/",include("rest_auth.urls")),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
     re_path(r"^.*$", IndexTemplateView.as_view(), name="entry-point")

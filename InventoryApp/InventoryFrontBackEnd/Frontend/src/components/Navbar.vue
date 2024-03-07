@@ -1,6 +1,6 @@
 <template>
   <nav class="main-nav">
-    <router-link :to="{ name: 'Home' }">Home</router-link>
+    <router-link :to="{ name: 'Home' }"><span class="fa fa-home"> Home</span></router-link>
     <router-link :to="{ name: 'ListMyInventories' }">My Inventories</router-link>
     <router-link :to="{ name: 'AddComponent' }">Create Component</router-link>
     <router-link :to="{ name: 'ListComponents' }">Inventory Library</router-link>    

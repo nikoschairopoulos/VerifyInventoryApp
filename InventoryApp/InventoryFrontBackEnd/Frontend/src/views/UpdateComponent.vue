@@ -41,7 +41,7 @@
             </div>
             
             <div class="mb-3">
-                <label for="quantity" class="form-label">OPEX_PER_CAPEX*[%100]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label">ANNUAL MAINTENANCE/CAPEX*[%100]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 

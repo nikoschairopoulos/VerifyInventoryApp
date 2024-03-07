@@ -20,6 +20,7 @@
     <table class="table-responsive">
         <thead class="thead-dark">
         <tr>
+            <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Subtype</th>
@@ -30,6 +31,7 @@
         </thead>
         <tbody>
         <tr v-for="component in componentsPerType" :key="component.id">
+                <td>{{ component.id }}</td>
                 <td>{{ component.name }}</td>
                 <td>{{ component.component_type }}</td>
                 <td>{{ component.component_subtype }}</td>
@@ -65,6 +67,7 @@
         <table class="table-responsive">
             <thead class="thead-dark">
             <tr>
+                <th scope="col">ID</th>
                 <th scope="col">Name</th>
                 <th scope="col">Type</th>
                 <th scope="col">Subtype</th>
@@ -73,6 +76,7 @@
             </thead>
             <tbody>
             <tr v-for="component in inventoryComponents" :key="component.id">
+                    <td>{{ component.id }}</td>
                     <td>{{ component.name }}</td>
                     <td>{{ component.component_type }}</td>
                     <td>{{ component.component_subtype }}</td>

@@ -41,7 +41,6 @@ class Component(models.Model):
         return f"{self.name} {self.component_type} {self.component_subtype}"
     
 
-
 class Inventory(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="inventories"
@@ -53,6 +52,7 @@ class Inventory(models.Model):
     def __str__(self):
         return f"{self.name}"
     
+
 class Factor(models.Model):
     country = models.CharField(25)
     fuel    = models.CharField(25)
@@ -64,6 +64,13 @@ class Factor(models.Model):
             models.UniqueConstraint(fields=['country', 'fuel'], name='composite_pk')
         ]
 
+
+class Wall_Insulation_Materials(models.Model):
+    wall_or_insulation = models.CharField(50) # takes only values (wall,insulation)
+    component_element = models.CharField(50)
+    conductivity = models.FloatField()
+    capacity = models.FloatField()
+    density  = models.FloatField()
 
     
 

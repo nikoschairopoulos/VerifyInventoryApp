@@ -2,9 +2,11 @@
   <div>   
     <div class="tablecontainer">
       <div class="choose_option">
-      <div class="mb-3">
-                <label for="Choose Technology" class="form-label">Choose Technology:</label><br>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
+        <h2>Search components by technology <span class="fa fa-search" ></span></h2><br>
+        <hr>
+      <div class="mb-1">
+                <label for="Choose Technology" class="form-label"><strong>Choose Technology</strong>:</label>
+                <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
@@ -24,6 +26,7 @@
       <table class=" table  table-hover">
         <thead class="thead-dark">
           <tr>
+            <th scope="col" class="text-center">ID</th>
             <th scope="col" class="text-center">Name</th>
             <th scope="col" class="text-center">Type</th>
             <th scope="col" class="text-center">Subtype</th>
@@ -35,6 +38,7 @@
         </thead>
         <tbody>
           <tr v-for="component in componentsPerType"  :key="component.id">
+                <td class="text-center">{{ component.id }}</td>
                 <td class="text-center">{{ component.name }}</td>
                 <td class="text-center">{{ component.component_type }}</td>
                 <td class="text-center">{{ component.component_subtype }}</td>
@@ -221,7 +225,7 @@ export default {
 <style scoped>
 /* Add styles as needed */
 .tablecontainer{
-  width: 100%;
+
 }
 
 table {
@@ -305,6 +309,18 @@ th {
   background: lightsteelblue;
   position: relative;
   left: 0%;
+  
+}
+h2{
+  padding-top: 10px;
+  margin-bottom: -25px;
+  color: seagreen;
+}
+#ChooseTechnology{
+  padding: 8px;
+  background-color: hwb;
+  border-radius: 24px;
+  border: solid 2px gray;
 }
 
 </style>
