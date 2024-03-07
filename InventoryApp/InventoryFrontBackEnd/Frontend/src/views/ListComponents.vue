@@ -306,7 +306,6 @@ th {
 }
 
 .choose_option{
-  background: lightsteelblue;
   position: relative;
   left: 0%;
   
@@ -320,7 +319,7 @@ h2{
   padding: 8px;
   background-color: hwb;
   border-radius: 24px;
-  border: solid 2px gray;
+  border: solid 2px darkgreen;
 }
 
 </style>

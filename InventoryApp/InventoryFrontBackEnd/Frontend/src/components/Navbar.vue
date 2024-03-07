@@ -1,11 +1,11 @@
 <template>
   <nav class="main-nav">
-    <router-link :to="{ name: 'Home' }"><span class="fa fa-home"> Home</span></router-link>
-    <router-link :to="{ name: 'ListMyInventories' }">My Inventories</router-link>
-    <router-link :to="{ name: 'AddComponent' }">Create Component</router-link>
-    <router-link :to="{ name: 'ListComponents' }">Inventory Library</router-link>    
-    <router-link :to="{ name: 'factors' }">Fuel Factors</router-link>    
-    <button id="logoutbtn" class="btn btn-outline-secondary" @click="logout">Logout</button>
+    <router-link :to="{ name: 'Home' }"><span style="color: darkgreen;" class="fa fa-home"> <span style="color: darkgreen;"> <strong>Home</strong></span></span></router-link>
+    <router-link :to="{ name: 'ListMyInventories' }"><span style="color: darkgreen;"> <strong>My Inventories</strong></span></router-link>
+    <router-link :to="{ name: 'AddComponent' }"><span style="color: darkgreen;"> <strong>Create Component</strong></span></router-link>
+    <router-link :to="{ name: 'ListComponents' }"><span style="color: darkgreen;"> <strong>Inventory Library</strong></span></router-link>    
+    <router-link :to="{ name: 'factors' }"><span style="color: darkgreen;"> <strong>Fuel Factors</strong></span></router-link>    
+    <button id="logoutbtn"  class="btn btn-outline-secondary" @click="logout"><span class="fa fa-sign-out" style="font-size:12px">Logout</span></button>
   </nav>
 </template>
 
@@ -73,7 +73,9 @@ export default {
   }
   #logoutbtn{
     position: absolute;
-    right: 4px;
+    right: 10px;
+    top: 15px;
+    font-weight: bold;
   }
   @media (max-width: 750px){
     .main-nav {
@@ -82,7 +84,7 @@ export default {
     justify-content:start;
     flex-direction: column-reverse;
     text-align: left;
-    background-color: yellow;
+    background-color: rgb(105, 105, 56);
     margin-bottom: 10px;
   }
   a.router-link-active {
