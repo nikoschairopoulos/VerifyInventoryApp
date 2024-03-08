@@ -3,11 +3,11 @@
     <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
     <div class="col-6">
         <p><strong>All fields with * are Mandatory</strong></p>       
-            <div class="mb-3 mt-3">
+            <div class="mb-2 mt-3">
                 <label for="name" class="form-label">Name*:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
             </div>
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="Choose Technology" class="form-label">Choose Technology*:</label>
                 <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                     <option value="El. Generators">Electrical Generators</option>
@@ -22,12 +22,12 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="type" class="form-label">Component Type*:</label>
                 <input type="text" class="form-control" id="type" v-model="component_type" required>
             </div>
 
-            <div v-if="showSubtype"  class="mb-3">
+            <div v-if="showSubtype"  class="mb-2">
                 <label for="type" class="form-label">Component Subtype*:</label>
                 <input type="text" class="form-control" id="type" v-model="component_subtype" required>
             </div>
@@ -35,78 +35,78 @@
             <!-- Add Numerics -----------------------------------------------------------------------------> 
 
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">CAPEX/UGS*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0" >
             </div>
             
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">ANNUAL MAINTENANCE/CAPEX*[%100]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Embodied CO2/UGS*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Embodied Pe/UGS*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Component Lifetime[years]*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" required min="0">
             </div>
 
-            <div class="mb-3 form-check">
+            <div class="mb-2 form-check">
                 <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false">
                 <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY*</label>
             </div>
 
 
-            <button type="submit" class="btn btn-primary">Update Component*</button>
+            <button type="submit" id="submitbtn" class="btn btn-primary">Update Component*</button>
 
         </div>
         <div class="col-6" id="group2">
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Pref Cost*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" required min="0">
             </div>
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Pref Env*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Scale Cost*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Scale Env*:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Major Upgrade Point*[years]</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" required min="0">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Major Upgrade Share*[%100]: <span v-if="major_upgrade_share>100 || major_upgrade_share <0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="100">
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="quantity" class="form-label">Anuual Performance Degradation*[%100]: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             
             <!-- ... Sheet Type ... -->
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="EOL_ACTION" class="form-label">EOL ACTION:</label>
                 <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select">
                     <option value="replace">replace</option>
@@ -115,12 +115,12 @@
             </div>
 
             <!-- ... Repeat the pattern for other form elements ... --> 
-            <div class="mb-3" >
+            <div class="mb-2" >
                 <label for="bibliography" style="display:block;">Bibliography:</label>
                 <textarea id="bibliography" v-model="bibliography" rows="2" cols="30" placeholder="Add bibliography links or other sources"></textarea>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label for="description" style="display:block;">Description:</label>
                 <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
             </div>
@@ -282,7 +282,7 @@ h1{
     background-color: palegreen;
   }
 
-  .mb-3{
+  .mb-2{
     width: 60%;
   }
 
@@ -298,6 +298,10 @@ h1{
   }
   #description{
     width:100%;
+  }
+
+  #submitbtn{
+    margin-bottom: 4px;
   }
 
 

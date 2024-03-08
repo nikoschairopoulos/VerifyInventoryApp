@@ -4,7 +4,7 @@
     <div>
     <div class="mb-3">
                 <label for="Choose Technology" class="form-label">Choose Technology:</label>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
+                <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
@@ -245,6 +245,10 @@ overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 -ms-overflow-style: -ms-autohiding-scrollbar;
 max-height: 400px;
+}
+
+#ChooseTechnology{
+    margin-top: 10px;
 }
 
 </style>
