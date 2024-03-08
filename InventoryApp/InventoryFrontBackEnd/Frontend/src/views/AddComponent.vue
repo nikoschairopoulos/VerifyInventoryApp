@@ -11,7 +11,8 @@
     <div class="form-photo">
         
         <div class="directives">
-            <p><strong>tip:</strong>In case you want to set the CAPEX, Embodied PE and CO2<br>
+            <br>
+            <p><strong>tip:</strong>In case you want to set the <span style="color:darkgreen"><strong>CAPEX, Embodied PE and CO2</strong></span> &nbsp; &nbsp; <br>
             from a Project Inventory, as it is given:<br>
             - set <strong>scale env = 0</strong><br>
             - set <strong>scale cost = 0</strong>

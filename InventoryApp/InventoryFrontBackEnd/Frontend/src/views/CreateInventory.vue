@@ -202,7 +202,7 @@ export default {
 
     display:flex;
     justify-content: space-around;
-    width:100;
+    width:100%;
     
 }
 table {

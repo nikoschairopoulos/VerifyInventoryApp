@@ -59,11 +59,11 @@
                 <div class="mb-3">
                     <label for="type" class="form-label">Project Name:</label>
                     <input type="text" class="form-control" id="type" v-model="inventoryElement.project_name">
+                    <p style="margin-top:10%;text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
                 </div>
                 <button type="submit" id="submitinventory" class="btn btn-primary">Update Inventory</button>
              </div>
     </form>
-        <h4 style="margin-top:10%;">You have add these components </h4>
         <table class="table-responsive">
             <thead class="thead-dark">
             <tr>
@@ -199,7 +199,7 @@ export default {
 
 display:flex;
 justify-content: space-around;
-width:100;
+
 }
 table {
 margin-left: 0.5%;
@@ -229,6 +229,7 @@ background-color: #f2f2f2;
 
 #component{
     width:100%;
+    margin-bottom: 5px;
 }
 
 #submitinventory {
@@ -243,7 +244,7 @@ width: fit-content;
 overflow-x: auto;
 -webkit-overflow-scrolling: touch;
 -ms-overflow-style: -ms-autohiding-scrollbar;
-max-height: 600px;
+max-height: 400px;
 }
 
 </style>
