@@ -8,6 +8,16 @@
         </div>
     </div>
     
+    <div class="form-photo">
+        
+        <div class="directives">
+            <p><strong>tip:</strong>In case you want to set the CAPEX, Embodied PE and CO2<br>
+            from a Project Inventory, as it is given:<br>
+            - set <strong>scale env = 0</strong><br>
+            - set <strong>scale cost = 0</strong>
+            </p>
+            <img id="tech_image" src="../../public/pv.jpg" alt="">
+        </div>
     <div class="input-form" @submit.prevent="handleSubmit">
         <form ref="anyName" class="container mt-4 needs-validation" novalidate id="component">
         <div class="col-6"> 
@@ -140,6 +150,7 @@
                 <!-- ... Repeat the pattern for other form elements ... -->       
         </div>
     </form>
+    </div>
     </div>
 </div>
 
@@ -334,12 +345,14 @@ export default {
         text-align: center;
     }
     #component {
-        width: 50%;
+        position: relative;
+        width: 140%;
         background-color: aliceblue;
         border: 2px solid lightsteelblue;
         display: flex;
         justify-content: space-evenly;
         border-radius: 1%;
+        height: 100%;
     
     }
     /* Apply different styles for smaller viewports */
@@ -368,6 +381,32 @@ export default {
   }
   #description{
     width:100%;
+  }
+  
+  .form-photo{
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #tech_image{
+    width:400px;
+  }
+  .directives{
+    margin-left:50px;
+    position:relative;
+    top:400px;
+    height:50%;
+    z-index: -1;
+  }
+  .directives p{
+    margin-bottom:0px;
+  }
+
+  @media (max-width: 1500px){
+    .directives{
+        display: none;
+    }
   }
 
   </style>

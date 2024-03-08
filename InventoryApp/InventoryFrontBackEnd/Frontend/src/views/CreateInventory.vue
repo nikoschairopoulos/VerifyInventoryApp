@@ -3,8 +3,8 @@
 
     <div>
       <div class="mb-3">
-                <label for="Choose Technology" class="form-label">Choose Technology:</label>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
+                <label for="ChooseTechnology" class="form-label">Choose Technology:</label>
+                <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
@@ -51,19 +51,19 @@
       <div class="addedcomponents" v-if="YouHaveAddComponent">
         <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
         <div class="group1">
-                <div class="mb-3">
+                <div class="mb-3 mt-3">
                     <label for="name" class="form-label">Inventory Name:</label>
                     <input type="text" class="form-control" id="name" v-model="inventoryName">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 mb-6">
                     <label for="type" class="form-label">Project Name:</label>
                     <input type="text" class="form-control" id="type" v-model="projectName">
                 </div>
+                <p style="margin-top:10%;text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
                 <button type="submit" id="submitinventory" class="btn btn-primary">Submit Inventory</button>
         </div>
     </form>
-        <h4 style="margin-top:10%;">You have add these components</h4>
       <table class="table-responsive">
         <thead class="thead-dark">
           <tr>
@@ -234,12 +234,17 @@ th {
 
     #component{
         width:100%;
+        margin-bottom: 5px;
     }
 
     #submitinventory {
     width: 55%;
     margin-bottom: 10%;
     margin-left: 0%;
+}
+
+#ChooseTechnology{
+    margin-top: 10px;
 }
 
     .table-responsive {

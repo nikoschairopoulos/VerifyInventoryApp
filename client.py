@@ -22,5 +22,5 @@ def client():
 
 
 if __name__ == "__main__":
-    print(requests.get('http://127.0.0.1:8000/api/technologies/',
+    print(requests.get('http://127.0.0.1:8000/api/inventory/',
                        headers={'Authorization':'Token 5bff5a101277474b47cec46915b6b67998c3ea80'}).json())
