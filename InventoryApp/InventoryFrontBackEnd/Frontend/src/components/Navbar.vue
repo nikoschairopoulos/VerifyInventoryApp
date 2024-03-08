@@ -1,11 +1,15 @@
 <template>
   <nav class="main-nav">
+  <div class="menu">
     <router-link :to="{ name: 'Home' }"><span style="color: darkgreen;" class="fa fa-home"> <span style="color: darkgreen;"> <strong>Home</strong></span></span></router-link>
     <router-link :to="{ name: 'ListMyInventories' }"><span style="color: darkgreen;"> <strong>My Inventories</strong></span></router-link>
     <router-link :to="{ name: 'AddComponent' }"><span style="color: darkgreen;"> <strong>Create Component</strong></span></router-link>
     <router-link :to="{ name: 'ListComponents' }"><span style="color: darkgreen;"> <strong>Inventory Library</strong></span></router-link>    
     <router-link :to="{ name: 'factors' }"><span style="color: darkgreen;"> <strong>Fuel Factors</strong></span></router-link>    
-    <button id="logoutbtn"  class="btn btn-outline-secondary" @click="logout"><span class="fa fa-sign-out" style="font-size:12px">Logout</span></button>
+    </div>
+    <div class="logout-button">
+      <button id="logoutbtn"  class="btn btn-outline-secondary" @click="logout"><span class="fa fa-sign-out" style="font-size:6x">Logout</span></button>
+    </div>
   </nav>
 </template>
 
@@ -48,9 +52,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .main-nav {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
     background-color: yellow;
     padding: 1%;
     margin-bottom: 1px;
@@ -71,12 +76,6 @@ export default {
     left:30%;
     margin-right: 2px;
   }
-  #logoutbtn{
-    position: absolute;
-    right: 10px;
-    top: 15px;
-    font-weight: bold;
-  }
   @media (max-width: 750px){
     .main-nav {
     width:120%;
@@ -84,19 +83,21 @@ export default {
     justify-content:start;
     flex-direction: column-reverse;
     text-align: left;
-    background-color: rgb(105, 105, 56);
     margin-bottom: 10px;
   }
-  a.router-link-active {
-    display: none;
+}
+  
+
+
+  a.router-link-hover{
+    font-size: 150;
   }
 
   #logoutbtn{
     display: inline-block;
+    position:relative;
+    top:-6px;
+    color: green;    
   }
-  a.router-link-hover{
-    font-size: 150;
-  }
-    
-}
+
 </style>
