@@ -354,11 +354,12 @@ export default {
         justify-content: space-evenly;
         border-radius: 1%;
         height: 100%;
-    
+       
     }
     /* Apply different styles for smaller viewports */
-  @media (max-width: 1000px) { 
-  }
+
+  
+
   .explanation{
     margin-left: 4%;
     position:fixed;
@@ -408,7 +409,14 @@ export default {
     .directives{
         display: none;
     }
+    .form-photo{
+        width:100%;
+    }
+    .component{
+        width:100%;
   }
+
+}
 
   </style>
 
