@@ -120,23 +120,7 @@ export default {
 body{margin-top:20px;}
 
 
-/* USER LIST TABLE */
-.user-list tbody td > img {
-    position: relative;
-	max-width: 50px;
-	float: left;
-	margin-right: 15px;
-}
-.user-list tbody td .user-link {
-	display: block;
-	font-size: 1.25em;
-	padding-top: 3px;
-	margin-left: 60px;
-}
-.user-list tbody td .user-subhead {
-	font-size: 0.875em;
-	font-style: italic;
-}
+
 
 /* TABLES */
 .table {
@@ -169,7 +153,7 @@ body{margin-top:20px;}
 	font-weight: normal;
 }
 .table thead > tr > th > p span {
-	color: blue
+	color: green
 }
 .table thead > tr > th > p span:after {
 	content: "\f0dc";
@@ -215,6 +199,7 @@ body{margin-top:20px;}
 	line-height: 1.2;
 }
 .table p.table-link {
+	color:green;
 	margin: 0 5px;
 	font-size: 1.125em;
 }
