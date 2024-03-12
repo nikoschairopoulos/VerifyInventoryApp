@@ -291,7 +291,6 @@ th {
 }
 
 .modal-card-head {
-  background: #221ef7;
             color: #fff;
             font-size: 20px;
             text-align: center;

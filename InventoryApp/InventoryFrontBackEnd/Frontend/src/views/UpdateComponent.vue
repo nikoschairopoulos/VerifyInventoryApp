@@ -217,6 +217,9 @@ export default {
                 alert("Success")
                 this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
             }catch(error){
+                dataObject.opex_per_capex*=100;
+                dataObject.major_upgrade_share*=100;
+                dataObject.annual_performance_degradation*=100;
                 console.log(error)
                 alert("Error")
         }
