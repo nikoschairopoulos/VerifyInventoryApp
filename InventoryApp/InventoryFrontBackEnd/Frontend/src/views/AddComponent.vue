@@ -56,27 +56,27 @@
 
 
                     <div class="mb-2" @mouseover="explain('CAPEX/UGS')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">CAPEX/UGS* <strong>[€/{{ ugs_header }}]</strong>:</label>
+                        <label for="quantity" class="form-label">CAPEX/UGS*:<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control"  id="validationCustom01" v-model="capex_per_ugs" min="0" required>
                     </div>
                     
                     <div class="mb-2" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">OPEX_PER_CAPEX* %100: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                        <label for="quantity" class="form-label">ANNUAL MAINTENANCE* [%CAPEX]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="100" required>
                     </div>
 
                     <div class="mb-2" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label" >Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
+                        <label for="quantity" class="form-label" >Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:<span v-if="embodied_co2_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0" required>
                     </div>
 
                     <div class="mb-2" @mouseover="explain('embodied_pe_per_ugs')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:</label>
+                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span> </label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
                     </div>
 
                     <div class="mb-2">
-                        <label for="quantity" class="form-label">Component Lifetime* <strong>[years]</strong>:</label>
+                        <label for="quantity" class="form-label">Component Lifetime* <strong>[years]</strong>:<span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
                     </div>
 
@@ -92,26 +92,26 @@
             <div  id="group2" class="col-6">
 
                     <div class="mb-2 mt-3" @mouseover="explain('pref_cost')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">Pref Cost* <strong> [{{ ugs_header }}]</strong> :</label>
+                        <label for="quantity" class="form-label">Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
                     </div>
                     <div class="mb-2" @mouseover="explain('pref_env')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">Pref Env* <strong> [{{ ugs_header }}]</strong>:</label>
+                        <label for="quantity" class="form-label">Pref Env* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
                     </div>
 
                     <div class="mb-2">
                         <label for="quantity" class="form-label" @mouseover="explain('scale_cost')" @mouseleave="dontExplain">Scale Cost*:</label>
-                        <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost" min="0" required>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
                     </div>
 
                     <div class="mb-2">
                         <label for="quantity" class="form-label" @mouseover="explain('scale_env')" @mouseleave="dontExplain">Scale Env*:</label>
-                        <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env" min="0" required>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env"  required>
                     </div>
 
                     <div class="mb-2">
-                        <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_point')" @mouseleave="dontExplain">Major Upgrade Point* <strong> [years]</strong>:</label>
+                        <label for="quantity" class="form-label" @mouseover="explain('major_upgrade_point')" @mouseleave="dontExplain">Major Upgrade Point* <strong> [years]</strong>:<span v-if="major_upgrade_point<0" class="text-danger"><br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" required>
                     </div>
 
