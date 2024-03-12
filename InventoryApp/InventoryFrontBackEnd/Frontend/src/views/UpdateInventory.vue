@@ -224,7 +224,6 @@ background-color: #f2f2f2;
 
 }
 .addedcomponents{
-    margin-top: 2.5%;
 }
 
 #component{

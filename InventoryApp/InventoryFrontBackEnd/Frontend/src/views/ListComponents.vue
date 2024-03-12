@@ -224,9 +224,7 @@ export default {
 
 <style scoped>
 /* Add styles as needed */
-.tablecontainer{
-
-}
+.tablecontainer{}
 
 table {
   border-collapse: collapse;
@@ -242,7 +240,7 @@ th {
 }
 
 
-    .table-responsive {
+.table-responsive {
     width: 100%;
     margin: 0 auto;
 }
@@ -321,5 +319,4 @@ h2{
   border-radius: 24px;
   border: solid 2px darkgreen;
 }
-
 </style>

@@ -78,7 +78,7 @@ export default {
   }
   @media (max-width: 750px){
     .main-nav {
-    width:120%;
+    width:auto;
     display: flex;
     justify-content:start;
     flex-direction: column-reverse;

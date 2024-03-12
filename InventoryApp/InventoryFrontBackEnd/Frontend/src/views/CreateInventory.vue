@@ -229,7 +229,7 @@ th {
 
     }
     .addedcomponents{
-        margin-top: 2.5%;
+        margin-top: 34px;
     }
 
     #component{
