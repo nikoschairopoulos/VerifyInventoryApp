@@ -36,22 +36,22 @@
 
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">CAPEX/UGS*:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
+                <label for="quantity" class="form-label">CAPEX/UGS*:<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0" >
             </div>
             
             <div class="mb-2">
-                <label for="quantity" class="form-label">ANNUAL MAINTENANCE* [%CAPEX]: <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label"><span>ANNUAL MAINTENANCE[%CAPEX]*:</span>  <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Embodied CO2/UGS*:<span v-if="embodied_co2_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
+                <label for="quantity" class="form-label">Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:<span v-if="embodied_co2_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required min="0">
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Embodied Pe/UGS*:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span> </label>
+                <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span> </label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" required min="0">
             </div>
 
@@ -72,11 +72,11 @@
         <div class="col-6" id="group2">
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Pref Cost*:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                <label for="quantity" class="form-label">Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" required min="0">
             </div>
             <div class="mb-2">
-                <label for="quantity" class="form-label">Pref Env*:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                <label for="quantity" class="form-label">Pref Env* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" required min="0">
             </div>
 
@@ -165,6 +165,7 @@ export default {
         bibliography:null,
         description:null,
         showSubtype:true,
+        ugs_header:null,
         component:{}
     } 
   },

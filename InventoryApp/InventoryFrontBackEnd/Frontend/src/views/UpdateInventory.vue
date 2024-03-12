@@ -24,8 +24,6 @@
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Subtype</th>
-            <th scope="col">SHEET_TYPE</th>
-            <th scope="col">IS_MAIN_INVENTORY</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -35,8 +33,6 @@
                 <td>{{ component.name }}</td>
                 <td>{{ component.component_type }}</td>
                 <td>{{ component.component_subtype }}</td>
-                <td>{{ component.SHEET_TYPE }}</td>
-                <td>{{ component.IS_MAIN_INVENTORY }}</td>
                 <td>
                     <button class="btn btn-primary" style="margin-right:2px;" @click="addComponent(component)">
                         Add to Inventory
@@ -224,6 +220,7 @@ background-color: #f2f2f2;
 
 }
 .addedcomponents{
+    margin-top:34px;
 }
 
 #component{
