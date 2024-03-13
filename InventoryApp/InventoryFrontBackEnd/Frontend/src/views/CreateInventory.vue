@@ -1,7 +1,6 @@
 <template>
     <div class="tablecontainer">
-
-    <div>
+    
       <div class="mb-3">
                 <label for="ChooseTechnology" class="form-label">Choose Technology:</label>
                 <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
@@ -17,6 +16,8 @@
                     <option value="Other">Other</option>
                 </select>
       </div>
+
+      <div class = "test">
       <table class="table-responsive">
         <thead class="thead-dark">
           <tr>
@@ -41,12 +42,33 @@
           </tr>
         </tbody>
       </table>
-   
-      <div v-if="YouHaveAddComponent" class="form-table">
+
+      <div class="addedcomponents"   v-if="YouHaveAddComponent">
+        <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
+          <p style=" color: black; text-align: center;">Submit Inventory Form</p>
+          <div class="group1">
+        <hr><br>
+                <div>
+                    <label for="name"  class="form-label">Demo Name:</label>
+                    <input type="text" class="form-control" id="name" v-model="inventoryName">
+                </div>
+
+                <div>
+                    <label for="type" class="form-label">Project Name:</label>
+                    <input type="text" class="form-control" id="type" v-model="projectName">
+                </div>
+                <p style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
+                <button type="submit"  class="btn btn-primary">Submit Inventory</button>
+                <hr>
+        </div>
+    </form>
+    </div>
+  </div>
+  <div v-if="YouHaveAddComponent" class="form-table">
         <hr>
         <hr style="color:white; height:5px;">
       <h4 style="color:green; text-align: center;">Inserted Components:</h4>
-      <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px;" class="table-responsive">
+      <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px; width:50%;" class="table-responsive">
         <thead class="thead-dark">
           <tr>
             <th scope="col">ID</th>
@@ -71,33 +93,7 @@
         </tbody>
       </table>
     </div>
-
-      <div class="addedcomponents"   v-if="YouHaveAddComponent">
-        <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-          <p style="margin-top: 20px; color: black; text-align: center;">Submit Inventory Form</p>
-          <div class="group1">
-        <hr><br>
-                <div>
-                    <label for="name"  class="form-label">Demo Name:</label>
-                    <input type="text" class="form-control" id="name" v-model="inventoryName">
-                </div>
-
-                <div>
-                    <label for="type" class="form-label">Project Name:</label>
-                    <input type="text" class="form-control" id="type" v-model="projectName">
-                </div>
-                <p style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
-                <button type="submit"  class="btn btn-primary">Submit Inventory</button>
-
-                <hr>
-        </div>
-    </form>
-    </div>
   </div>
-
-
-
-    </div>
   </template>
   
   
@@ -203,11 +199,7 @@ export default {
 
 <style scoped>
 /* Add styles as needed */
-.tablecontainer{
-
-
-    
-}
+.tablecontainer{   }
 table {
   margin-left: 0.5%;
   border:0.5px solid grey;
@@ -222,8 +214,8 @@ th, td {
   white-space: normal;
   font-size: medium;
   word-wrap: break-word;
-  width:250px;
-  max-width: 250px;
+  width:200px;
+  max-width: 200px;
 }
 
 .mb-3{
@@ -233,18 +225,18 @@ th, td {
 
     }
     .addedcomponents{
-       
+      width:50%;
+      margin-left:20px;
+      height: 400px;
+      margin-right:5%;
+       background-color: aliceblue;
     }
 
-    #component{
-      width:60%;
-      border-radius: solid 1px grey;
-      background-color: aliceblue;
+    #component{}
       
-    }
+    
 
     #submitinventory {
-    margin-bottom:5px;
     }
 
 #ChooseTechnology{
@@ -254,7 +246,6 @@ th, td {
   .table-responsive {
     margin: 0 auto;
     display: block;
-    width: 60%;
     max-height: 400px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -263,9 +254,12 @@ th, td {
 
 .group1{
   margin: 0 auto;
-  width:50%;
 }
 
+.test{
+  display: flex;
+  justify-content: flex-start;
+}
 
 
 
