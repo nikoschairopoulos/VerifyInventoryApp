@@ -24,8 +24,6 @@
             <th scope="col">Name</th>
             <th scope="col">Type</th>
             <th scope="col">Subtype</th>
-            <th scope="col">SHEET_TYPE</th>
-            <th scope="col">IS_MAIN_INVENTORY</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -35,36 +33,20 @@
                 <td>{{ component.name }}</td>
                 <td>{{ component.component_type }}</td>
                 <td>{{ component.component_subtype }}</td>
-                <td>{{ component.SHEET_TYPE }}</td>
-                <td>{{ component.IS_MAIN_INVENTORY }}</td>
                 <td>
-                    <button class="btn btn-primary" style="margin-right:2px;" @click="addComponent(component)">
+                    <button class="btn btn-primary" style="margin-right:2px; background-color:green;" @click="addComponent(component)">
                         Add to Inventory
                     </button>
                 </td>
           </tr>
         </tbody>
       </table>
-</div>
-
-
-      <div class="addedcomponents" v-if="YouHaveAddComponent">
-        <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-        <div class="group1">
-                <div class="mb-3 mt-3">
-                    <label for="name" class="form-label">Inventory Name:</label>
-                    <input type="text" class="form-control" id="name" v-model="inventoryName">
-                </div>
-
-                <div class="mb-3 mb-6">
-                    <label for="type" class="form-label">Project Name:</label>
-                    <input type="text" class="form-control" id="type" v-model="projectName">
-                </div>
-                <p style="margin-top:10%;text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
-                <button type="submit" id="submitinventory" class="btn btn-primary">Submit Inventory</button>
-        </div>
-    </form>
-      <table class="table-responsive">
+   
+      <div v-if="YouHaveAddComponent" class="form-table">
+        <hr>
+        <hr style="color:white; height:5px;">
+      <h4 style="color:green; text-align: center;">Inserted Components:</h4>
+      <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px;" class="table-responsive">
         <thead class="thead-dark">
           <tr>
             <th scope="col">ID</th>
@@ -89,6 +71,29 @@
         </tbody>
       </table>
     </div>
+
+      <div class="addedcomponents"   v-if="YouHaveAddComponent">
+        <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
+          <p style="margin-top: 20px; color: black; text-align: center;">Submit Inventory Form</p>
+          <div class="group1">
+        <hr><br>
+                <div>
+                    <label for="name"  class="form-label">Demo Name:</label>
+                    <input type="text" class="form-control" id="name" v-model="inventoryName">
+                </div>
+
+                <div>
+                    <label for="type" class="form-label">Project Name:</label>
+                    <input type="text" class="form-control" id="type" v-model="projectName">
+                </div>
+                <p style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
+                <button type="submit"  class="btn btn-primary">Submit Inventory</button>
+
+                <hr>
+        </div>
+    </form>
+    </div>
+  </div>
 
 
 
@@ -200,14 +205,11 @@ export default {
 /* Add styles as needed */
 .tablecontainer{
 
-    display:flex;
-    justify-content: space-around;
-    width:100%;
+
     
 }
 table {
   margin-left: 0.5%;
-  border-collapse: collapse;
   border:0.5px solid grey;
   max-height: 600px;
 }
@@ -216,10 +218,12 @@ th, td {
   border: 1px solid #ddd;
   padding: 6px;
   text-align: center;
-}
-
-th {
-  background-color: #f2f2f2;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-size: medium;
+  word-wrap: break-word;
+  width:250px;
+  max-width: 250px;
 }
 
 .mb-3{
@@ -229,30 +233,40 @@ th {
 
     }
     .addedcomponents{
-        margin-top: 34px;
+       
     }
 
     #component{
-        width:100%;
-        margin-bottom: 5px;
+      width:60%;
+      border-radius: solid 1px grey;
+      background-color: aliceblue;
+      
     }
 
     #submitinventory {
-    width: 55%;
-    margin-bottom: 10%;
-    margin-left: 0%;
-}
+    margin-bottom:5px;
+    }
 
 #ChooseTechnology{
     margin-top: 10px;
 }
 
-    .table-responsive {
+  .table-responsive {
+    margin: 0 auto;
     display: block;
-    width: fit-content;
+    width: 60%;
     max-height: 400px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
+
+.group1{
+  margin: 0 auto;
+  width:50%;
+}
+
+
+
+
 </style>

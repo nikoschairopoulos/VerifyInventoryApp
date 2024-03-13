@@ -45,6 +45,8 @@
 
 
     <div class="addedcomponents" v-if="YouHaveAddComponent">
+        <h2>Sumbit Inventory Form</h2>
+        <hr>
         <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
             <div class="group1">
                 <div class="mb-3">
