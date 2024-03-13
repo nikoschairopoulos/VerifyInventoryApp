@@ -342,86 +342,86 @@ export default {
 
 </script>
 
-  <style scoped>
+<style scoped>
 
-    h1{
-        text-align: center;
-    }
-    #component {
-        position: relative;
-        width: 140%;
-        background-color: aliceblue;
-        border: 2px solid lightsteelblue;
-        display: flex;
-        justify-content: space-evenly;
-        border-radius: 1%;
-        height: 100%;
-       
-    }
-    /* Apply different styles for smaller viewports */
-
-  
-
-  .explanation{
-    margin-left: 4%;
-    position:fixed;
-    width:20%;
-    background-color: palegreen;
-  }
-
-  .mb-2{
-    width: 60%;
-  }
-
-  #w3review{
-    text-align:left;
-  }
-  #group2{
-  }
-
-  #bibliography{
-    width:100%;
-  }
-  #description{
-    width:100%;
-  }
-  
-  .form-photo{
-    width: 80%;
+h1{
+    text-align: center;
+}
+#component {
+    position: relative;
+    width: 140%;
+    background-color: aliceblue;
+    border: 2px solid lightsteelblue;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    border-radius: 1%;
+    height: 100%;
+   
+}
+/* Apply different styles for smaller viewports */
+
+
+
+.explanation{
+margin-left: 4%;
+position:fixed;
+width:20%;
+background-color: palegreen;
+}
+
+.mb-2{
+width: 60%;
+}
+
+#w3review{
+text-align:left;
+}
+#group2{
+    margin-right: -18%;
   }
 
-  #tech_image{
-    width:400px;
-  }
-  .directives{
-    margin-left:50px;
+#bibliography{
+width:100%;
+}
+#description{
+width:100%;
+}
+
+.form-photo{
+width: 80%;
+display: flex;
+justify-content: space-around;
+}
+
+#tech_image{
+width:400px;
+}
+.directives{
+margin-left:50px;
+position:relative;
+top:400px;
+height:50%;
+z-index: -1;
+}
+.directives p{
+margin-bottom:0px;
+}
+
+@media (max-width: 1000px){
+.directives{
+    display: none;
+}
+.form-photo{
+    width:70%;
+}
+#component{
+    width:100%;
     position:relative;
-    top:400px;
-    height:50%;
-    z-index: -1;
-  }
-  .directives p{
-    margin-bottom:0px;
-  }
-
-  @media (max-width: 1000px){
-    .directives{
-        display: none;
-    }
-    .form-photo{
-        width:70%;
-    }
-    #component{
-        width:100%;
-        position:relative;
-        left:28%;
-  }
+    left:28%;
+}
 
 }
 
-  </style>
-
+</style>
 
     

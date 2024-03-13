@@ -57,7 +57,7 @@
                     <label for="type" class="form-label">Project Name:</label>
                     <input type="text" class="form-control" id="type" v-model="projectName">
                 </div>
-                <p style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
+                <p class="mt-4" style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
                 <button type="submit"  class="btn btn-primary">Submit Inventory</button>
                 <hr>
         </div>
@@ -254,6 +254,7 @@ th, td {
 
 .group1{
   margin: 0 auto;
+  width:50%;
 }
 
 .test{
