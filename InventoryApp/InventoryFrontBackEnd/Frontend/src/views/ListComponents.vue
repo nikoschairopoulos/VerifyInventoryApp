@@ -4,7 +4,7 @@
       <div class="choose_option">
         <h2>Search components by technology <span class="fa fa-search" ></span></h2><br>
         <hr>
-      <div class="mb-1">
+      <div class="mb-1 ml-2" id="filter">
                 <label for="Choose Technology" class="form-label"><strong>Choose Technology</strong>:</label>
                 <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
@@ -18,6 +18,11 @@
                     <option value="El. Storage">El. Storage</option>
                     <option value="Other">Other</option>
                 </select>
+
+                <div class="mb-2 ml-2 " >
+                  <label class="form-check-label" for="isMainInventory"><strong>No Main Inventory  </strong></label>
+                        <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="NotMainInventory" @change="updateTypeofComponentToRender()"  value="false" >
+                    </div>
             </div>
             <hr style="color: green;">
             
@@ -146,7 +151,8 @@ export default {
                  SHEET_TYPE:"all types",
                  detailsComp:null,
                  toShow:false,
-                 showModal:false
+                 showModal:false,
+                 NotMainInventory:false
 
         };
     },
@@ -170,6 +176,10 @@ export default {
         updateTypeofComponentToRender(){
           if(this.SHEET_TYPE==="all types"){this.componentsPerType=this.components}
           else{this.componentsPerType=this.components.filter(comp=>comp.SHEET_TYPE==this.SHEET_TYPE)}
+
+          if(this.NotMainInventory){
+            this.componentsPerType=this.componentsPerType.filter(comp=>!comp.IS_MAIN_INVENTORY)
+          }
         },
 
         refreshlist(id) {
@@ -304,7 +314,7 @@ th {
 
 .choose_option{
   position: relative;
-  left: 0%;
+  left: 1%;
   
 }
 h2{
