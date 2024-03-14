@@ -2,7 +2,7 @@
     <div class="tablecontainer">
     
       <div class="mb-3">
-                <label for="ChooseTechnology" class="form-label">Choose Technology:</label>
+                <label for="ChooseTechnology" class="form-label"><strong>Choose Technology:</strong></label>
                 <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
@@ -15,12 +15,17 @@
                     <option value="El. Storage">El. Storage</option>
                     <option value="Other">Other</option>
                 </select>
+
+                <div class="mb-2 ml-2 " >
+                    <label class="form-check-label" for="isMainInventory"><strong>No Main Inventory  </strong></label>
+                        <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="NotMainInventory" @change="updateTypeofComponentToRender()"  value="false" >
+                </div>
       </div>
 
       <div class = "test">
       <table class="table-responsive">
         <thead class="thead-dark">
-          <tr>
+          <tr id="table-header">
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
@@ -45,7 +50,7 @@
 
       <div class="addedcomponents"   v-if="YouHaveAddComponent">
         <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-          <p style=" color: black; text-align: center;">Submit Inventory Form</p>
+          <p style=" color: cadetblue; text-align: center; font-size: 2em;">Submit Inventory Form</p>
           <div class="group1">
         <hr><br>
                 <div>
@@ -70,7 +75,7 @@
       <h4 style="color:green; text-align: center;">Inserted Components:</h4>
       <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px; width:50%;" class="table-responsive">
         <thead class="thead-dark">
-          <tr>
+          <tr id="table-header">
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Type</th>
@@ -112,7 +117,8 @@ export default {
                  INVENTORY_ID_COMPONENT: new Set(),
                  YouHaveAddComponent:false,
                  inventoryName:null,
-                 projectName:null
+                 projectName:null,
+                 NotMainInventory:null
 
         };
     },
@@ -135,6 +141,8 @@ export default {
         updateTypeofComponentToRender(){
           if(this.SHEET_TYPE==="all types"){this.componentsPerType=this.components}
           else{this.componentsPerType=this.components.filter(comp=>comp.SHEET_TYPE==this.SHEET_TYPE)}
+          if(this.NotMainInventory){
+            this.componentsPerType=this.componentsPerType.filter(comp=>!comp.IS_MAIN_INVENTORY)}
         },
 
         refreshlist(id) {
@@ -258,6 +266,10 @@ th, td {
   margin-left:0.5%;
   display: flex;
   justify-content: flex-start;
+}
+
+#table-header{
+  background-color: mediumseagreen;
 }
 
 
