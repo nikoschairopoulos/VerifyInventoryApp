@@ -58,7 +58,6 @@ export default {
     justify-content: space-between;
     background-color: yellow;
     padding: 1%;
-    margin-bottom: 1px;
   }
   .main-nav a {
     display: inline-block;
@@ -83,7 +82,6 @@ export default {
     justify-content:start;
     flex-direction: column-reverse;
     text-align: left;
-    margin-bottom: 10px;
   }
 }
   

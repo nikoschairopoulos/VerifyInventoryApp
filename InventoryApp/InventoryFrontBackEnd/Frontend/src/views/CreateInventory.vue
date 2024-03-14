@@ -255,6 +255,7 @@ th, td {
 }
 
 .test{
+  margin-left:0.5%;
   display: flex;
   justify-content: flex-start;
 }

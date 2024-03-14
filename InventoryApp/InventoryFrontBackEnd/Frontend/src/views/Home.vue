@@ -1,7 +1,12 @@
 <template>
   <div class="home">
-      <img src="../../public/figure5.png" >
-    </div>
+    <div class="bg-image-container">
+  <img src="../../public/figure5.png" class="bg-image" alt="Background Image">
+  <h2 style="color: white; text-align: center; margin-top: 50px; font-size: 4em;"> Verify-B Inventory Manager </h2>
+</div>
+
+</div>
+ 
 </template>
 
 <script>
@@ -11,7 +16,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .pagefooter{
   font-size: 24px;
   position:fixed;
@@ -31,10 +36,20 @@ export default {
 
 }
 
-img {
+.bg-image-container {
+  position: relative;
+  height: 100vh; /* Adjust the height as needed */
   width: 100%;
-  height: auto;
+  overflow: hidden; /* Hide any overflow from the image */
 }
 
-
+.bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cover the container with the image */
+  z-index: -1; /* Place the image behind other content */
+}
 </style>

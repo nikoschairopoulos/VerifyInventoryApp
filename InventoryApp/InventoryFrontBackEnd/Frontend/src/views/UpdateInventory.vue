@@ -259,6 +259,8 @@ th, td {
 }
 
 .test{
+  background-color: white;
+  margin-left:0.5%;
   display: flex;
   justify-content: flex-start;
 }
