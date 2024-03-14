@@ -13,11 +13,11 @@ relations:
 # Create your models here.
 
 class Component(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=250)
     # here add the attributes as at excell inventory:
     #installed_ugs =  models.FloatField() 
-    component_type = models.CharField(max_length=50,db_column='type')
-    component_subtype = models.CharField(max_length=50,db_column='subtype',null=True)
+    component_type = models.CharField(max_length=250,db_column='type')
+    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True)
     capex_per_ugs =  models.FloatField(db_column='capex/u.g.s.') 
     opex_per_capex = models.FloatField(db_column='opex_per_capex') 
     embodied_co2_per_ugs = models.FloatField(db_column='embodied_co2/u.g.s.') 
@@ -30,8 +30,8 @@ class Component(models.Model):
     major_upgrade_point = models.FloatField() 
     major_upgrade_share = models.FloatField() 
     annual_performance_degradation = models.FloatField() 
-    replace_or_die = models.CharField(max_length=20)
-    SHEET_TYPE = models.CharField(max_length=20)             # HERE WE DECLERE THE SHEET_TYPE  e.g El.Generators,Insulation etc
+    replace_or_die = models.CharField(max_length=250)
+    SHEET_TYPE = models.CharField(max_length=250)             # HERE WE DECLERE THE SHEET_TYPE  e.g El.Generators,Insulation etc
     IS_MAIN_INVENTORY = models.BooleanField()                # HERE WE DECLARE IF IT IS AT THE MAIN INVENTORY
     bibliography = models.TextField(null=True)
     description = models.TextField(null=True)
@@ -45,8 +45,8 @@ class Inventory(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="inventories"
     )
-    name = models.CharField(max_length=60)
-    project_name = models.CharField(max_length=60)
+    name = models.CharField(max_length=250)
+    project_name = models.CharField(max_length=250)
     components = models.ManyToManyField(Component,related_name="inventories",blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
@@ -54,8 +54,8 @@ class Inventory(models.Model):
     
 
 class Factor(models.Model):
-    country = models.CharField(25)
-    fuel    = models.CharField(25)
+    country = models.CharField(250)
+    fuel    = models.CharField(250)
     co2_factor = models.FloatField() 
     primary_energy_factor = models.FloatField()
     class Meta:
@@ -66,8 +66,8 @@ class Factor(models.Model):
 
 
 class Wall_Insulation_Materials(models.Model):
-    wall_or_insulation = models.CharField(50) # takes only values (wall,insulation)
-    component_element = models.CharField(50)
+    wall_or_insulation = models.CharField(250) # takes only values (wall,insulation)
+    component_element = models.CharField(250)
     conductivity = models.FloatField()
     capacity = models.FloatField()
     density  = models.FloatField()
