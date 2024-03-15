@@ -27,43 +27,47 @@
             <hr style="color: green;">
             
       </div>  
+      <div class="responsive">
       <div class="table-responsive">
       <table class=" table  table-hover">
-        <thead class="thead-dark">
-          <tr>
+          <tr style="background-color: green;">
             <th scope="col" class="text-center">ID</th>
             <th scope="col" class="text-center">Name</th>
             <th scope="col" class="text-center">Type</th>
             <th scope="col" class="text-center">Subtype</th>
-            <th scope="col" class="text-center">replace_or_die</th>
-            <th scope="col" class="text-center">SHEET_TYPE</th>
-            <th scope="col" class="text-center">IS_MAIN_INVENTORY</th>
             <th scope="col" class="text-center">Actions</th>
           </tr>
-        </thead>
         <tbody>
           <tr v-for="component in componentsPerType"  :key="component.id">
                 <td class="text-center">{{ component.id }}</td>
                 <td class="text-center">{{ component.name }}</td>
                 <td class="text-center">{{ component.component_type }}</td>
                 <td class="text-center">{{ component.component_subtype }}</td>
-                <td class="text-center">{{ component.replace_or_die}}</td>
-                <td class="text-center">{{ component.SHEET_TYPE }}</td>
-                <td class="text-center">{{ component.IS_MAIN_INVENTORY }}</td>
                 <td>
-                    <button class="btn btn-primary" style="margin-right:5px;" @click="updateComponent(component.id)">
-                        Edit
-                    </button>
-                <button class="btn btn-danger" style="margin-right:5px;" @click="deleteComponent(component.id)">
-                        Delete
-                </button>
-                <button type="button" class="btn btn-primary" @click="setDetailsAndShowModal(component)" >
-                        Info
-                </button>
+
+                  
+                  <span @click="updateComponent(component.id)"  class="fa-stack" >
+										<i class="fa fa-square fa-stack-2x" ></i>
+										<i style="color: blue;" class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+									</span>
+                
+
+									<span @click="deleteComponent(component.id)"  class="fa-stack">
+										<i class="fa fa-square fa-stack-2x"></i>
+										<i style="back" class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+									</span>
+
+									<span @click="setDetailsAndShowModal(component)"  class="fa-stack">
+										<i class="fa fa-square fa-stack-2x"></i>
+										<i class="fa fa-edit fa-stack-1x fa-inverse"></i>
+									</span>
+
+
                 </td>
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
 
        <!-- Modal-->
@@ -71,8 +75,9 @@
        <div class="modal-background" @click="closeModal"></div>
        <div class="modal-card">
         <header class="modal-card-head">
-          <h2 class="modal-card-title">Component Details</h2>
+          <h4 class="modal-card-title">Component Details</h4>
         </header>
+        <hr style="size=60px;" class="mt-4">
             <div class="modal-card-body">
               <div class="group1">
                   
@@ -240,18 +245,12 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  text-align: center;
-}
 
-th {
-  background-color: #f2f2f2;
-}
+
 
 
 .table-responsive {
-    width: 100%;
+    width: 60%;
     margin: 0 auto;
 }
 .infocart{
@@ -317,15 +316,73 @@ th {
   left: 1%;
   
 }
-h2{
+h4{
   padding-top: 10px;
   margin-bottom: -25px;
   color: seagreen;
 }
+
+
 #ChooseTechnology{
   padding: 8px;
   background-color: hwb;
   border-radius: 24px;
   border: solid 2px darkgreen;
 }
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: normal;
+  font-size: medium;
+  word-wrap: break-word;
+  width:200px;
+  max-width: 200px;
+}
+
+#buttons{
+width:50%;
+}
+
+.table thead > tr > th > p span {
+	color: green
+}
+
+.table p.table-link {
+	color:green;
+	margin: 0 5px;
+	font-size: 1.125em;
+}
+.table p.table-link:hover {
+	text-decoration: none;
+	color: #2aa493;
+}
+.table p.table-link.danger {
+	color: #fe635f;
+}
+.table p.table-link.danger:hover {
+	color: #dd504c;
+}
+
+span > i:hover {
+    cursor: pointer;
+    color: #2bb6a3;
+	border-color: #2bb6a3;
+}
+
+span{
+  color: green;
+}
+
+.table-responsive{
+  display: contents;
+}
+h2{
+  padding-top: 10px;
+  margin-bottom: -25px;
+  color: seagreen;
+}
+
 </style>
