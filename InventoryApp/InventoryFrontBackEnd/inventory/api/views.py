@@ -91,4 +91,19 @@ class Inventory_technologies(APIView):
             if comp['SHEET_TYPE'] not in technologies:
                 technologies.append(comp['SHEET_TYPE'])
         return Response(technologies)
+    
+
+class Specific_inventory_plus_default(APIView):
+    def get(self,request,pk):
+        #take the inventory:
+        inventory =  get_object_or_404(Inventory,pk=pk)
+        #take its components:
+        component_inventory_1 = ComponentSerializer(inventory.components,many=True).data # list of dicts 
+        #take all the default components:
+        components_default = Component.objects.filter(IS_MAIN_INVENTORY = True)
+        component_inventory_2 = ComponentSerializer(components_default,many=True).data   #list of dicts
+        result = {"custom":component_inventory_1,"default":component_inventory_2}
+        #result = component_inventory_1 + component_inventory_2 (fetch all without formating) / every component_inventory is a list of dicts
+        return Response(result)
+
 

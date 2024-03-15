@@ -5,7 +5,9 @@ from inventory.api.views import (
           LIBRARY_VERIFY,
           FactorViewSet,
           Components_by_technology,
-          Inventory_technologies)
+          Inventory_technologies,
+          Specific_inventory_plus_default)
+
 #from django.urls import path
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
@@ -21,7 +23,8 @@ urlpatterns = [
     path("library/<int:pk>/",LIBRARY_VERIFY.as_view(),name="Library_Getter"),
     path("userInventories/",ListInventory.as_view(),name="List_Inventory_of_User"),
     path("component/<str:Technology_key>",Components_by_technology.as_view(),name="components_of_specific_technology"),
-    path("technologies/",Inventory_technologies.as_view(),name="inventory_technologies")
+    path("technologies/",Inventory_technologies.as_view(),name="inventory_technologies"),
+    path("verify/inventory/<int:pk>",Specific_inventory_plus_default.as_view(),name="verify_connections")
 ]
 
 
