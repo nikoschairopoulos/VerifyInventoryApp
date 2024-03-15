@@ -37,20 +37,105 @@
                             <option value="Ventilation">Ventilation</option>
                             <option value="PCM">PCM</option>
                             <option value="Water Storage">Water Storage</option>
-                            <option value="El. Storage">El. Storage</option>
+                            <option value="El. Storage">Electrical Storage</option>
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <!-- Add types -----------------------------------------------------------------------------> 
+                    <div class="mb-2" id="options">
+                        <div id="options" v-if="SHEET_TYPE=='Thermal Sources'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="boiler">boiler</option>
+                            <option value="heatpump">heatpump</option>
+                            <option value="air_conditioning">aircondition</option>
+                            <option value="solar">solar thermal panel</option>
+                            <option value="district_heating">district heating </option>
+                            <option value="geo">geo thermal</option>
+                            <option value="fan">fan coil </option>
 
-                    <div class="mb-2">
-                        <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label>
-                        <input type="text" class="form-control" id="type" v-model="component_type" required>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='El. Generators'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="pv">photovoltaic panel</option>
+                            <option value="wind">wind turbine</option>
+                        </select>
+                        </div>
+
+
+                        <div id="options" v-if="SHEET_TYPE=='Insulation'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="building_insulation">building insulation</option>
+                            <option value="dhw_insulation">water tank insulation</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='PCM'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="pcm">phase change material standard</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='Water Storage'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="hot_water">water storage tank</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='El. Storage'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="li_on">battery Li-ion </option>
+                            <option value="lead_acid">battery lead acid</option>
+                            <option value="flow">battery flow</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='Glazing'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="frame"> frame </option>
+                            <option value="glass"> glass </option>
+                        </select>
+                        </div>
+
+
+                        <div id="options" v-if="SHEET_TYPE=='Ventilation'">
+                            <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="mixing_ventilation"> mixing ventilation </option>
+                            <option value="displacement_ventilation"> displacement ventilation </option>
+                            <option value="stratum_ventilation"> stratum ventilation </option>
+                            <option value="natural_ventilation"> natural ventilation </option>
+                            <option value="micro_ventilation">micro ventilation</option>
+                            </select>
+                        </div>
+
+
                     </div>
 
-                    <div v-if="showSubtype" class="mb-2">
+                    <!-- subtypes -->
+                    <div id="options" class="mb-2" v-if="showSubtype && component_type=='boiler' "> 
+                        <label for="type" class="form-label" id="subtype_element" @mouseover="explain('subtype')" @mouseleave="dontExplain">Fuel :</label><br>
+                        <select  id="type" v-model="component_subtype" required>
+                            <option value="ngas">  natural gas </option>
+                            <option value="diesel"> diesel  </option>
+                            <option value="biomass"> biomass </option>
+                            <option value="oil"> oil  </option>
+                            <option value="lpg"> lpg </option>
+                            </select>
+                    </div>  
+                    <div  v-else-if="showSubtype" class="mb-2">
                         <label for="type" class="form-label" id="subtype_element" @mouseover="explain('subtype')" @mouseleave="dontExplain">Component Subtype* :</label>
                         <input type="text" class="form-control" id="type" v-model="component_subtype" required>
                     </div>
+                
 
                     <!-- Add Numerics -----------------------------------------------------------------------------> 
 
@@ -66,13 +151,13 @@
                     </div>
 
                     <div class="mb-2" @mouseover="explain('embodied_co2_per_ugs')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label" >Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:<span v-if="embodied_co2_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
-                        <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" min="0" required>
+                        <label for="quantity" class="form-label" >Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required>
                     </div>
 
                     <div class="mb-2" @mouseover="explain('embodied_pe_per_ugs')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span> </label>
-                        <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
+                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>: </label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs"  required>
                     </div>
 
                     <div class="mb-2">
@@ -80,14 +165,11 @@
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
                     </div>
 
-                    <div class="mb-2 form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
+                    <div class="form-check" @mouseover="explain('MAIN_INVENTORY')" @mouseleave="dontExplain">
                         <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false" >
                         <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY</label>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">Create Component</button>
-
-
+                    <button type="submit" id="sumbit-button" class="btn btn-primary mb-5">Create Component</button>
             </div>
             <div  id="group2" class="col-6">
 
@@ -144,11 +226,11 @@
                         <label for="description" style="display:block;">Description:</label>
                         <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
                     </div>
-                    
-                
-                
+            
+
                     <!-- ... Repeat the pattern for other form elements ... -->       
             </div>
+            
         </form>
     </div>
     </div>
@@ -319,7 +401,7 @@ export default {
         }
         else if(newValue=='El. Storage'){
             this.ugs_header='kWh'
-            this.showSubtype=true;
+            this.showSubtype=false;
         }
         else if(newValue=='Insulation'){
             this.ugs_header='m\u00B3'
@@ -408,19 +490,33 @@ margin-bottom:0px;
 }
 
 @media (max-width: 1000px){
-.directives{
-    display: none;
-}
-.form-photo{
-    width:70%;
-}
-#component{
-    width:100%;
-    position:relative;
-    left:28%;
+    .directives{
+        display: none;
+    }
+    .form-photo{
+        width:70%;
+    }
+    #component{
+        width:100%;
+        position:relative;
+        left:28%;
+    }
 }
 
+
+#sumbit-button{
+    position: relative;
+    bottom: -5%;
 }
+
+#type{
+    width:100%
+}
+
+.custom-select{
+    width: 100%;
+}
+
 
 </style>
 
