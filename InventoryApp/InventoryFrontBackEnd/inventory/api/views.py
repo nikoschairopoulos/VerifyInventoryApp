@@ -98,7 +98,9 @@ class Specific_inventory_plus_default(APIView):
         #take the inventory:
         inventory =  get_object_or_404(Inventory,pk=pk)
         #take its components:
-        component_inventory_1 = ComponentSerializer(inventory.components,many=True).data # list of dicts 
+        component_inventory = ComponentSerializer(inventory.components,many=True).data # list of dicts 
+        #filter if somehow exist a MAIN INVENTORY ELEMENT
+        component_inventory_1 = list(filter(lambda i: i['IS_MAIN_INVENTORY']!=True, component_inventory)) # put a lamda expression and an iterable
         #take all the default components:
         components_default = Component.objects.filter(IS_MAIN_INVENTORY = True)
         component_inventory_2 = ComponentSerializer(components_default,many=True).data   #list of dicts

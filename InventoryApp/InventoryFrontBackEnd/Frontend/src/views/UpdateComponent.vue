@@ -17,20 +17,105 @@
                     <option value="Ventilation">Ventilation</option>
                     <option value="PCM">PCM</option>
                     <option value="Water Storage">Water Storage</option>
-                    <option value="El. Storage">El. Storage</option>
+                    <option value="El. Storage">Electrical Storage</option>
                     <option value="Other">Other</option>
                 </select>
             </div>
 
-            <div class="mb-2">
-                <label for="type" class="form-label">Component Type*:</label>
-                <input type="text" class="form-control" id="type" v-model="component_type" required>
-            </div>
+                           <!-- Add types -----------------------------------------------------------------------------> 
+                           <div class="mb-1" id="options">
+                        <div id="options" v-if="SHEET_TYPE=='Thermal Sources'">
+                            <label for="type" class="form-label">Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="boiler">boiler</option>
+                            <option value="heatpump">heatpump</option>
+                            <option value="air_conditioning">aircondition</option>
+                            <option value="solar">solar thermal panel</option>
+                            <option value="district_heating">district heating </option>
+                            <option value="geo">geo thermal</option>
+                            <option value="fan">fan coil </option>
 
-            <div v-if="showSubtype"  class="mb-2">
-                <label for="type" class="form-label">Component Subtype*:</label>
-                <input type="text" class="form-control" id="type" v-model="component_subtype" required>
-            </div>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='El. Generators'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="pv">photovoltaic panel</option>
+                            <option value="wind">wind turbine</option>
+                        </select>
+                        </div>
+
+
+                        <div id="options" v-if="SHEET_TYPE=='Insulation'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="building_insulation">building insulation</option>
+                            <option value="dhw_insulation">water tank insulation</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='PCM'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="pcm">phase change material standard</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='Water Storage'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="hot_water">water storage tank</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='El. Storage'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="li_on">battery Li-ion </option>
+                            <option value="lead_acid">battery lead acid</option>
+                            <option value="flow">battery flow</option>
+                        </select>
+                        </div>
+
+                        <div id="options" v-if="SHEET_TYPE=='Glazing'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="frame"> frame </option>
+                            <option value="glass"> glass </option>
+                        </select>
+                        </div>
+
+
+                        <div id="options" v-if="SHEET_TYPE=='Ventilation'">
+                            <label for="type" class="form-label" >Component Type* :</label><br>
+                            <select id="type" v-model="component_type" required>
+                            <option value="mixing_ventilation"> mixing ventilation </option>
+                            <option value="displacement_ventilation"> displacement ventilation </option>
+                            <option value="stratum_ventilation"> stratum ventilation </option>
+                            <option value="natural_ventilation"> natural ventilation </option>
+                            <option value="micro_ventilation">micro ventilation</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                    <!-- subtypes -->
+                    <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' && SHEET_TYPE=='Thermal Sources' "> 
+                        <label for="type" class="form-label" id="subtype_element" >Fuel :</label><br>
+                        <select  id="type" v-model="component_subtype" required>
+                            <option value="ngas">  natural gas </option>
+                            <option value="diesel"> diesel  </option>
+                            <option value="biomass"> biomass </option>
+                            <option value="oil"> oil  </option>
+                            <option value="lpg"> lpg </option>
+                            </select>
+                    </div>  
+                    <div  v-else-if="showSubtype" class="mb-1">
+                        <label for="type" class="form-label" id="subtype_element">Component Subtype* :</label>
+                        <input type="text" class="form-control" id="type" v-model="component_subtype" required>
+                    </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
 
@@ -307,6 +392,14 @@ h1{
   #submitbtn{
     margin-bottom: 4px;
   }
+
+  #type{
+    width:60%
+}
+
+.custom-select{
+    width: 100%;
+}
 
 
 </style>
