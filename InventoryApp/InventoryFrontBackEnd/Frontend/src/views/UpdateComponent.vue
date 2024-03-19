@@ -46,7 +46,7 @@
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:<span v-if="embodied_co2_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
+                <label for="quantity" class="form-label">Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required min="0">
             </div>
 

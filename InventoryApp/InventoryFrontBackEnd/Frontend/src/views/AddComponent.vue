@@ -156,7 +156,7 @@
                     </div>
 
                     <div class="mb-1" @mouseover="explain('embodied_pe_per_ugs')" @mouseleave="dontExplain">
-                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>: </label>
+                        <label for="quantity" class="form-label">Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs"  required>
                     </div>
 
