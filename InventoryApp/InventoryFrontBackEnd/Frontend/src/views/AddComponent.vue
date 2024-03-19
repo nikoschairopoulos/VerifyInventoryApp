@@ -121,7 +121,7 @@
                     </div>
 
                     <!-- subtypes -->
-                    <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' "> 
+                    <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' && SHEET_TYPE=='Thermal Sources' "> 
                         <label for="type" class="form-label" id="subtype_element" @mouseover="explain('subtype')" @mouseleave="dontExplain">Fuel :</label><br>
                         <select  id="type" v-model="component_subtype" required>
                             <option value="ngas">  natural gas </option>
