@@ -7,115 +7,29 @@
                 <label for="name" class="form-label">Name*:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
             </div>
-            <div class="mb-2">
-                <label for="Choose Technology" class="form-label">Choose Technology*:</label>
-                <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
-                    <option value="El. Generators">Electrical Generators</option>
-                    <option value="Thermal Sources">Thermal Sources</option>
-                    <option value="Glazing">Glazing</option>
-                    <option value="Insulation">Insulation</option>
-                    <option value="Ventilation">Ventilation</option>
-                    <option value="PCM">PCM</option>
-                    <option value="Water Storage">Water Storage</option>
-                    <option value="El. Storage">Electrical Storage</option>
-                    <option value="Other">Other</option>
-                </select>
+       
+
+            <!--  Add thermal properties-->
+            <div style="width:98.5%" class="row mb-1" v-if="SHEET_TYPE=='Insulation'">
+                            <div class="col-4">
+                                <label for="quantity" class="form-label thermals">density:<span v-if="density<0" class="text-danger"> <br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="density" min="0">
+                            </div>
+                            <div class="col-4">
+                                <label for="quantity" class="form-label thermals">capacity:<span v-if="capacity<0" class="text-danger"> <br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="capacity" min="0">
+                            </div>
+            </div>
+            <div v-if="SHEET_TYPE=='Insulation'"  class="mb-2">
+                <label for="quantity" class="form-label thermals">conductivity:<span v-if="conductivity<0" class="text-danger"> <br> valid value is non negative</span></label>
+                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="conductivity" min="0">
             </div>
 
-                           <!-- Add types -----------------------------------------------------------------------------> 
-                           <div class="mb-1" id="options">
-                        <div id="options" v-if="SHEET_TYPE=='Thermal Sources'">
-                            <label for="type" class="form-label">Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="boiler">boiler</option>
-                            <option value="heatpump">heatpump</option>
-                            <option value="air_conditioning">aircondition</option>
-                            <option value="solar">solar thermal panel</option>
-                            <option value="district_heating">district heating </option>
-                            <option value="geo">geo thermal</option>
-                            <option value="fan">fan coil </option>
-
-                        </select>
-                        </div>
-
-                        <div id="options" v-if="SHEET_TYPE=='El. Generators'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="pv">photovoltaic panel</option>
-                            <option value="wind">wind turbine</option>
-                        </select>
-                        </div>
-
-
-                        <div id="options" v-if="SHEET_TYPE=='Insulation'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="building_insulation">building insulation</option>
-                            <option value="dhw_insulation">water tank insulation</option>
-                        </select>
-                        </div>
-
-                        <div id="options" v-if="SHEET_TYPE=='PCM'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="pcm">phase change material standard</option>
-                        </select>
-                        </div>
-
-                        <div id="options" v-if="SHEET_TYPE=='Water Storage'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="hot_water">water storage tank</option>
-                        </select>
-                        </div>
-
-                        <div id="options" v-if="SHEET_TYPE=='El. Storage'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="li_on">battery Li-ion </option>
-                            <option value="lead_acid">battery lead acid</option>
-                            <option value="flow">battery flow</option>
-                        </select>
-                        </div>
-
-                        <div id="options" v-if="SHEET_TYPE=='Glazing'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="frame"> frame </option>
-                            <option value="glass"> glass </option>
-                        </select>
-                        </div>
-
-
-                        <div id="options" v-if="SHEET_TYPE=='Ventilation'">
-                            <label for="type" class="form-label" >Component Type* :</label><br>
-                            <select id="type" v-model="component_type" required>
-                            <option value="mixing_ventilation"> mixing ventilation </option>
-                            <option value="displacement_ventilation"> displacement ventilation </option>
-                            <option value="stratum_ventilation"> stratum ventilation </option>
-                            <option value="natural_ventilation"> natural ventilation </option>
-                            <option value="micro_ventilation">micro ventilation</option>
-                            </select>
-                        </div>
-
-
-                    </div>
-
-                    <!-- subtypes -->
-                    <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' && SHEET_TYPE=='Thermal Sources' "> 
-                        <label for="type" class="form-label" id="subtype_element" >Fuel :</label><br>
-                        <select  id="type" v-model="component_subtype" required>
-                            <option value="ngas">  natural gas </option>
-                            <option value="diesel"> diesel  </option>
-                            <option value="biomass"> biomass </option>
-                            <option value="oil"> oil  </option>
-                            <option value="lpg"> lpg </option>
-                            </select>
-                    </div>  
-                    <div  v-else-if="showSubtype" class="mb-1">
-                        <label for="type" class="form-label" id="subtype_element">Component Subtype* :</label>
-                        <input type="text" class="form-control" id="type" v-model="component_subtype" required>
-                    </div>
+            <div v-if="SHEET_TYPE=='Glazing'" class="mb-2">
+                <label for="quantity" class="form-label thermals">U value:<span v-if="density<0" class="text-danger"> <br> valid value is non negative</span></label>
+                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="density" min="0" required>
+                            
+            </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
 
@@ -145,13 +59,18 @@
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" required min="0">
             </div>
 
-            <div class="mb-2 form-check">
-                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false">
-                <label class="form-check-label" for="isMainInventory">TO ADD AT MAIN INVENTORY*</label>
+                <!-- ... EOL ACTION ... -->
+                <div class="mb-2">
+                    <label for="EOL_ACTION" class="form-label">EOL ACTION:</label>
+                    <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select">
+                    <option value="replace">replace</option>
+                    <option value="die">die</option>
+                </select>
             </div>
 
-
+            <div v-bind:class="{'buttonclass1': SHEET_TYPE!=='Insulation' && SHEET_TYPE!=='Glazing', 'buttonclass2': SHEET_TYPE==='Insulation','buttonclass3': SHEET_TYPE==='Glazing'}">
             <button type="submit" id="submitbtn" class="btn btn-primary">Update Component*</button>
+            </div>
 
         </div>
         <div class="col-6" id="group2">
@@ -186,18 +105,10 @@
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Anuual Performance Degradation*[%100]: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label"><span>Anuual Performance Degradation*[%100]</span>: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             
-            <!-- ... Sheet Type ... -->
-            <div class="mb-2">
-                <label for="EOL_ACTION" class="form-label">EOL ACTION:</label>
-                <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select">
-                    <option value="replace">replace</option>
-                    <option value="die">die</option>
-                </select>
-            </div>
 
             <!-- ... Repeat the pattern for other form elements ... --> 
             <div class="mb-2" >
@@ -251,6 +162,9 @@ export default {
         description:null,
         showSubtype:true,
         ugs_header:null,
+        density:null,
+        capacity:null,
+        conductivity:null,
         component:{}
     } 
   },
@@ -287,6 +201,13 @@ export default {
     this.IS_MAIN_INVENTORY =  this.component.IS_MAIN_INVENTORY
     this.bibliography = this.component.bibliography
     this.description = this.component.description
+    
+    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("conductivity")){
+        this.capacity = this.component.thermal_properties.capacity
+        this.density  = this.component.thermal_properties.density
+        this.conductivity = this.component.thermal_properties.conductivity
+    }
+
     if(this.component.SHEET_TYPE==='Ventilation'){
         this.showSubtype=false;
     }
@@ -296,6 +217,13 @@ export default {
     async handleSubmit(){ 
         const dataObject = this.$data;
         try{
+
+            if(this.SHEET_TYPE=='Insulation'){
+                dataObject['thermal_properties'] = {'conductivity':this.conductivity,
+                                                    'density':this.density,
+                                                    'capacity':this.capacity}
+            }
+
             dataObject.opex_per_capex/=100
             dataObject.annual_performance_degradation/=100
             dataObject.major_upgrade_share/=100
@@ -323,7 +251,7 @@ export default {
         }
         else if(newValue=='El. Storage'){
             this.ugs_header='kWh'
-            this.showSubtype=true;
+            this.showSubtype=false;
         }
         else if(newValue=='Insulation'){
             this.ugs_header='m\u00B3'
@@ -399,6 +327,15 @@ h1{
 
 .custom-select{
     width: 100%;
+}
+.buttonclass1{
+    margin-top: 55px;
+}
+.buttonclass2{
+    margin-bottom:10px;
+}
+.buttonclass3{
+    margin-bottom:35px;
 }
 
 

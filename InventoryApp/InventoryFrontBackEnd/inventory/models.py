@@ -13,7 +13,7 @@ relations:
 # Create your models here.
 
 class Component(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250,unique=True)
     # here add the attributes as at excell inventory:
     #installed_ugs =  models.FloatField() 
     component_type = models.CharField(max_length=250,db_column='type')
@@ -35,6 +35,7 @@ class Component(models.Model):
     IS_MAIN_INVENTORY = models.BooleanField()                # HERE WE DECLARE IF IT IS AT THE MAIN INVENTORY
     bibliography = models.TextField(null=True)
     description = models.TextField(null=True)
+    thermal_properties = models.JSONField(null=True, blank=True)
 
 
     def __str__(self):
@@ -65,13 +66,13 @@ class Factor(models.Model):
         ]
 
 
-class Wall_Insulation_Materials(models.Model):
-    wall_or_insulation = models.CharField(250) # takes only values (wall,insulation)
-    component_element = models.CharField(250)
+class Wall_Materials(models.Model):
+    id = models.BigAutoField(primary_key=True, default=0)
+    name = models.CharField(250)
     conductivity = models.FloatField()
     capacity = models.FloatField()
     density  = models.FloatField()
-
+    
     
 
 
