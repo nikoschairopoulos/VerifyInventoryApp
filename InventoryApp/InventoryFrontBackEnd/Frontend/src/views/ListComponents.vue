@@ -75,7 +75,7 @@
        <div class="modal-background" @click="closeModal"></div>
        <div class="modal-card">
         <header class="modal-card-head">
-          <h4 class="modal-card-title">Component Details</h4>
+          <h4 class="modal-card-title"><strong>{{ detailsComp.name }}</strong></h4>
         </header>
         <hr style="size=60px;" class="mt-4">
             <div class="modal-card-body">
@@ -103,7 +103,22 @@
                  
                         <label for="quantity" class="form-label">Component Lifetime[years]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.lifetime" min="0">
-               
+
+                        <hr>
+                        <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
+                          <label for="quantity" class="form-label">Density<strong>[Kg/m&sup3;]</strong>:</label>
+                          <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.density" min="0">
+                        </div>
+
+                        <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
+                          <label for="quantity" class="form-label">Specific Heat Capacity:<strong>[J/(Kg&middot;K)]</strong></label>
+                          <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.capacity" min="0">
+                        </div>
+
+                        <div v-if="detailsComp.SHEET_TYPE=='Glazing'">
+                            <label for="quantity" class="form-label">U value:</label>
+                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.Uvalue" min="0">
+                          </div>
             </div>
             <div class="group2">
                 
@@ -127,6 +142,17 @@
     
                         <label for="quantity" class="form-label">Anuual Performance Degradation[%100]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.annual_performance_degradation" min="0"> 
+
+                        <hr>
+                        <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
+                            <label for="quantity" class="form-label">Thermal Conductivity<strong>[W/(m&middot;K)]:</strong></label>
+                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.conductivity" min="0">
+                          </div>
+
+                        <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
+                          <label for="quantity" class="form-label">U value<strong>[W/(m&sup2;K)]</strong>:</label>
+                          <input style="background-color: gray;" type="text" class="form-control"  id="quantity" value="not defined" min="0">
+                        </div>
              
                   </div>
             </div> 

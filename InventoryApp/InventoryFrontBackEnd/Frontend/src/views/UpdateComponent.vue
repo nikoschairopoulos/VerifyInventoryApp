@@ -25,15 +25,15 @@
                 <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="conductivity" min="0">
             </div>
 
+       
             <div v-if="SHEET_TYPE=='Glazing'" class="mb-2">
-                <label for="quantity" class="form-label thermals">U value:<span v-if="density<0" class="text-danger"> <br> valid value is non negative</span></label>
-                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="density" min="0" required>
-                            
+                    <div class="col-12">
+                        <label for="quantity" class="form-label thermals">U value <strong>[W/(m&sup2;K)]</strong>:<span v-if="Uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
+                        <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="Uvalue" min="0" required>
+                    </div>
             </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
-
-
             <div class="mb-2">
                 <label for="quantity" class="form-label">CAPEX/UGS*:<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="capex_per_ugs" required min="0" >
@@ -46,7 +46,7 @@
 
             <div class="mb-2">
                 <label for="quantity" class="form-label">Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
-                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required min="0">
+                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required >
             </div>
 
             <div class="mb-2">
@@ -71,8 +71,8 @@
             <div v-bind:class="{'buttonclass1': SHEET_TYPE!=='Insulation' && SHEET_TYPE!=='Glazing', 'buttonclass2': SHEET_TYPE==='Insulation','buttonclass3': SHEET_TYPE==='Glazing'}">
             <button type="submit" id="submitbtn" class="btn btn-primary">Update Component*</button>
             </div>
-
         </div>
+        
         <div class="col-6" id="group2">
 
             <div class="mb-2">
@@ -165,6 +165,7 @@ export default {
         density:null,
         capacity:null,
         conductivity:null,
+        Uvalue:null,
         component:{}
     } 
   },
@@ -201,11 +202,16 @@ export default {
     this.IS_MAIN_INVENTORY =  this.component.IS_MAIN_INVENTORY
     this.bibliography = this.component.bibliography
     this.description = this.component.description
+
     
-    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("conductivity")){
+    if(this.component.thermal_properties!=null  && this.component.thermal_properties.hasOwnProperty("conductivity")){
         this.capacity = this.component.thermal_properties.capacity
         this.density  = this.component.thermal_properties.density
         this.conductivity = this.component.thermal_properties.conductivity
+    }
+
+    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("Uvalue")){
+        this.Uvalue = this.component.thermal_properties.Uvalue
     }
 
     if(this.component.SHEET_TYPE==='Ventilation'){
@@ -218,11 +224,16 @@ export default {
         const dataObject = this.$data;
         try{
 
-            if(this.SHEET_TYPE=='Insulation'){
+            if(this.SHEET_TYPE==='Insulation'){
                 dataObject['thermal_properties'] = {'conductivity':this.conductivity,
                                                     'density':this.density,
                                                     'capacity':this.capacity}
             }
+
+            if(this.SHEET_TYPE=='Glazing'){
+                dataObject['thermal_properties'] = {'Uvalue':this.Uvalue}
+            }
+          
 
             dataObject.opex_per_capex/=100
             dataObject.annual_performance_degradation/=100
