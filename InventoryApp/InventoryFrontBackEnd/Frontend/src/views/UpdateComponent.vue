@@ -27,8 +27,8 @@
        
             <div v-if="SHEET_TYPE=='Glazing'" class="mb-2">
                     <div class="col-12">
-                        <label for="quantity" class="form-label thermals">U value <strong>[W/(m&sup2;K)]</strong>:<span v-if="Uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
-                        <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="Uvalue" min="0" required>
+                        <label for="quantity" class="form-label thermals">U value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
+                        <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="uvalue" min="0" required>
                     </div>
             </div>
 
@@ -172,7 +172,7 @@ export default {
         density:null,
         capacity:null,
         conductivity:null,
-        Uvalue:null,
+        uvalue:null,
         component:{}
     } 
   },
@@ -217,8 +217,8 @@ export default {
         this.conductivity = this.component.thermal_properties.conductivity
     }
 
-    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("Uvalue")){
-        this.Uvalue = this.component.thermal_properties.Uvalue
+    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("uvalue")){
+        this.uvalue = this.component.thermal_properties.uvalue
     }
 
     if(this.component.SHEET_TYPE==='Ventilation'){
@@ -238,7 +238,7 @@ export default {
             }
 
             if(this.SHEET_TYPE=='Glazing'){
-                dataObject['thermal_properties'] = {'Uvalue':this.Uvalue}
+                dataObject['thermal_properties'] = {'uvalue':this.uvalue}
             }
           
 
