@@ -117,7 +117,7 @@
 
                         <div v-if="detailsComp.SHEET_TYPE=='Glazing'">
                             <label for="quantity" class="form-label">U value:</label>
-                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.Uvalue" min="0">
+                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.uvalue" min="0">
                           </div>
             </div>
             <div class="group2">
