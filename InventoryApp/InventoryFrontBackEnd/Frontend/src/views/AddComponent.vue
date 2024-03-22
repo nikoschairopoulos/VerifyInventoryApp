@@ -605,7 +605,11 @@ margin-bottom:0px;
 }
 
 label{
-    font-size:15px;
+    
+}
+
+input{
+    
 }
 
 </style>

@@ -2,8 +2,7 @@
     <div container>
     <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
     <div class="col-6">
-        <p><strong>All fields with * are Mandatory</strong></p>       
-            <div class="mb-2 mt-3">
+            <div class="mb-2 mt-1">
                 <label for="name" class="form-label">Name*:</label>
                 <input type="text" class="form-control" id="name" v-model="name">
             </div>
@@ -40,7 +39,7 @@
             </div>
             
             <div class="mb-2">
-                <label for="quantity" class="form-label"><span>ANNUAL MAINTENANCE[%CAPEX]*:</span>  <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label"><span>ANNUAL MAINTENANCE [%CAPEX]*:</span>  <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
@@ -68,9 +67,17 @@
                 </select>
             </div>
 
+            <div v-if="SHEET_TYPE!=='Insulation' && SHEET_TYPE!=='Glazing'"  class="mt-4">
+                <label for="quantity" class="form-label">Thermal Properties:<span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
+                <input style="background-color: grey; font-size: 12px;" type="text" step="any" class="form-control"  id="quantity" placeholder="no thermal properties for this component" required min="0" readonly>
+            </div>
+
             <div v-bind:class="{'buttonclass1': SHEET_TYPE!=='Insulation' && SHEET_TYPE!=='Glazing', 'buttonclass2': SHEET_TYPE==='Insulation','buttonclass3': SHEET_TYPE==='Glazing'}">
             <button type="submit" id="submitbtn" class="btn btn-primary">Update Component*</button>
             </div>
+
+         
+
         </div>
         
         <div class="col-6" id="group2">
@@ -310,9 +317,11 @@ h1{
     background-color: palegreen;
   }
 
-  .mb-2{
+ .mt-4,.mb-2{
     width: 60%;
   }
+
+
 
   #w3review{
     text-align:left;
@@ -340,13 +349,13 @@ h1{
     width: 100%;
 }
 .buttonclass1{
-    margin-top: 55px;
+    margin-top: 35px;
 }
 .buttonclass2{
-    margin-bottom:10px;
+    margin-bottom:15px;
 }
 .buttonclass3{
-    margin-bottom:35px;
+    margin-top:35px;
 }
 
 
