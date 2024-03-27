@@ -14,8 +14,12 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from inventory.models import Inventory
 from inventory.models import Factor
+from rest_framework.exceptions import NotFound
+from rest_framework import status
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 
+def error404(request):
+    raise NotFound(detail="Error 404, page not found", code=404)
 
 class ComponentViewSet(ModelViewSet):
     queryset = Component.objects.all()
@@ -81,7 +85,7 @@ class Components_by_technology(APIView):
         components = ComponentSerializer(items,many=True)           # serialize the components -> taking the serialize indide it .data have the dicts
         return Response(components.data)                            # return response
              
-
+#FOR Verify App (do not touch)
 class Inventory_technologies(APIView):
     def get(self,request):
         technologies = []
@@ -92,7 +96,7 @@ class Inventory_technologies(APIView):
                 technologies.append(comp['SHEET_TYPE'])
         return Response(technologies)
     
-
+#FOR Verify App (do not touch)
 class Specific_inventory_plus_default(APIView):
     def get(self,request,pk):
         #take the inventory:
@@ -107,5 +111,20 @@ class Specific_inventory_plus_default(APIView):
         result = {"custom":component_inventory_1,"default":component_inventory_2}
         #result = component_inventory_1 + component_inventory_2 (fetch all without formating) / every component_inventory is a list of dicts
         return Response(result)
+
+#for Verify Calculatons app
+class find_fuel_factors_specific_country(APIView):
+    def get(self,request,country):
+        fuel_json = {'pef':{},'co2':{}}
+        fuel_factors = Factor.objects.filter(country=country) #returns many records --> queryset > 1
+        fuel_factors_data =  FactorSerializer(fuel_factors,many=True).data
+        if fuel_factors_data:
+            for elem in fuel_factors_data:
+                fuel_json['pef'][elem['fuel']] = elem['co2_factor']
+                fuel_json['co2'][elem['fuel']] = elem['primary_energy_factor']
+            return Response(fuel_json)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 

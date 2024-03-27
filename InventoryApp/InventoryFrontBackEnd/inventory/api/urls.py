@@ -6,7 +6,8 @@ from inventory.api.views import (
           FactorViewSet,
           Components_by_technology,
           Inventory_technologies,
-          Specific_inventory_plus_default)
+          Specific_inventory_plus_default,
+          find_fuel_factors_specific_country)
 
 #from django.urls import path
 from django.urls import include, path
@@ -24,7 +25,8 @@ urlpatterns = [
     path("userInventories/",ListInventory.as_view(),name="List_Inventory_of_User"),
     path("component/<str:Technology_key>",Components_by_technology.as_view(),name="components_of_specific_technology"),
     path("technologies/",Inventory_technologies.as_view(),name="inventory_technologies"),
-    path("verify/inventory/<int:pk>",Specific_inventory_plus_default.as_view(),name="verify_connections")
+    path("verify/inventory/<int:pk>",Specific_inventory_plus_default.as_view(),name="verify_connections"),
+    path("factors/<str:country>",find_fuel_factors_specific_country.as_view(),name='fuel_factors_specific_country')
 ]
 
 
