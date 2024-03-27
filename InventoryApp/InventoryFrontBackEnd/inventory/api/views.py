@@ -112,6 +112,15 @@ class Specific_inventory_plus_default(APIView):
         #result = component_inventory_1 + component_inventory_2 (fetch all without formating) / every component_inventory is a list of dicts
         return Response(result)
 
+#for Verify App
+class inventory_without_components(APIView):
+    def get(self,request):
+        inventory_obj = Inventory.objects.all()
+        result_inventory = InventorySerializer(inventory_obj,many=True).data #returns LIST of dicts
+        for elem in result_inventory:
+            del elem['components']
+        return Response(result_inventory)
+
 #for Verify Calculatons app
 class find_fuel_factors_specific_country(APIView):
     def get(self,request,country):
@@ -126,5 +135,7 @@ class find_fuel_factors_specific_country(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+        
 
 
