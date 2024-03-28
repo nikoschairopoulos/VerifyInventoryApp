@@ -221,10 +221,19 @@
 
 
                     <div v-if="SHEET_TYPE=='Glazing'" class="row mb-2">
-                            <div class="col-12">
-                                <label for="quantity" class="form-label thermals">U value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
+                            <div v-if="component_type=='glass' ||component_type=='frame' " class="col-6">
+                                <label for="quantity" class="form-label thermals">U-value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
                                 <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="uvalue" min="0" required>
                             </div>
+                            <div v-if="component_type=='glass'" class="col-6">
+                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
+                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="gvalue" min="0" required>
+                            </div>
+                            <div v-else-if="component_type=='frame'"  class="col-6">
+                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
+                                <input type="number" step="any" class="form-control thermals"  style="background-color:grey" id="validationCustom01" value="not required"  readonly placeholder="not required">
+                            </div>
+                           
                     </div>
 
 
@@ -341,6 +350,7 @@ export default {
         density:null,
         capacity:null,
         uvalue:null,
+        gvalue:null,
         ugs_header:null,
         explainMessage:null,
         explanationMode:false,
@@ -374,7 +384,8 @@ export default {
         } 
 
         if(this.SHEET_TYPE=='Glazing'){
-            dataObject['thermal_properties'] = {'uvalue':this.uvalue}
+            dataObject['thermal_properties'] = {'uvalue':this.uvalue,
+                                                'gvalue':this.gvalue}
         }
 
         try{
