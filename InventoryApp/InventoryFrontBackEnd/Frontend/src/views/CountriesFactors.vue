@@ -81,7 +81,7 @@
                 </div>
 
                 <div class="col-6">
-                <label for="validationCustom01" class="form-label">Primary Energy Factor [kwh/ Burned Fuel kwh]</label>
+                <label for="validationCustom01" class="form-label">Primary Energy Factor [kwh/Fuel kwh]</label>
                 <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="pef" required min="1">
                 <div class="valid-feedback">
                 pass
@@ -90,7 +90,7 @@
             </div>
             <div class="col-6">
                 <label for="validationCustom01" class="form-label">CO2 Emission Factor [kgCO2/kwh]</label>
-                <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="co2" required min="1">
+                <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="co2" required>
                 <div class="valid-feedback">
                     pass
                 </div>

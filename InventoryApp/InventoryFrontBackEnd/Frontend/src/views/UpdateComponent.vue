@@ -25,11 +25,16 @@
             </div>
 
        
-            <div v-if="SHEET_TYPE=='Glazing'" class="mb-2">
-                    <div class="col-12">
+            <div  v-if="SHEET_TYPE=='Glazing'" class="mb-2">
+                   
                         <label for="quantity" class="form-label thermals">U value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
                         <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="uvalue" min="0" required>
-                    </div>
+               
+            </div>
+
+            <div v-if="SHEET_TYPE=='Glazing' && component_type =='glass'" class="mb-2">
+                        <label for="quantity" class="form-label thermals">G value:<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid value range is (0,1)</span></label>
+                        <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="gvalue" min="0" required>
             </div>
 
             <!-- Add Numerics -----------------------------------------------------------------------------> 
@@ -39,7 +44,7 @@
             </div>
             
             <div class="mb-2">
-                <label for="quantity" class="form-label"><span>ANNUAL MAINTENANCE [%CAPEX]*:</span>  <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label">ANNUAL MAINTENANCE* <strong>[%CAPEX]</strong><span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
@@ -127,6 +132,8 @@
                 <label for="description" style="display:block;">Description:</label>
                 <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
             </div>
+
+           
         
            
             <!-- ... Repeat the pattern for other form elements ... -->
@@ -173,6 +180,7 @@ export default {
         capacity:null,
         conductivity:null,
         uvalue:null,
+        gvalue:null,
         component:{}
     } 
   },
@@ -217,6 +225,10 @@ export default {
         this.conductivity = this.component.thermal_properties.conductivity
     }
 
+    if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("gvalue")){
+        this.gvalue = this.component.thermal_properties.gvalue
+    }
+
     if(this.component.thermal_properties!=null && this.component.thermal_properties.hasOwnProperty("uvalue")){
         this.uvalue = this.component.thermal_properties.uvalue
     }
@@ -238,7 +250,8 @@ export default {
             }
 
             if(this.SHEET_TYPE=='Glazing'){
-                dataObject['thermal_properties'] = {'uvalue':this.uvalue}
+                dataObject['thermal_properties'] = {'uvalue':this.uvalue,
+                                                    'gvalue':this.gvalue}
             }
           
 
@@ -355,7 +368,7 @@ h1{
     margin-bottom:15px;
 }
 .buttonclass3{
-    margin-top:35px;
+    margin-top:25px;
 }
 
 

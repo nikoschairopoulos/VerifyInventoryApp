@@ -153,6 +153,11 @@
                           <label for="quantity" class="form-label">U value<strong>[W/(m&sup2;K)]</strong>:</label>
                           <input style="background-color: gray;" type="text" class="form-control"  id="quantity" value="not defined" min="0">
                         </div>
+
+                        <div v-if="detailsComp.SHEET_TYPE=='Glazing'">
+                            <label for="quantity" class="form-label">G value:</label>
+                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.ugalue" min="0">
+                          </div>
              
                   </div>
             </div> 
@@ -272,13 +277,6 @@ table {
 }
 
 
-
-
-
-.table-responsive {
-    width: 60%;
-    margin: 0 auto;
-}
 .infocart{
   box-sizing: content-box;
   position: fixed;
@@ -290,6 +288,7 @@ table {
   justify-content: space-around;
   background-color: aliceblue;
 }
+
 .group2{
   margin-right: 10px;
   max-height: 70%;
@@ -338,8 +337,7 @@ table {
 }
 
 .choose_option{
-  position: relative;
-  left: 1%;
+  margin-left:10px;
   
 }
 h4{

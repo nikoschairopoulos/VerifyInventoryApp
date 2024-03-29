@@ -49,7 +49,7 @@
 
       <div class="addedcomponents"   v-if="YouHaveAddComponent">
         <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-          <p style=" color: cadetblue; text-align: center; font-size: 2em;">Submit Inventory Form</p>
+          <p style=" color: cadetblue; text-align: center; font-size: 1.2em;">Submit Inventory Form</p>
           <div class="group1">
         <hr><br>
                 <div>
@@ -61,8 +61,7 @@
                     <label for="type" class="form-label">Project Name:</label>
                     <input type="text" class="form-control" id="type" v-model="inventoryElement.project_name">
                 </div>
-                <p class="mt-4" style="text-align:center; font-weight: bolder;">You added: {{ inventoryComponents.length }} components</p>
-                <button type="submit"  class="btn btn-primary">Update Inventory</button>
+                <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Update Inventory</button>
                 <hr>
         </div>
     </form>
@@ -71,7 +70,7 @@
   <div v-if="YouHaveAddComponent" class="form-table">
         <hr>
         <hr style="color:white; height:5px;">
-      <h4 style="color:green; text-align: center;">Inserted Components:</h4>
+      <h4 style="color:green; text-align: center;">Inserted Components:{{ inventoryComponents.length }} </h4>
       <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px; width:50%;" class="table-responsive">
         <thead class="thead-dark">
           <tr id="table-header">
