@@ -1,9 +1,16 @@
 <template>
-    <div class="tablecontainer">
-    
-      <div class="mb-3">
+
+<div class="row">
+  
+  <div class=" col-lg-2 col-md-2 col-sm-4 col-6">
+    <nav class="navbar-primary">
+      <ul class="navbar-primary-menu">
+        <li>
+          <a href="#" @click="showcomponents"><span ></span><span class="nav-label">Add Components</span></a>
+          <a href="#" @click="showinventory"><span ></span><span class="nav-label">Submit Inventory</span></a>
+          <div style="margin-left:5px" class="mb-3">
                 <label for="ChooseTechnology" class="form-label"><strong>Choose Technology:</strong></label>
-                <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
+                <select style="width:90%;font-size:1em;" id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
                     <option value="Thermal Sources">Thermal Sources</option>
@@ -16,78 +23,78 @@
                     <option value="Other">Other</option>
                 </select>
 
-                <div class="mb-2 ml-2 " >
+                <div class="mt-2 ml-2 " >
                     <label class="form-check-label" for="isMainInventory"><strong>No Main Inventory  </strong></label>
                         <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="NotMainInventory" @change="updateTypeofComponentToRender()"  value="false" >
                 </div>
-      </div>
+            </div>
+        </li>
+      </ul>
+    </nav>
+  </div>    
 
-      <div class = "test">
-      <table class="table-responsive">
-        <thead class="thead-dark">
-          <tr id="table-header">
-            <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Subtype</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="component in componentsPerType" :key="component.id">
-                <td>{{ component.id }}</td>
-                <td>{{ component.name }}</td>
-                <td>{{ component.component_type }}</td>
-                <td>{{ component.component_subtype }}</td>
-                <td>
-                    <button class="btn btn-primary" style="margin-right:2px; background-color:green;" @click="addComponent(component)">
-                        Add to Inventory
-                    </button>
-                </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="addedcomponents"   v-if="YouHaveAddComponent">
-        <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-          <p style=" color: cadetblue; text-align: center; font-size: 1.2em;">Submit Inventory Form</p>
-          <div class="group1">
-        <hr><br>
-                <div>
-                    <label for="name"  class="form-label">Demo Name:</label>
-                    <input type="text" class="form-control" id="name" v-model="inventoryName">
-                </div>
-
-                <div>
-                    <label for="type" class="form-label">Project Name:</label>
-                    <input type="text" class="form-control" id="type" v-model="projectName">
-                </div>
-                <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Submit Inventory</button>
-                <hr>
-        </div>
-    </form>
-    </div>
+  <div class="col-2 col-sm-1 col-xs-1">
   </div>
-  <div v-if="YouHaveAddComponent" class="form-table">
+
+
+  <div class="col-6" v-if="showComponentsTable">
         <hr>
-        <hr style="color:white; height:5px;">
-      <h4 style="color:green; text-align: center;">Inserted Components: {{ inventoryComponents.length }}</h4>
-      <table style="margin-top: 20px; max-height: 300px; margin-bottom: 10px; width:50%;" class="table-responsive">
+        <h2 style="text-align: center;">Choose Components to add them at Your Inventory:</h2>
+        <hr>
+        <table  class="table-responsive">
+            <tr id="table-header">
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Actions</th>
+            </tr>
+          <tbody>
+            <tr v-bind:class="{'coloured':inventoryComponents.includes(component)}" v-for="component in componentsPerType" :key="component.id">
+                  <td>{{ component.id }}</td>
+                  <td>{{ component.name }}</td>
+                  <td>
+                      <button class="btn btn-primary" style="margin-right:2px; background-color:green;" @click="addComponent(component)">
+                          Add to Inventory
+                      </button>
+                  </td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+
+  <div style="background-color: white" class="col-6" v-if=" showInventoryForm">
+
+    <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
+              <p style="  text-align: center; font-size: 2em;">Submit Inventory Form</p>
+              <div class="group1">
+            <hr><br>
+                    <div>
+                        <label for="name"  class="form-label">Demo Name:</label>
+                        <input type="text" class="form-control" id="name" v-model="inventoryName">
+                    </div>
+
+                    <div>
+                        <label for="type" class="form-label">Project Name:</label>
+                        <input type="text" class="form-control" id="type" v-model="projectName">
+                    </div>
+                    <button type="submit" style="margin-top: 10px;" class="btn btn-primary">Submit Inventory</button>
+                    <hr>
+            </div>
+        </form>
+
+    <h2><strong>Inventory Components:</strong></h2>
+    <h4>Components Number:{{ inventoryComponents.length }}</h4>
+    <table class="table-responsive" style="max-height: 400px;">
         <thead class="thead-dark">
           <tr id="table-header">
             <th scope="col">ID</th>
             <th scope="col">Name</th>
-            <th scope="col">Type</th>
-            <th scope="col">Subtype</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="component in inventoryComponents" :key="component.id">
+          <tr  v-for="component in inventoryComponents" :key="component.id">
                 <td>{{ component.id }}</td>
                 <td>{{ component.name }}</td>
-                <td>{{ component.component_type }}</td>
-                <td>{{ component.component_subtype }}</td>
                 <td>
                     <button class="btn btn-danger" style="margin-right:2px;" @click="deleteComponent(component.id)">
                         Delete From Inventory
@@ -96,9 +103,17 @@
           </tr>
         </tbody>
       </table>
-    </div>
   </div>
-  </template>
+
+
+</div>
+
+
+
+
+
+
+</template>
   
   
 
@@ -117,7 +132,9 @@ export default {
                  YouHaveAddComponent:false,
                  inventoryName:null,
                  projectName:null,
-                 NotMainInventory:null
+                 NotMainInventory:null,
+                 showComponentsTable:true,
+                 showInventoryForm:false
 
         };
     },
@@ -134,9 +151,33 @@ export default {
             .catch(error => {
             console.error('Error fetching data:', error);
         });
+
+        this.hideBodyOverflow();
     },
+
+    beforeDestroy() {
+      this.showBodyOverflow();
+  },
     methods: {
 
+      hideBodyOverflow() {
+        document.body.style.overflowX = 'hidden';
+    },
+
+    showBodyOverflow() {
+      document.body.style.overflowX ='';
+    },
+
+      showcomponents(){
+          this.showComponentsTable=true;
+          this.showInventoryForm=false
+      },  
+
+      showinventory(){
+          this.showComponentsTable=false;
+          this.showInventoryForm=true
+      },  
+      
         updateTypeofComponentToRender(){
           if(this.SHEET_TYPE==="all types"){this.componentsPerType=this.components}
           else{this.componentsPerType=this.components.filter(comp=>comp.SHEET_TYPE==this.SHEET_TYPE)}
@@ -202,12 +243,90 @@ export default {
 
 
 <style scoped>
-/* Add styles as needed */
-.tablecontainer{   }
+
+
+
 table {
-  margin-left: 0.5%;
-  border:0.5px solid grey;
-  max-height: 600px;
+  max-height: none; /* This would override the .table-responsive max-height */
+}
+
+/* Add styles as needed */
+.navbar-global {
+  background-color: indigo;
+}
+
+.navbar-global .navbar-brand {
+}
+
+.navbar-global .navbar-user > li > a
+{
+}
+
+.navbar-primary {
+  height: 100vh;
+  width: 70%;
+  overflow: hidden;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+  background-color: green;
+  margin-bottom: 0px;
+  overflow-y: hidden;
+}
+
+.navbar-primary.collapsed {
+  width: 60px;
+}
+
+.navbar-primary.collapsed .glyphicon {
+  font-size: 22px;
+}
+
+.navbar-primary.collapsed .nav-label {
+  display: none;
+}
+
+.navbar-primary-menu,
+.navbar-primary-menu li {
+  margin:0; padding:0;
+  list-style: none;
+}
+
+.navbar-primary-menu li a {
+  display: block;
+  padding: 10px 18px;
+  text-align: left;
+  border-bottom:solid 1px #444;
+  color: #ccc;
+}
+
+.navbar-primary-menu li a:hover {
+  background-color: #000;
+  text-decoration: none;
+  color: white;
+}
+
+.navbar-primary-menu li a .glyphicon {
+  margin-right: 6px;
+}
+
+.navbar-primary-menu li a:hover .glyphicon {
+  color: orchid;
+}
+
+a{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+.table-responsive{
+  display: block;
+  max-height: 80vh;
+  overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    border:solid grey 0.25px
 }
 
 th, td {
@@ -218,59 +337,29 @@ th, td {
   white-space: normal;
   font-size: medium;
   word-wrap: break-word;
-  width:200px;
-  max-width: 200px;
+  width:300px;
+  max-width: 300px;
 }
 
-.mb-3{
-        width: 100%;             /* Make each form element take full width on smaller screens */
-        box-sizing: border-box;  /* Include padding and border in the width */
-        margin-left: 0.5%;
-
-    }
-    .addedcomponents{
-      width:50%;
-      margin-left:20px;
-      height: 400px;
-      margin-right:5%;
-       background-color: aliceblue;
-    }
-
-    #component{}
-      
-    
-
-    #submitinventory {
-    }
-
-#ChooseTechnology{
-    margin-top: 10px;
-}
-
-  .table-responsive {
-    margin: 0 auto;
-    display: block;
-    max-height: 400px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-}
-
-.group1{
-  margin: 0 auto;
-  width:50%;
-}
-
-.test{
-  margin-left:0.5%;
-  display: flex;
-  justify-content: flex-start;
-}
-
-#table-header{
-  background-color: mediumseagreen;
+.coloured{
+  background-color: lightgrey;
 }
 
 
+@media screen and (max-height: 850px) {
+  .navbar-primary {
+    height: 200vh;
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .navbar-primary {
+    width: 100%;
+  }
+}
+
+body.hide-overflow {
+  overflow: hidden;
+}
 
 </style>

@@ -49,7 +49,7 @@
 
       <div class="addedcomponents"   v-if="YouHaveAddComponent">
         <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-          <p style=" color: cadetblue; text-align: center; font-size: 1.2em;">Submit Inventory Form</p>
+          <p style=" color: cadetblue; text-align: center; font-size: em;">Submit Inventory Form</p>
           <div class="group1">
         <hr><br>
                 <div>

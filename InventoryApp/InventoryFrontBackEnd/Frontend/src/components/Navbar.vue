@@ -53,7 +53,11 @@ export default {
 </script>
 
 <style scoped>
+.body{
+  margin:0%
+}
   .main-nav {
+    width:100%;
     display: flex;
     justify-content: space-between;
     background-color: yellow;

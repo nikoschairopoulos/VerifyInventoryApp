@@ -17,6 +17,9 @@ export default {
 </script>
 
 <style scoped>
+.body{
+  overflow: hidden;
+}
 .pagefooter{
   font-size: 24px;
   position:fixed;
