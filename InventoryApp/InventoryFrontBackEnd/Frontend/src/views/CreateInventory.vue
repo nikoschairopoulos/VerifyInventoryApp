@@ -39,7 +39,7 @@
 
   <div class="col-6" v-if="showComponentsTable">
         <hr>
-        <h2 style="text-align: center;">Choose Components to add them at Your Inventory:</h2>
+        <h4 style="text-align: center;">Choose Components:</h4>
         <hr>
         <table  class="table-responsive">
             <tr id="table-header">
