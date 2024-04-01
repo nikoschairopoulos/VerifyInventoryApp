@@ -129,8 +129,8 @@ class find_fuel_factors_specific_country(APIView):
         fuel_factors_data =  FactorSerializer(fuel_factors,many=True).data
         if fuel_factors_data:
             for elem in fuel_factors_data:
-                fuel_json['pef'][elem['fuel']] = elem['co2_factor']
-                fuel_json['co2'][elem['fuel']] = elem['primary_energy_factor']
+                fuel_json['pef'][elem['fuel']] = elem['primary_energy_factor']
+                fuel_json['co2'][elem['fuel']] = elem['co2_factor']
             return Response(fuel_json)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
