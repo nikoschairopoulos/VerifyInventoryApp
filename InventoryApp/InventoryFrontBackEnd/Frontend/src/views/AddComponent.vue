@@ -115,7 +115,7 @@
                                     <div id="options" v-if="SHEET_TYPE=='El. Storage'">
                                         <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
-                                        <option value="li_on">battery Li-ion </option>
+                                        <option value="li_ion">battery Li-ion </option>
                                         <option value="lead_acid">battery lead acid</option>
                                         <option value="flow">battery flow</option>
                                     </select>
