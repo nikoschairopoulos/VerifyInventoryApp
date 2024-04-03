@@ -69,6 +69,7 @@ class FactorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return super().create(validated_data)
     def update(self, instance, validated_data):
+        test=1
         obj =  super().update(instance, validated_data)
         return obj
 

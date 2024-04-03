@@ -77,7 +77,7 @@
                                         <label for="type" class="form-label" @mouseover="explain('type')" @mouseleave="dontExplain">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                         <option value="boiler">boiler</option>
-                                        <option value="heatpump">heatpump</option>
+                                        <option value="heat_pump">heatpump</option>
                                         <option value="air_conditioning">aircondition</option>
                                         <option value="solar">solar thermal panel</option>
                                         <option value="district_heating">district heating </option>
