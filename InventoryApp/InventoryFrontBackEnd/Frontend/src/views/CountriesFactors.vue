@@ -197,6 +197,7 @@
                 co2_factor:this.co2,
                 primary_energy_factor:this.pef
             }
+                //returns only one object (there is resriction from the DB)
                 let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel )
                 console.log("i try to send data at the Backend....",this.$data)
                 const {data} = await axios.put(`${TARGET_IP}/api/factor/${obj[0].id}/`,dataObject)

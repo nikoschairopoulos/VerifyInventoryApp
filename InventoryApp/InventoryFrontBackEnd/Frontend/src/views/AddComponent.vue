@@ -544,7 +544,8 @@ h1{
 margin-left: 4%;
 position:fixed;
 width:20%;
-background-color: palegreen;
+background-color: #1089ff;
+color:#F7F7F7;
 }
 
 

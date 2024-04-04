@@ -1,11 +1,11 @@
 <template>
   <nav class="main-nav">
   <div class="menu">
-    <router-link :to="{ name: 'Home' }"><span style="color: darkgreen;" class="fa fa-home"> <span style="color: darkgreen;"> <strong>Home</strong></span></span></router-link>
-    <router-link :to="{ name: 'ListMyInventories' }"><span style="color: darkgreen;"> <strong>My Inventories</strong></span></router-link>
-    <router-link :to="{ name: 'AddComponent' }"><span style="color: darkgreen;"> <strong>Create Component</strong></span></router-link>
-    <router-link :to="{ name: 'ListComponents' }"><span style="color: darkgreen;"> <strong>Inventory Library</strong></span></router-link>    
-    <router-link :to="{ name: 'factors' }"><span style="color: darkgreen;"> <strong>Fuel Factors</strong></span></router-link>    
+    <router-link :to="{ name: 'Home' }"><span style="color: #F7F7F7" class="fa fa-home"></span> <span style="color: #F7F7F7;"> <strong>Home</strong></span></router-link>
+    <router-link :to="{ name: 'ListMyInventories' }"><span style="color:#F7F7F7;"> <strong>My Inventories</strong></span></router-link>
+    <router-link :to="{ name: 'AddComponent' }"><span style="color: #F7F7F7;"> <strong>Create Component</strong></span></router-link>
+    <router-link :to="{ name: 'ListComponents' }"><span style="color: #F7F7F7;"> <strong>Inventory Library</strong></span></router-link>    
+    <router-link :to="{ name: 'factors' }"><span style="color: #F7F7F7;"> <strong>Fuel Factors</strong></span></router-link>    
     </div>
     <div class="logout-button">
       <button id="logoutbtn"  class="btn btn-outline-secondary" @click="logout"><span class="fa fa-sign-out" style="font-size:6x">Logout</span></button>
@@ -60,18 +60,18 @@ export default {
     width:100%;
     display: flex;
     justify-content: space-between;
-    background-color: yellow;
+    background-color:#054673;
     padding: 1%;
   }
   .main-nav a {
     display: inline-block;
     text-decoration: none;
     margin: 0 10px;
-    color: #999;
+    color: #F7F7F7;
     font-size: 18px;
   }
   a.router-link-active {
-    border-bottom: 2px solid #00ce89;
+    border-bottom: 2px solid #1089ff;
     padding-bottom: 4px;
   }
   .options{
@@ -99,7 +99,7 @@ export default {
     display: inline-block;
     position:relative;
     top:-6px;
-    color: green;    
+    color:#F7F7F7
   }
 
 </style>

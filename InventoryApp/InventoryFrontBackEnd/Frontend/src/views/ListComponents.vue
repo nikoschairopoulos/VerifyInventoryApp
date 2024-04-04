@@ -30,7 +30,7 @@
       <div class="responsive">
       <div class="table-responsive">
       <table class=" table  table-hover">
-          <tr style="background-color: green;">
+          <tr style="background-color:#054673;color:#F7F7F7;">
             <th scope="col" class="text-center">ID</th>
             <th scope="col" class="text-center">Name</th>
             <th scope="col" class="text-center">Type</th>
@@ -45,23 +45,26 @@
                 <td class="text-center">{{ component.component_subtype }}</td>
                 <td>
 
+              
                   
+                  <span @click="setDetailsAndShowModal(component)"  class="fa-stack">
+										<i class="fa fa-square fa-stack-2x"></i>
+										<i  style="color: white;" class="fa fa-edit fa-stack-1x fa-inverse"></i>
+									</span>
+
+
                   <span @click="updateComponent(component.id)"  class="fa-stack" >
 										<i class="fa fa-square fa-stack-2x" ></i>
-										<i style="color: blue;" class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+										<i style="color: yellow;" class="fa fa-pencil fa-stack-1x fa-inverse"></i>
 									</span>
                 
 
 									<span @click="deleteComponent(component.id)"  class="fa-stack">
 										<i class="fa fa-square fa-stack-2x"></i>
-										<i style="back" class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+										<i style="color: red;" class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
 									</span>
 
-									<span @click="setDetailsAndShowModal(component)"  class="fa-stack">
-										<i class="fa fa-square fa-stack-2x"></i>
-										<i class="fa fa-edit fa-stack-1x fa-inverse"></i>
-									</span>
-
+							
 
                 </td>
           </tr>
@@ -77,7 +80,7 @@
         <header class="modal-card-head">
           <h4 class="modal-card-title"><strong>{{ detailsComp.name }}</strong></h4>
         </header>
-        <hr style="size=60px;" class="mt-4">
+        <hr style="size:60px;" class="mt-4">
             <div class="modal-card-body">
               <div class="group1">
                   

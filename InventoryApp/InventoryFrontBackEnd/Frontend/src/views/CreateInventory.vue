@@ -6,10 +6,10 @@
     <nav class="navbar-primary">
       <ul class="navbar-primary-menu">
         <li>
-          <a href="#" @click="showcomponents"><span ></span><span class="nav-label">Add Components</span></a>
-          <a href="#" @click="showinventory"><span ></span><span class="nav-label">Submit Inventory</span></a>
+          <a href="#" id="nav-options" @click="showcomponents"><strong>Add Components</strong></a>
+          <a href="#" @click="showinventory" id="nav-options" class="nav-label"><strong>Submit Inventory</strong></a>
           <div style="margin-left:5px" class="mb-3">
-                <label for="ChooseTechnology" class="form-label"><strong>Choose Technology:</strong></label>
+                <label for="ChooseTechnology" id="temps" class="form-label"><strong>Choose Technology <span class="fa fa-search" ></span></strong></label>
                 <select style="width:90%;font-size:1em;" id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
                     <option value="El. Generators">Electrical Generators</option>
@@ -24,7 +24,7 @@
                 </select>
 
                 <div class="mt-2 ml-2 " >
-                    <label class="form-check-label" for="isMainInventory"><strong>No Main Inventory  </strong></label>
+                    <label class="form-check-label" id="temps" for="isMainInventory"><strong>No Main Inventory  </strong></label>
                         <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="NotMainInventory" @change="updateTypeofComponentToRender()"  value="false" >
                 </div>
             </div>
@@ -52,7 +52,7 @@
                   <td>{{ component.id }}</td>
                   <td>{{ component.name }}</td>
                   <td>
-                      <button class="btn btn-primary" style="margin-right:2px; background-color:green;" @click="addComponent(component)">
+                      <button id="add-buttons" class="btn btn-primary"  @click="addComponent(component)">
                           Add to Inventory
                       </button>
                   </td>
@@ -269,7 +269,7 @@ table {
   -webkit-transition: all 0.1s ease-in-out;
   -moz-transition: all 0.1s ease-in-out;
   transition: all 0.1s ease-in-out;
-  background-color: green;
+  background-color:white;
   margin-bottom: 0px;
   overflow-y: hidden;
 }
@@ -297,13 +297,13 @@ table {
   padding: 10px 18px;
   text-align: left;
   border-bottom:solid 1px #444;
-  color: #ccc;
+  color: #F7F7F7;
 }
 
-.navbar-primary-menu li a:hover {
-  background-color: #000;
+.navbar-primary-menu li a:hover{
+  background-color:#1089ff;
   text-decoration: none;
-  color: white;
+  color: #ffffff; 
 }
 
 .navbar-primary-menu li a .glyphicon {
@@ -326,7 +326,8 @@ a{
   overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    border:solid grey 0.25px
+    border:solid grey 0.25px;
+    background-color: white;
 }
 
 th, td {
@@ -360,6 +361,29 @@ th, td {
 
 body.hide-overflow {
   overflow: hidden;
+}
+
+.nav-label{
+  color:#054673;
+}
+
+#temps{
+  color:#054673;
+}
+
+#add-buttons{
+  margin-right:2px;
+  background-color: #2bb6a3;
+}
+
+#nav-options{
+  color:#054673;
+  text-decoration: none;
+}
+
+#nav-options:hover{
+  color:#F7F7F7;
+
 }
 
 </style>

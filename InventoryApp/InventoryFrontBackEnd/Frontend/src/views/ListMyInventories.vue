@@ -233,7 +233,11 @@ span > i:hover {
 #inventorycreate:hover{
     cursor: pointer;
     background-color: #2bb6a3;
-	border-color: #2bb6a3;
+	border-color: greenyellow;
+}
+
+#inventorycreate{
+	background-color: #2bb6a3;
 }
 
 </style>
