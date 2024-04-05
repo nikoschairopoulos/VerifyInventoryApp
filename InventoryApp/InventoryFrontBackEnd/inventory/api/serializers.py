@@ -62,6 +62,10 @@ class InventorySerializer(serializers.ModelSerializer):
         return to_return
     '''
 
+########
+    #learning tip:
+    #every serializer has the 3 bellow methods: create,update,validate
+########
 class FactorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Factor
@@ -72,6 +76,15 @@ class FactorSerializer(serializers.ModelSerializer):
         test=1
         obj =  super().update(instance, validated_data)
         return obj
+    def validate(self, data):
+        """
+        Check that the start is before the stop.
+        """
+        if data['primary_energy_factor'] < 0 :
+            raise serializers.ValidationError({"primary energy factor cannot be negative number"})
+    
+        #if data['co2_factor']<0:
+        #    raise serializers.ValidationError({""})
 
 
     

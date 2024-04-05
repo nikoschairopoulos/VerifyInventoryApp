@@ -64,7 +64,7 @@
   <div style="background-color: white" class="col-6" v-if=" showInventoryForm">
 
     <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-              <p style="  text-align: center; font-size: 2em;">Submit Inventory Form</p>
+              <p id='form-title' style="  text-align: center; font-size: 2em;">Submit Inventory Form</p>
               <div class="group1">
             <hr><br>
                     <div>
@@ -385,5 +385,14 @@ body.hide-overflow {
   color:#F7F7F7;
 
 }
+
+h2,h4{
+  color:#054673;
+}
+
+#form-title{
+  color:#054673;
+}
+
 
 </style>

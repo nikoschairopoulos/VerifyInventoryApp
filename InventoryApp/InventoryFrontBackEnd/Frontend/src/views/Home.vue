@@ -1,11 +1,35 @@
 <template>
   <div class="home">
-    <div class="bg-image-container">
-  <img src="../../public/figure5.png" class="bg-image" alt="Background Image">
-  <h2 style="color: white; text-align: center; margin-top: 50px; font-size: 4em;"> Verify-B Inventory Manager </h2>
+    <h4 style="color: #054673; text-align: center; margin-top: 50px; margin-bottom:50px ; font-size: 4em;"> <strong>VERIFY-B LCI</strong>  </h4>
+    
+    <div class="row">
+        <div class="col-3">
+        </div>
+        <div class="col-8">
+          <div class="bg-image-container">
+          <img style="" src="../../public/figure6.png"  alt="">
+        </div>
+      </div>
+      </div>
+
+      <div style="" class="container mt-5">
+        <button id="redirectButton" class="btn btn-primary">Go to VERIFY-B App</button>
+        <hr style="height: 15px; color: #054673;">
+        <div  style="margin-top: 10px; color: #054673; width: fit-content;">
+        <p style="margin-top: 10px;">
+          <strong>This app aims to manage the inventory of the Verify Web App. It allows for the insertion, updating, or deletion of new components.<br> 
+                  Additionally, it enables the definition of a new inventory for each specific Project.
+                  Users can also access and update the emission factors for every fuel and country combination.
+          </strong>
+        </p>
+        </div>
+      </div>
+
+      
+    
 </div>
 
-</div>
+
  
 </template>
 
@@ -41,7 +65,7 @@ export default {
 
 .bg-image-container {
   position: relative;
-  height: 100vh; /* Adjust the height as needed */
+  height: 40vh; /* Adjust the height as needed */
   width: 100%;
   overflow: hidden; /* Hide any overflow from the image */
 }
@@ -50,9 +74,9 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+
   object-fit: cover; /* Cover the container with the image */
   z-index: -1; /* Place the image behind other content */
 }
+
 </style>
