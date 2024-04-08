@@ -23,8 +23,8 @@
                     <option value="Other">Other</option>
                 </select>
 
-                <div  id='filter' class="mt-2 ml-2 " >
-                    <label class="form-check-label" id="temps" for="isMainInventory"><strong>No Main Inventory  </strong></label>
+                <div   class="mt-2 ml-2 " >
+                    <label  class="form-check-label" id="temps" for="isMainInventory"><strong>No Main Inventory  </strong></label>
                         <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="NotMainInventory" @change="updateTypeofComponentToRender()"  value="false" >
                 </div>
             </div>
@@ -394,7 +394,7 @@ h2,h4{
   color:#054673;
 }
 
-#filter{
+#temps{
   color:#2bb6a3;
 }
 
