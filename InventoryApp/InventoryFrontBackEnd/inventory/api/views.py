@@ -112,6 +112,12 @@ class Specific_inventory_plus_default(APIView):
         #result = component_inventory_1 + component_inventory_2 (fetch all without formating) / every component_inventory is a list of dicts
         return Response(result)
 
+class only_main_inventory(APIView):
+    def get(self,request):
+        all_main_objects = Component.objects.filter(IS_MAIN_INVENTORY=True)
+        objects_main = ComponentSerializer(all_main_objects,many=True)
+        return Response(objects_main.data)
+
 #for Verify App
 class inventory_without_components(APIView):
     def get(self,request):
