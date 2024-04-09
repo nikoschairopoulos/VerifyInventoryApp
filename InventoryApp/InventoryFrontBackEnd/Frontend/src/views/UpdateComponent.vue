@@ -112,12 +112,12 @@
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label">Major Upgrade Share*[%100]: <span v-if="major_upgrade_share>100 || major_upgrade_share <0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label">Major Upgrade Share*[CAPEX%]: <span v-if="major_upgrade_share>100 || major_upgrade_share <0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" required min="0" max="100">
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label"><span>Anuual Performance Degradation*[%100]</span>: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label"><span>Anuual Performance Degradation[%]</span>: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             

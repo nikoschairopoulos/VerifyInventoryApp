@@ -143,7 +143,7 @@
                         <label for="quantity" class="form-label">Major Upgrade Share[%100]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.major_upgrade_share" min="0">
     
-                        <label for="quantity" class="form-label">Anuual Performance Degradation[%100]:</label>
+                        <label for="quantity" class="form-label">Annual Performance Degradation[%]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.annual_performance_degradation" min="0"> 
 
                         <hr>
