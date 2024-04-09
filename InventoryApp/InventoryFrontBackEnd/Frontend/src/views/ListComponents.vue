@@ -94,7 +94,7 @@
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.capex_per_ugs" min="0">
                   
                  
-                        <label for="quantity" class="form-label">OPEX_PER_CAPEX[%100]:</label>
+                        <label for="quantity" class="form-label">ANNUAL MAINTENANCE[%CAPEX]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.opex_per_capex" min="0">
                 
                  
