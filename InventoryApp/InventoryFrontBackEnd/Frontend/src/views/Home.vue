@@ -12,7 +12,9 @@
 
       <div style="" class="container mt-5">
         <button id="redirectButton" class="btn btn-primary" @click="goToVerify" >Go to VERIFY-B App</button>
-        <a href="../assets/input_data.xlsx" download><button id="downloadButton" class="btn btn-info"  >Download LCI Form</button></a>
+        <a href="http://127.0.0.1:8080/input_data.xlsx">
+        <button id="downloadButton" class="btn btn-info">Download LCI Form</button>
+        </a>
         <hr style="height: 15px; color: #054673;">
         <div  style="margin-top: 10px; color: #054673; width: fit-content;">
         <p style="margin-top: 10px;">
@@ -23,26 +25,20 @@
         </p>
         </div>
       </div>
-
-      
-    
 </div>
-
-
- 
 </template>
 
 <script>
-
 export default {
   name: 'Home',
   components: {},
+  data(){
+    URL:`${process.env.BASE_URL}../../input_data.xlsx`
+  },
   methods:{
     goToVerify(){
       window.location.href = "http://192.168.101.31:3003/";
-    },
-    downloadForm(){
-      
+      console.log(process.env.BASE_URL)
     }
   }
 }

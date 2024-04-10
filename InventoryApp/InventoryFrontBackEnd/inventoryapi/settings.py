@@ -145,7 +145,7 @@ STATICFILES_DIRS = [
 ]
 
 
-AUTH_USER_MODEL = 'users.CustomUser' # We use custom user Model for authorization
+AUTH_USER_MODEL = 'users.CustomUser' # We use custom user Model for authorization (is FK at inventory as well -- is another app so you write it here to achieve the connections)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
