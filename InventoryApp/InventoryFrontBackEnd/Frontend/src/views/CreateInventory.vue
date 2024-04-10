@@ -119,8 +119,7 @@
 
 <script>
 import { axios } from "@/common/api.service.js";
-import {TARGET_IP} from "@/common/request_configs.js"
-import UpdateComponent from './UpdateComponent.vue';
+import { TARGET_IP } from "@/common/request_configs.js";
 export default {
     name:"CreateInventory",
     data() {
@@ -349,7 +348,7 @@ th, td {
 
 @media screen and (max-height: 850px) {
   .navbar-primary {
-    height: 200vh;
+    height: 90vh;
   }
 }
 

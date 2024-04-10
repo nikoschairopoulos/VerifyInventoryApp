@@ -46,6 +46,7 @@ class Inventory(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="inventories"
     )
+    #author_data = 
     name = models.CharField(max_length=250)
     project_name = models.CharField(max_length=250)
     components = models.ManyToManyField(Component,related_name="inventories",blank=True)

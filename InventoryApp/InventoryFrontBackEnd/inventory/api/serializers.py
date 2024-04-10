@@ -22,6 +22,7 @@ class InventorySerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True,read_only=True)
     components_collection = serializers.ListField(write_only=True)
     author = serializers.StringRelatedField(read_only=True)
+    email  =  serializers.EmailField(source='author.email', read_only=True)
     class Meta:
         model=Inventory
         fields = '__all__'

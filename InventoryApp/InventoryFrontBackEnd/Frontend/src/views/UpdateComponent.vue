@@ -44,7 +44,7 @@
             </div>
             
             <div class="mb-2">
-                <label for="quantity" class="form-label">ANNUAL MAINTENANCE* <strong>[%CAPEX]</strong><span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label">Annual Maintenance* <strong>[%CAPEX]</strong><span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" required min="0" max="100">
             </div>
 
@@ -73,7 +73,7 @@
             </div>
 
             <div v-if="SHEET_TYPE!=='Insulation' && SHEET_TYPE!=='Glazing'"  class="mt-4">
-                <label for="quantity" class="form-label">Thermal Properties:<span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
+                <label for="quantity" class="form-label">Thermal Properties:</label>
                 <input style="background-color: grey; font-size: 12px;" type="text" step="any" class="form-control"  id="quantity" placeholder="no thermal properties for this component" required min="0" readonly>
             </div>
 
@@ -117,7 +117,7 @@
             </div>
 
             <div class="mb-2">
-                <label for="quantity" class="form-label"><span>Anuual Performance Degradation[%]</span>: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                <label for="quantity" class="form-label">Annual Performance Degradation[%]: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                 <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" required min="0" max="100">
             </div>
             
@@ -148,7 +148,7 @@
 </template>
 <script>
 import { axios } from "@/common/api.service.js";
-import {TARGET_IP} from "@/common/request_configs.js"
+import { TARGET_IP } from "@/common/request_configs.js";
 export default {
   name: 'UpdateComponent',
   data(){
@@ -312,7 +312,7 @@ h1{
         text-align: center;
     }
     #component {
-        width: 50%;
+        width: 80%;
         background-color: aliceblue;
         border: 2px solid lightsteelblue;
         display: flex;

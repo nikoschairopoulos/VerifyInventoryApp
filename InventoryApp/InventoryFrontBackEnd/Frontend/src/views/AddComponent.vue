@@ -256,7 +256,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-1" @mouseover="explain('OPEX_PER_CAPEX')" @mouseleave="dontExplain">
-                                <label for="quantity" class="form-label">ANNUAL MAINTENANCE <strong>[CAPEX%]:</strong> <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                                <label for="quantity" class="form-label">Annual Maintenance <strong>[CAPEX%]:</strong> <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
                                 <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="100" required>
                             </div>
                         </div>
@@ -307,7 +307,7 @@
                         <div class="col-2 mt-2">
                             <button type="submit" id="sumbit-button" class="btn btn-primary mb-2">Create Component</button>
                         </div>
-                        <p class="col-6 mt-2"><strong>All fields with * are Mandatory</strong></p>
+                        <p  id='mandatory' class="col-10 mt-2"><strong>All fields with * are Mandatory</strong></p>
                     </div>  
 
                 </div>
@@ -320,7 +320,7 @@
 
 <script>
 import { axios } from "@/common/api.service.js";
-import {TARGET_IP} from "@/common/request_configs.js"
+import { TARGET_IP } from "@/common/request_configs.js";
 export default {
   name: 'AddComponentForm',
   props:['header','componentValues','EditMode'],
@@ -622,6 +622,11 @@ label{
 
 input{
     
+}
+
+#mandatory{
+    display: flex;
+    justify-content: end;
 }
 
 </style>
