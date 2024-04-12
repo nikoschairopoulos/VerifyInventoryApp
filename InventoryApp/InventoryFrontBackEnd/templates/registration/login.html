@@ -5,7 +5,7 @@
 <h1 class="text-light">Verify Inventory Manager App</h1>
 <p class="text-light mb-4">Add your Credentials</p>
 <div class="form-container">
-    <form method="POST">
+    <form  id="loginForm" method="POST">
         {% csrf_token %}
 
         <!-- https://getbootstrap.com/docs/5.1/forms/floating-labels/#example -->
@@ -33,4 +33,26 @@
           <button type="submit" class="btn btn-lg btn-primary">Login</button>
         </div>
     </form>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent form submission
+      
+          // Get the username value
+          const usernameInput = form.querySelector('#floatingUsername');
+          const username = usernameInput.value.trim();
+      
+          // Store the username in local storage
+          localStorage.setItem('verify_lci_username', username);
+      
+          // Submit the form
+          form.submit();
+        });
+      });
+      </script>
+
+
 {% endblock %}
+

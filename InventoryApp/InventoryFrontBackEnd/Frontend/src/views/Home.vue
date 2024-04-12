@@ -12,7 +12,7 @@
 
       <div style="" class="container mt-5">
         <button id="redirectButton" class="btn btn-primary" @click="goToVerify" >Go to VERIFY-B App</button>
-        <a href="http://127.0.0.1:8080/input_data.xlsx">
+        <a :href={URL_FORM}>
         <button id="downloadButton" class="btn btn-info">Download LCI Form</button>
         </a>
         <hr style="height: 15px; color: #054673;">
@@ -33,8 +33,16 @@ export default {
   name: 'Home',
   components: {},
   data(){
-    URL:`${process.env.BASE_URL}../../input_data.xlsx`
+    return{
+    URL_FORM:`${process.env.BASE_URL}/input_data.xlsx`,
+    username:null
+    }
   },
+  mounted(){
+    this.username = localStorage.getItem('verify_lci_username');
+    console.log('loged in as: '+this.username)
+  }
+  ,
   methods:{
     goToVerify(){
       window.location.href = "http://192.168.101.31:3003/";
@@ -46,7 +54,7 @@ export default {
 
 <style scoped>
 .body{
-  overflow-x: hidden;
+  
 }
 
 #home-page-image{

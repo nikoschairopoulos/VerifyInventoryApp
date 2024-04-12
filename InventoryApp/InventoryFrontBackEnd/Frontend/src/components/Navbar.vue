@@ -8,6 +8,9 @@
     <router-link :to="{ name: 'factors' }"><span style="color: #F7F7F7;"> <strong>Fuel Factors</strong></span></router-link>    
     </div>
     <div class="logout-button">
+      <div class="user">
+        <i id="username" class='fa fa-user'></i><strong id="username">{{username }}</strong>
+      </div>
       <button id="logoutbtn"  class="btn btn-outline-secondary" @click="logout"><span class="fa fa-sign-out" style="font-size:6x">Logout</span></button>
     </div>
   </nav>
@@ -17,6 +20,18 @@
 import axios from 'axios';
 
 export default {
+
+  data(){
+    return{
+      username:null
+    }
+  },
+
+  mounted(){
+    this.username = localStorage.getItem('verify_lci_username');
+    console.log('loged in as: '+this.username)
+  }
+  ,
   methods: {
     logout() {
       // Get the CSRF token
@@ -34,6 +49,7 @@ export default {
         withCredentials: true // Include cookies
       })
       .then(response => {
+        localStorage.removeItem('verify_lci_username')
         console.log("logout")
         // Handle successful logout
         // Redirect to Google's homepage or any other desired URL
@@ -99,6 +115,20 @@ export default {
     display: inline-block;
     position:relative;
     top:-6px;
+    color:#F7F7F7
+  }
+
+
+  .user{
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  #username{
+    position:relative;
+    top:-4px;
+    font-weight:bold ;
+    margin-bottom: 10px;
     color:#F7F7F7
   }
 
