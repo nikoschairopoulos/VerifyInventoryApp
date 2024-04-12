@@ -12,7 +12,7 @@
 
       <div style="" class="container mt-5">
         <button id="redirectButton" class="btn btn-primary" @click="goToVerify" >Go to VERIFY-B App</button>
-        <a :href={URL_FORM}>
+        <a :href="`${URL_FORM}input_data.xlsx`">
         <button id="downloadButton" class="btn btn-info">Download LCI Form</button>
         </a>
         <hr style="height: 15px; color: #054673;">
@@ -34,13 +34,14 @@ export default {
   components: {},
   data(){
     return{
-    URL_FORM:`${process.env.BASE_URL}/input_data.xlsx`,
+    URL_FORM:`${process.env.BASE_URL}`,
     username:null
     }
   },
   mounted(){
     this.username = localStorage.getItem('verify_lci_username');
     console.log('loged in as: '+this.username)
+    console.log(process.env.BASE_URL)
   }
   ,
   methods:{
