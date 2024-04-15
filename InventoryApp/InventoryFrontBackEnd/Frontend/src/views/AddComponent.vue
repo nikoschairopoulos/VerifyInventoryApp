@@ -456,29 +456,82 @@ export default {
 
     async onFileChange(event) {
         let xlsxfile = event.target.files ? event.target.files[0] : null;
-        
+
         readXlsxFile(xlsxfile).then((rows) => {
         
             console.log("rows:", rows)
             let parameter_labels = rows[0]
-            let excellComponent = {}
-            for(let i = 0; i < parameter_labels.length; i++){
-                excellComponent[rows[0][i]] = rows[1][i]
+            // is the Array of all objects will be created
+            let excellComponent = []
+            //(initialization)create n emtpy objects for n rows of component values
+            for(let i=0;i<rows.length-1;i++){
+                excellComponent.push({})
+           }
+
+            console.log("rows= ",rows.length)
+            // iterate over rows (components)
+            for(let i=1 ; i<rows.length ;i++){
+                let sheetType = rows[i][15] // is its position at the form, will be changed
+                console.log( "iteration = ",i," SHEET-TYPE = ",sheetType)
+                if(sheetType==='Glazing' || sheetType==='Insulation'){
+                    console.log("add thermal properties before create insulation")
+                    excellComponent[i-1]['thermal_properties'] = {}
+                }
+                
+                for(let j = 0; j < parameter_labels.length; j++){
+                    let jsonKey = rows[0][j]
+                    if (jsonKey!='conductivity' && jsonKey!='capacity' && jsonKey!='density' && jsonKey!="gvalue" && jsonKey!="uvalue"){ 
+                        excellComponent[i-1][jsonKey] = rows[i][j]
+                    }else if(sheetType==='Insulation' && (jsonKey=='density'||jsonKey=='conductivity'||jsonKey=='capacity')){
+                        console.log('Insulation in')
+                        excellComponent[i-1]['thermal_properties'][jsonKey] = rows[i][j]
+                    }else if(sheetType==='Glazing' && (jsonKey=='uvalue'||jsonKey=='gvalue')){
+                        console.log('Glazing in')
+                        excellComponent[i-1]['thermal_properties'][jsonKey] = rows[i][j]
+                    }
+                }
+                if (!('thermal_properties' in excellComponent[i-1])){
+                    excellComponent[i-1].thermal_properties = null
+                }
             }
 
+            console.log("----------test----------------")
+            console.log(excellComponent)
+            console.log(excellComponent[0])
+            console.log(excellComponent[1])
+            console.log(excellComponent[2])
+
             // to handle them properly - now is for proof of concept:
+            /*
             excellComponent["bibliography"] = null
             excellComponent["description"] = null 
             excellComponent["thermal_properties"] = null
             console.log(excellComponent)
+            */
+            console.log("excellComponent data:", excellComponent);
 
-            axios.post(`${TARGET_IP}/api/component/`, excellComponent).then(()=>{
+
+            //let excellComponentBody = JSON.stringify({excellComponent})
+            axios.post(`${TARGET_IP}/api/excell_create`,excellComponent, {
+                headers: {'Content-Type': 'application/json'},}) 
+                .then(()=>{
                 alert("Success")
                 this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
             }).catch(error => {
-               console.error('Error fetching data:', error)})
-            }
-    )},
+                let error_message = "errors \n"
+                for(let i=0;i<error.response.data.length;i++){
+                    if(Object.keys(error.response.data[i]).length===0){
+                        error_message+=`${excellComponent[i].name} : pass \n`
+                    }else{
+                        console.log(error.response.data[i])
+                        for(let prop in error.response.data[i])
+                        error_message+=`${excellComponent[i].name} : ${error.response.data[i][prop][0]} \n`
+                    }
+                }
+               alert(error_message)
+               console.error('Error fetching data:', error.response.data)})
+            } 
+  )},
 
   mounted(){
     (function() {

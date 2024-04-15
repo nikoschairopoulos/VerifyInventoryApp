@@ -9,7 +9,8 @@ from inventory.api.views import (
           Specific_inventory_plus_default,
           find_fuel_factors_specific_country,
           inventory_without_components,
-          only_main_inventory
+          only_main_inventory,
+          CreateComponentFromExcell
           )
 
 #from django.urls import path
@@ -31,7 +32,8 @@ urlpatterns = [
     path("verify/inventory/<int:pk>",Specific_inventory_plus_default.as_view(),name="verify_connections"),
     path("factors/<str:country>",find_fuel_factors_specific_country.as_view(),name='fuel_factors_specific_country'),
     path("verify/all_inventories",inventory_without_components.as_view(),name='all_inventories'),
-    path("verify/component_main_inventory",only_main_inventory.as_view(),name='all_main_components')
+    path("verify/component_main_inventory",only_main_inventory.as_view(),name='all_main_components'),
+    path("excell_create",CreateComponentFromExcell.as_view(),name='create_components_from_excell')
 ]
 
 

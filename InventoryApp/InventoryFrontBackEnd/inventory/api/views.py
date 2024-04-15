@@ -142,6 +142,15 @@ class find_fuel_factors_specific_country(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-        
+#Create Components from Excell form - LCI APP:
+class CreateComponentFromExcell(APIView):
+    def post(self, request):
+        components_list = request.data
+        components_serializer = ComponentSerializer(data=components_list, many=True)
 
+        if components_serializer.is_valid():
+            components_serializer.save()
+            return Response(components_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(components_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -17,6 +17,10 @@ class ComponentSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         obj =  super().update(instance, validated_data)
         return obj
+    def validate(self, data):
+        if data['lifetime'] < 0 :
+            raise serializers.ValidationError({"lifetime must be greater than zero"})
+        return data
 
 class InventorySerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True,read_only=True)
