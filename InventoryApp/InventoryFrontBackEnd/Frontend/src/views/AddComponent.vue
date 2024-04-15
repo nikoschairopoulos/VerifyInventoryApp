@@ -5,8 +5,8 @@
     <div class="form-photo">
         <div class="directives">
             <br>
-            <p><strong>tip:</strong>In case you want to set the <span style="color:darkgreen"><strong>CAPEX, Embodied PE and CO2</strong></span> &nbsp; &nbsp; <br>
-            from a Project Inventory, as it is given:<br>
+            <p><strong>tip to Import Component:</strong>In case you want  to set the <br> <strong style="color:darkgreen">CAPEX, Embodied PE and CO2</strong>
+            from a Project Inventory<br> as it is given:<br>
             - set <strong>scale env = 0</strong><br>
             - set <strong>scale cost = 0</strong>
             </p>
@@ -330,8 +330,12 @@
                     <div class="row">
                         <div class="col-2 mt-2">
                             <button type="submit" id="sumbit-button" class="btn btn-primary mb-2">Create Component</button>
+
+                            
                         </div>
                         <p  id='mandatory' class="col-10 mt-2"><strong>All fields with * are Mandatory</strong></p>
+                        <label for="formFileSm" class="form-label"> <strong>Create Component from .xlsx file</strong></label>
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" @change="onFileChange" />
                     </div>  
                
                    
@@ -347,6 +351,7 @@
 <script>
 import { axios } from "@/common/api.service.js";
 import { TARGET_IP } from "@/common/request_configs.js";
+import readXlsxFile from 'read-excel-file';
 export default {
   name: 'AddComponentForm',
   props:['header','componentValues','EditMode'],
@@ -381,6 +386,7 @@ export default {
         explainMessage:null,
         explanationMode:false,
         showSubtype:true,
+        file :null,
         explain_dict:{
             "type":'Is the Components type e.g.  Heatpump',
             "subtype":'Is the Components subtype e.g. for a Heatpump a subtype would be: water to water',
@@ -436,6 +442,7 @@ export default {
             dataObject.major_upgrade_share/=100;
             dataObject.annual_performance_degradation/=100;
             const {data} = await axios.post(`${TARGET_IP}/api/component/`,dataObject)
+                console.log(dataObject)
                 alert("Success")
                 this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
             }catch(error){
@@ -446,90 +453,33 @@ export default {
                 alert("Error")
         }        
     },
-    explain(explainHeader){
-        if(explainHeader==='type'){
-            this.explainMessage = 'Is the Components type e.g.  Heatpump'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='subtype'){
-            this.explainMessage = 'Is the Components subtype e.g. for a Heatpump a subtype would be: water to water'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='installed_ugs'){
-            this.explainMessage = 'Is the Components installed Nominal Magnitude e.g. for Heatpump is the nominal power to kwh '
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='CAPEX/UGS'){
-            this.explainMessage = 'This parameter is the ratio of a the CAPEX/UGS for the reference component that is considered for this analysis e.g. Heatpumps cost=100 € and nominal power (installed UGS) = 10kW ==>  CAPEX/UGS=10[€/kW]'              
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='OPEX_PER_CAPEX'){
-            this.explainMessage = 'This parameter gives the ratio of components yearly maintenance according to its CAPEX. e.g. if this ratio=10% then considering that Heatpump costs 100€ every year maintenance cost is 10€ '              
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='embodied_co2_per_ugs'){
-            this.explainMessage = 'This parameter gives the ratio of embodied CO2[kg]/UGS for the reference component that is considered for this analysis, e.g. Heatpumps embodied CO2=100 kg and the Nominal Power (installed UGS) is 10 kWh then the ratio=10[kgCO2/kWh] '              
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='embodied_pe_per_ugs'){
-            this.explainMessage = 'This parameter gives the ratio of embodied Primary/UGS for the reference component that is considered for this analysis, e.g. Heatpumps embodied Pe=100 GJ and the Nominal Power (installed UGS) is 10 kWh then the ratio=10[GJ/kWh] '              
-            this.explanationMode=true
-            return this.explainMessage
-            
-        }
-        if(explainHeader==='scale_cost'){
-            this.explainMessage = 'exponent for power-scaling the input values to match the size of the user-input(monetery). '              
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='scale_env'){
-            this.explainMessage = 'exponent for power-scaling the input values to match the size of the user-input (environmental).'              
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='major_upgrade_point'){
-            this.explainMessage ='Is time interval that major upgrades for the component occur, e.g. for a heatpump if the major upgrade point is 5 years, every 5 years major upgrade occur for this component.'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='major_upgrade_share'){
-            this.explainMessage = 'Is the % Percentage of CAPEX to calculate the cost of a major upgrade.'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='annual_performance_degradation'){
-            this.explainMessage = 'Annual drop of performance'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='pref_env'){
-            this.explainMessage = 'is the nominal installed UGS for the reference component of the analysis(environmental) e.g for a heatpump would be 10[kW]'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if(explainHeader==='pref_cost'){
-            this.explainMessage = 'is the nominal installed UGS for the reference component of the analysis(monetery) e.g for a heatpump would be 8[kW]'
-            this.explanationMode=true
-            return this.explainMessage
-        }
-        if (explainHeader=='MAIN_INVENTORY'){
-            this.explainMessage = 'When a component is not project specific is added at main inventory e.g. there is need to have a generalized Heatpump water to water at Verify inventory.'
-            this.explanationMode=true
-            return this.explainMessage
 
-        }
+    async onFileChange(event) {
+        let xlsxfile = event.target.files ? event.target.files[0] : null;
+        
+        readXlsxFile(xlsxfile).then((rows) => {
+        
+            console.log("rows:", rows)
+            let parameter_labels = rows[0]
+            let excellComponent = {}
+            for(let i = 0; i < parameter_labels.length; i++){
+                excellComponent[rows[0][i]] = rows[1][i]
+            }
 
-    },
-    dontExplain(){
-        this.explanationMode=false
-    }
-  },
+            // to handle them properly - now is for proof of concept:
+            excellComponent["bibliography"] = null
+            excellComponent["description"] = null 
+            excellComponent["thermal_properties"] = null
+            console.log(excellComponent)
+
+            axios.post(`${TARGET_IP}/api/component/`, excellComponent).then(()=>{
+                alert("Success")
+                this.$router.push({ name:'ListComponents'}); //here add the router name from router/index.js
+            }).catch(error => {
+               console.error('Error fetching data:', error)})
+            }
+    )},
+
   mounted(){
     (function() {
         'use strict';
@@ -575,6 +525,7 @@ export default {
         }
     }
   }
+}
 }
 
 </script>
