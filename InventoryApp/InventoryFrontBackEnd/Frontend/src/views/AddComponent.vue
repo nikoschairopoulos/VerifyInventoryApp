@@ -531,7 +531,7 @@ export default {
                alert(error_message)
                console.error('Error fetching data:', error.response.data)})
             } 
-  )},
+  )}},
 
   mounted(){
     (function() {
@@ -550,7 +550,9 @@ export default {
   },
   watch: {
     SHEET_TYPE(newValue) {
+
         if( newValue=="El. Generators" || newValue=="Thermal Sources" || newValue=='PCM'){
+            console.log(this.ugs_header)
             this.ugs_header = 'kW'
             this.showSubtype=true;
         }else if(newValue=="Water Storage"){
@@ -574,11 +576,12 @@ export default {
             this.showSubtype=true;
         }
         if(newValue=='Ventilation'){
+            this.ugs_header = 'kW'
             this.showSubtype=false;
         }
     }
   }
-}
+  
 }
 
 </script>

@@ -8,7 +8,9 @@
         <li>
           <a href="#" id="nav-options" :class="['nav-options', {'option': option1_or_option2}]" @click="showcomponents"><strong>Add Components</strong></a>
           <a href="#" @click="showinventory" :class="['nav-options', {'option': !option1_or_option2}]" ><strong>Submit Inventory</strong></a>
-          <div style="margin-left:5px" class="mb-3">
+          
+          <div style="margin-left:5px" class="mb-1">
+           
                 <label for="ChooseTechnology" id="temps" class="form-label"><strong>Choose Technology <span class="fa fa-search" ></span></strong></label>
                 <select style="width:90%;font-size:1em;" id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
                     <option value="all types">All Types</option>
@@ -295,7 +297,6 @@ table {
   display: block;
   padding: 10px 18px;
   text-align: left;
-  border-bottom:solid 1px #444;
   color: #F7F7F7;
 }
 
@@ -399,7 +400,7 @@ h2,h4{
 }
 
 .components{
-  margin-top: 6px;
+  margin-top:50px;
 }
 
 
