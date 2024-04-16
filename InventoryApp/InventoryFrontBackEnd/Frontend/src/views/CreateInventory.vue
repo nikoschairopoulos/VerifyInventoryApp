@@ -6,8 +6,8 @@
     <nav class="navbar-primary">
       <ul class="navbar-primary-menu">
         <li>
-          <a href="#" id="nav-options" @click="showcomponents"><strong>Add Components</strong></a>
-          <a href="#" @click="showinventory" id="nav-options" class="nav-label"><strong>Submit Inventory</strong></a>
+          <a href="#" id="nav-options" :class="['nav-options', {'option': option1_or_option2}]" @click="showcomponents"><strong>Add Components</strong></a>
+          <a href="#" @click="showinventory" :class="['nav-options', {'option': !option1_or_option2}]" ><strong>Submit Inventory</strong></a>
           <div style="margin-left:5px" class="mb-3">
                 <label for="ChooseTechnology" id="temps" class="form-label"><strong>Choose Technology <span class="fa fa-search" ></span></strong></label>
                 <select style="width:90%;font-size:1em;" id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
@@ -37,10 +37,7 @@
   </div>
 
 
-  <div class="col-6" v-if="showComponentsTable">
-        <hr>
-        <h4 style="text-align: center;">Choose Components:</h4>
-        <hr>
+  <div  class="col-6 components" v-if="showComponentsTable">
         <table  class="table-responsive">
             <tr id="table-header">
               <th scope="col">ID</th>
@@ -64,7 +61,7 @@
   <div style="background-color: white" class="col-6" v-if=" showInventoryForm">
 
     <form ref="anyName" class="container mt-4" id="component"  @submit.prevent="handleSubmit">
-              <p id='form-title' style="  text-align: center; font-size: 2em;">Submit Inventory Form</p>
+              <p id='form-title' style="  text-align: center; font-size: 2em; font-weight:bolder;">Submit Inventory Form</p>
               <div class="group1">
             <hr><br>
                     <div>
@@ -133,7 +130,8 @@ export default {
                  projectName:null,
                  NotMainInventory:null,
                  showComponentsTable:true,
-                 showInventoryForm:false
+                 showInventoryForm:false,
+                 option1_or_option2:true,
 
         };
     },
@@ -168,11 +166,13 @@ export default {
     },
 
       showcomponents(){
+          this.option1_or_option2= !this.option1_or_option2
           this.showComponentsTable=true;
           this.showInventoryForm=false
       },  
 
       showinventory(){
+          this.option1_or_option2= !this.option1_or_option2
           this.showComponentsTable=false;
           this.showInventoryForm=true
       },  
@@ -291,7 +291,7 @@ table {
   list-style: none;
 }
 
-.navbar-primary-menu li a {
+.nav-options{
   display: block;
   padding: 10px 18px;
   text-align: left;
@@ -299,10 +299,14 @@ table {
   color: #F7F7F7;
 }
 
-.navbar-primary-menu li a:hover{
+
+
+.option{
   background-color:#1089ff;
   text-decoration: none;
   color: #ffffff; 
+  border-radius: 8px;
+  margin-left:1px;
 }
 
 .navbar-primary-menu li a .glyphicon {
@@ -375,15 +379,12 @@ body.hide-overflow {
   background-color: #2bb6a3;
 }
 
-#nav-options{
+.nav-options{
   color:#054673;
   text-decoration: none;
 }
 
-#nav-options:hover{
-  color:#F7F7F7;
 
-}
 
 h2,h4{
   color:#054673;
@@ -394,7 +395,11 @@ h2,h4{
 }
 
 #temps{
-  color:#2bb6a3;
+  color:lightslategray;
+}
+
+.components{
+  margin-top: 6px;
 }
 
 
