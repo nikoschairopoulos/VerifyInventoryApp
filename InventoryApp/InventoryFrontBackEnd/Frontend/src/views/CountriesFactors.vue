@@ -90,7 +90,7 @@
             </div>
             <div class="col-6">
                 <label for="validationCustom01" class="form-label">CO2 Emission Factor [kgCO2/kwh]</label>
-                <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="co2" required>
+                <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="co2" required min="0">
                 <div class="valid-feedback">
                     pass
                 </div>
@@ -123,11 +123,9 @@
 </template>
 
 <script>
-    import { axios } from "@/common/api.service.js";
-    import {TARGET_IP} from "@/common/request_configs.js"
-    import { onUnmounted } from "vue";
-    import MapChart from 'vue-map-chart'
-
+ import { axios } from "@/common/api.service.js";
+import { TARGET_IP } from "@/common/request_configs.js";
+import MapChart from 'vue-map-chart';
     export default {
     name: 'CountriesFactors',
     components: {MapChart},
@@ -172,7 +170,7 @@
 
     },
     beforeUnmount(){
-        // *******PROPABLY THERE IS A BUH WITH MAP CHART COMPONENT *****
+        // *******PROPABLY THERE IS A BUG WITH MAP CHART COMPONENT *****
       try{
         let countryname = this.getCountryCodeOrName(this.country)[1]
         this.infoObj[countryname]=0;
