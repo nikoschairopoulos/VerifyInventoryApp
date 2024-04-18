@@ -159,7 +159,7 @@
 
                         <div v-if="detailsComp.SHEET_TYPE=='Glazing'">
                             <label for="quantity" class="form-label">G value:</label>
-                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.ugalue" min="0">
+                            <input type="text" class="form-control"  id="quantity" v-model="detailsComp.thermal_properties.gvalue" min="0">
                           </div>
              
                   </div>
@@ -177,8 +177,8 @@
   
 
 <script>
-import { axios} from "@/common/api.service.js";
-import {TARGET_IP} from "@/common/request_configs.js"
+import { axios } from "@/common/api.service.js";
+import { TARGET_IP } from "@/common/request_configs.js";
 import UpdateComponent from './UpdateComponent.vue';
 export default {
     name:"ListComponents",
