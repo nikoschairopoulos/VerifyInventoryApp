@@ -70,6 +70,7 @@ class FillDataBaseWithComponentsD:
                 comp_dict['SHEET_TYPE'] = SHEET_TYPE
                 comp_dict['IS_MAIN_INVENTORY'] = True
                 comp_dict['replace_or_die'] = 'replace'
+                comp_dict['IS_B_COMPONENT'] = False
                 #breakpoint()
 
                 #SERIALIZE AND LOAD:
@@ -79,6 +80,13 @@ class FillDataBaseWithComponentsD:
                     #breakpoint()
                 else:
                     print("error:",serializer.errors)
+
+    def specify_b_components(self):
+        objects_b = Component.objects.filter(IS_B_COMPONENT=None)
+        for obj in objects_b:
+            obj.IS_B_COMPONENT = True
+            obj.save()
+
         
 ###################
 #Methods from Verify
@@ -130,6 +138,10 @@ class FillDataBaseWithComponentsD:
 #obj = FillDataBaseWithComponentsD()
 #obj.load_components()
 
+
+'''
+FUNCTION TO UPDATE NAMES:
+'''
 #update_name = {component_name="this is a new name"}
 def update_component(primary_key,update_name):
     obj = get_object_or_404(Component,pk=primary_key)
@@ -142,4 +154,10 @@ def update_component(primary_key,update_name):
     else:
         print(serializer.errors)
 
-update_component(338,'update_name')
+
+
+#update_component(338,'update_name')
+obj = FillDataBaseWithComponentsD()
+obj.load_components()
+obj.specify_b_components()
+
