@@ -1,0 +1,1 @@
+from InventoryFrontBackend.inventory.models import Component

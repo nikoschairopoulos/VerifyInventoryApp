@@ -228,7 +228,7 @@
                                 <label for="quantity" class="form-label">
                                     <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_share']"></i>
                                     Major Upgrade Share* <strong>[CAPEX%]:</strong> <span v-if="major_upgrade_share>100 || major_upgrade_share<0" class="text-danger"><br>valid range is [0,100]</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required placeholder="For No Replacement put : 1000">
                         </div>
                         </div>
 

@@ -37,6 +37,9 @@ class Component(models.Model):
     description = models.TextField(blank=True,null=True)
     thermal_properties = models.JSONField(null=True, blank=True)
 
+    class Meta:
+        app_label = 'inventory'
+
 
     def __str__(self):
         return f"{self.name} {self.component_type} {self.component_subtype}"
@@ -50,6 +53,10 @@ class Inventory(models.Model):
     project_name = models.CharField(max_length=250)
     components = models.ManyToManyField(Component,related_name="inventories",blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = 'inventory'
+
     def __str__(self):
         return f"{self.name}"
     
@@ -64,6 +71,8 @@ class Factor(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['country', 'fuel'], name='composite_pk')
         ]
+    
+        app_label = 'inventory'
 
 
 class Wall_Materials(models.Model):
@@ -72,6 +81,9 @@ class Wall_Materials(models.Model):
     conductivity = models.FloatField()
     capacity = models.FloatField()
     density  = models.FloatField()
+
+    class Meta:
+        app_label = 'inventory'
     
     
 

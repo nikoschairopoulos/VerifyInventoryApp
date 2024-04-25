@@ -20,7 +20,13 @@ class ComponentSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['lifetime'] < 0 :
             raise serializers.ValidationError({"lifetime must be greater than zero"})
+        if data['capex_per_ugs']<0:
+            raise serializers.ValidationError("capex/ugs must >=0")
+        
         return data
+
+
+
 
 class InventorySerializer(serializers.ModelSerializer):
     components = ComponentSerializer(many=True,read_only=True)
@@ -81,15 +87,19 @@ class FactorSerializer(serializers.ModelSerializer):
         test=1
         obj =  super().update(instance, validated_data)
         return obj
+    
     def validate(self, data):
         """
         Check that the start is before the stop.
         """
-        if data['primary_energy_factor'] < 0 :
-            raise serializers.ValidationError({"primary energy factor cannot be negative number"})
-    
-        #if data['co2_factor']<0:
-        #    raise serializers.ValidationError({""})
+        if data['primary_energy_factor'] < 1:
+            raise serializers.ValidationError({"primary energy factor cannot be < 1 "})
+        
+
+        if data['co2_factor']<0:
+            raise serializers.ValidationError({"co2 factor must >= 0 "})
+        
+        return data
 
 
     
