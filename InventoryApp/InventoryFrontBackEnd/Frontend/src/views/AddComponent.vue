@@ -50,6 +50,10 @@
                             <option value="PCM">PCM</option>
                             <option value="Water Storage">Water Storage</option>
                             <option value="El. Storage">Electrical Storage</option>
+                            <!--D COMPONENTS:-->
+                            <option value="Plants">Plants (D)</option>
+                            <option value="Public">Public (D)</option>
+                            <option value="Transport">Transport (D)</option>
                         </select>
                     </div>
                         </div>
@@ -141,11 +145,11 @@
                                         </select>
                                     </div>
 
-                                    <div id="options" v-if="SHEET_TYPE=='Plants'">
+                                    <div id="optionsD" v-if="SHEET_TYPE=='Plants'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                             <option value="power_plant"> Power Plant </option>
-                                            <option value="geothermal_hydro_plant"> Geothermal/Hydro Plant </option>
+                                            <option value="geothermal_hydro_plant"> Geothermal / Hydro Plant </option>
                                             <option value="incineration_plant">Incineration Plant</option>
                                             <option value="tidal_device_plant">Tidal Plant</option>
                                             <option value="fuel_cell_plant">Fuel Cell Plant</option>
@@ -153,6 +157,25 @@
                                             <option value="wind_park"> Wind Park</option>
                                         </select>
                                     </div>
+
+                                    <div id="optionsD" v-if="SHEET_TYPE=='Transport'">
+                                        <label for="type" class="form-label">Component Type* :</label><br>
+                                        <select id="type" v-model="component_type" required>
+                                            <option value="electric_vehicle"> Electric Vehicle </option>
+                                        </select>
+                                        </div>
+                                    
+                                    
+                                    <div id="optionsD" v-if="SHEET_TYPE=='Public'">
+                                        <label for="type" class="form-label">Component Type* :</label><br>
+                                        <select id="type" v-model="component_type" required>
+                                            <option value="charging_station"> Charging Station </option>
+                                            <option value="transformer"> Transformer </option>
+                                            <option value="lighting"> Lighting </option>
+                                            <option value="interconnection"> Interconnection </option>
+                                        </select>
+                                    </div>
+                                    
 
 
                                 </div>
@@ -715,5 +738,6 @@ input{
 #tooltip-explain{
     size: 15px;
 }
+
 
 </style>
