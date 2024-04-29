@@ -16,7 +16,11 @@
                     <option value="PCM">PCM</option>
                     <option value="Water Storage">Water Storage</option>
                     <option value="El. Storage">El. Storage</option>
+                    <option value="Plants">Plants (D)</option>
+                    <option value="Public">Public (D)</option>
+                    <option value="Transport">Transport (D)</option>
                     <option value="Other">Other</option>
+                   
                 </select>
 
                 <div class="mb-2 ml-2 " >
