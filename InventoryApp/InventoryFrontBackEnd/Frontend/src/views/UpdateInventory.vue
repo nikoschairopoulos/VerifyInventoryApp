@@ -13,7 +13,12 @@
                     <option value="PCM">PCM</option>
                     <option value="Water Storage">Water Storage</option>
                     <option value="El. Storage">El. Storage</option>
-                    <option value="Other">Other</option>
+
+                    <option value="Plants">Plants</option>
+                    <option value="Public">Public</option>
+                    <option value="Transport">Transport</option>
+
+                    <!--<option value="Other">Other</option>-->   
                 </select>
                 <div class="mb-2 ml-2 " >
                     <label class="form-check-label" for="isMainInventory"><strong> No Main Inventory   </strong></label>
@@ -102,7 +107,7 @@
 
 <script>
 import { axios } from "@/common/api.service.js";
-import {TARGET_IP} from "@/common/request_configs.js"
+import { TARGET_IP } from "@/common/request_configs.js";
 export default {
     name:"UpdateInventory",
     props:["id"],

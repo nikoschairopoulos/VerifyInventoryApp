@@ -7,19 +7,23 @@
       <div class="mb-1 ml-2" id="filter">
                 <label for="Choose Technology" class="form-label"><strong>Choose Technology</strong>:</label>
                 <select id="ChooseTechnology" v-model="SHEET_TYPE" class="custom-select" @change="updateTypeofComponentToRender()">
-                    <option value="all types">All Types</option>
-                    <option value="El. Generators">Electrical Generators</option>
-                    <option value="Thermal Sources">Thermal Sources</option>
-                    <option value="Glazing">Glazing</option>
-                    <option value="Insulation">Insulation</option>
-                    <option value="Ventilation">Ventilation</option>
-                    <option value="PCM">PCM</option>
-                    <option value="Water Storage">Water Storage</option>
-                    <option value="El. Storage">El. Storage</option>
-                    <option value="Plants">Plants (D)</option>
-                    <option value="Public">Public (D)</option>
-                    <option value="Transport">Transport (D)</option>
-                    <option value="Other">Other</option>
+                  <optgroup label="Building Level Components">
+                      <option value="all types">All Types</option>
+                      <option value="El. Generators">Electrical Generators</option>
+                      <option value="Thermal Sources">Thermal Sources</option>
+                      <option value="Glazing">Glazing</option>
+                      <option value="Insulation">Insulation</option>
+                      <option value="Ventilation">Ventilation</option>
+                      <option value="PCM">PCM</option>
+                      <option value="Water Storage">Water Storage</option>
+                      <option value="El. Storage">El. Storage</option>
+                  </optgroup>
+                  <optgroup label="District Level Components">
+                      <option value="Plants">Plants</option>
+                      <option value="Public">Public</option>
+                      <option value="Transport">Transport</option>
+                  </optgroup>
+                  <!--<option value="Other">Other</option>--> 
                    
                 </select>
 

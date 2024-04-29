@@ -42,6 +42,7 @@
                             <div class="mb-1">
                         <label for="Choose Technology" class="form-label">Choose Technology*:</label>
                         <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
+                            <optgroup label="Building Level Components">
                             <option value="El. Generators">Electrical Generators</option>
                             <option value="Thermal Sources">Thermal Sources</option>
                             <option value="Glazing">Glazing</option>
@@ -50,10 +51,13 @@
                             <option value="PCM">PCM</option>
                             <option value="Water Storage">Water Storage</option>
                             <option value="El. Storage">Electrical Storage</option>
+                            </optgroup>
                             <!--D COMPONENTS:-->
-                            <option value="Plants">Plants (D)</option>
-                            <option value="Public">Public (D)</option>
-                            <option value="Transport">Transport (D)</option>
+                            <optgroup label="District Level Components">
+                            <option value="Plants">Plants</option>
+                            <option value="Public">Public</option>
+                            <option value="Transport">Transport</option>
+                            </optgroup>
                         </select>
                     </div>
                         </div>
