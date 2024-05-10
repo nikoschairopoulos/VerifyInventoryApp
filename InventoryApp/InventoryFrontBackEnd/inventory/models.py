@@ -36,7 +36,7 @@ class Component(models.Model):
     bibliography = models.TextField(blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thermal_properties = models.JSONField(null=True, blank=True)
-    IS_B_COMPONENT = models.BooleanField(null=True)
+    IS_B_COMPONENT = models.BooleanField()
 
     class Meta:
         app_label = 'inventory'

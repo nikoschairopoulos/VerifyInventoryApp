@@ -148,7 +148,7 @@
                                         <option value="micro_ventilation">micro ventilation</option>
                                         </select>
                                     </div>
-
+                                    <!--D COMPONENT TYPES-->
                                     <div id="optionsD" v-if="SHEET_TYPE=='Plants'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
@@ -450,6 +450,7 @@ export default {
   },
   methods:{
     async handleSubmit(){ 
+        console.log("i submit..")
         const dataObject = this.$data;
         // remove some no need properties: 
         try{
@@ -467,7 +468,7 @@ export default {
         }catch(error){
             console.log(error)
         }
-
+        console.log("SHEET_TYPE:", this.SHEET_TYPE);
         if(this.SHEET_TYPE=='Insulation'){
             dataObject['thermal_properties'] = {'conductivity':this.conductivity,
                                                 'density':this.density,
@@ -479,7 +480,17 @@ export default {
                                                 'gvalue':this.gvalue}
         }
 
+        // tag the component as B or D (here chat , never enters:)
+        if(this.SHEET_TYPE=="Plants" || this.SHEET_TYPE=="Public" || this.SHEET_TYPE=='Transport'){
+            dataObject["IS_B_COMPONENT"] = false
+            console.log("D COMPONENT")
+        }else{
+            dataObject["IS_B_COMPONENT"] = true
+            console.log("B COMPONENT")
+        }
+
         try{
+            console.log("i submit..")
             dataObject.opex_per_capex/=100;
             dataObject.major_upgrade_share/=100;
             dataObject.annual_performance_degradation/=100;
@@ -496,9 +507,9 @@ export default {
         }        
     },
 
+
     async onFileChange(event) {
         let xlsxfile = event.target.files ? event.target.files[0] : null;
-
         readXlsxFile(xlsxfile).then((rows) => {
         
             console.log("rows:", rows)
@@ -509,7 +520,6 @@ export default {
             for(let i=0;i<rows.length-1;i++){
                 excellComponent.push({})
            }
-
             console.log("rows= ",rows.length)
             // iterate over rows (components)
             for(let i=1 ; i<rows.length ;i++){
@@ -519,7 +529,6 @@ export default {
                     console.log("add thermal properties before create insulation")
                     excellComponent[i-1]['thermal_properties'] = {}
                 }
-                
                 for(let j = 0; j < parameter_labels.length; j++){
                     let jsonKey = rows[0][j]
                     if (jsonKey!='conductivity' && jsonKey!='capacity' && jsonKey!='density' && jsonKey!="gvalue" && jsonKey!="uvalue"){ 

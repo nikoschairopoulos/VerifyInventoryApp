@@ -31,7 +31,8 @@ class InventoryViewSet(ModelViewSet):
     serializer_class = InventorySerializer
     #permission_classes = [IsAuthenticated]
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user) #Additionally author is added (this is added procedure after serializer) (not implemented at serializer)
+        serializer.save(author=self.request.user) #Additionally author is added (this is added procedure after serializer) 
+                                                  #adds the user at validated_data ==> .create(**validated_data)
 
 
 class FactorViewSet(ModelViewSet):

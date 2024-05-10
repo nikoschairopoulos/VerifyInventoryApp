@@ -11,7 +11,6 @@ class ComponentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Component
         fields='__all__'
-    #    extra_kwargs = {'id': {'write_only': False}}
     def create(self, validated_data):
         return super().create(validated_data)
     def update(self, instance, validated_data):
