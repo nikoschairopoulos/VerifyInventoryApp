@@ -261,7 +261,7 @@
                                 <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_point']"></i>
                                 Major Upgrade Point* <strong> 
                                 [Years]:</strong><span v-if="major_upgrade_point<0" class="text-danger"><br> valid value is non negative</span></label>
-                            <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" required>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" placeholder="For No Replacement put : 1000" required>
                         </div>
                         </div>
 
@@ -270,7 +270,7 @@
                                 <label for="quantity" class="form-label">
                                     <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_share']"></i>
                                     Major Upgrade Share* <strong>[CAPEX%]:</strong> <span v-if="major_upgrade_share>100 || major_upgrade_share<0" class="text-danger"><br>valid range is [0,100]</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required placeholder="For No Replacement put : 1000">
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required >
                         </div>
                         </div>
 
@@ -480,7 +480,7 @@ export default {
                                                 'gvalue':this.gvalue}
         }
 
-        // tag the component as B or D (here chat , never enters:)
+        // tag the component as B or D 
         if(this.SHEET_TYPE=="Plants" || this.SHEET_TYPE=="Public" || this.SHEET_TYPE=='Transport'){
             dataObject["IS_B_COMPONENT"] = false
             console.log("D COMPONENT")

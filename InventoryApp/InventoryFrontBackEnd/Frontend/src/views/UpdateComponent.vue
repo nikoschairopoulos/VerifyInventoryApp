@@ -181,6 +181,7 @@ export default {
         conductivity:null,
         uvalue:null,
         gvalue:null,
+        IS_B_COMPONENT:null,
         component:{}
     } 
   },
