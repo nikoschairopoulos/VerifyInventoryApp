@@ -51,14 +51,14 @@
                             <option value="PCM">PCM</option>
                             <option value="Water Storage">Water Storage</option>
                             <option value="El. Storage">Electrical Storage (ESS)</option>
-                            <option value="B_Batteries">Batteries</option>
+                            <option value="B_Batteries"> Batteries (Buildings)</option>
                             </optgroup>
                             <!--D COMPONENTS:-->
                             <optgroup label="District Level Components">
                             <option value="Plants">Plants</option>
                             <option value="Public">Public</option>
                             <option value="Transport">Transport</option>
-                            <option value="D_Batteries">Batteries</option>
+                            <option value="D_Batteries">Batteries (Districts)</option>
                             </optgroup>
                         </select>
                     </div>
@@ -119,13 +119,15 @@
                                         <option value="pcm">phase change material standard</option>
                                     </select>
                                     </div>
+                                    
                                     <div id="options" v-if="SHEET_TYPE=='Water Storage'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                         <option value="hot_water">water storage tank</option>
                                     </select>
                                     </div>
-                                    <div id="options" v-if="SHEET_TYPE=='El. Storage'">
+
+                                    <div id="options" v-if="SHEET_TYPE==('B_Batteries' || 'D_Batteries') ">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                         <option value="li_ion">battery Li-ion </option>
@@ -133,6 +135,14 @@
                                         <option value="flow">battery flow</option>
                                     </select>
                                     </div>
+                                    
+                                    <div id="options" v-if="SHEET_TYPE=='El. Storage' ">
+                                        <label for="type" class="form-label">Component Type* :</label><br>
+                                        <select id="type" v-model="component_type" required>
+                                        <option value="flywheel">flywheel </option>
+                                    </select>
+                                    </div>
+                                    
                                     <div id="options" v-if="SHEET_TYPE=='Glazing'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
@@ -181,9 +191,6 @@
                                             <option value="interconnection"> Interconnection </option>
                                         </select>
                                     </div>
-                                    
-
-
                                 </div>
                         </div>
                         <div class="col-6">

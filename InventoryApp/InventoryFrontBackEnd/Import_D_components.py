@@ -52,8 +52,6 @@ for comp in ser.data:
         d_comp['IS_B_COMPONENT'] = False
         d_comp['name']+=' district'
  
-
-        
         #D components:
         d_batteries.append(d_comp) 
         print(d_batteries)
