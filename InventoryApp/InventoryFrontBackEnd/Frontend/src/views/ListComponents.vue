@@ -16,12 +16,14 @@
                       <option value="Ventilation">Ventilation</option>
                       <option value="PCM">PCM</option>
                       <option value="Water Storage">Water Storage</option>
-                      <option value="El. Storage">El. Storage</option>
+                      <option value="El. Storage">El. Storage (ESS)</option>
+                      <option value="B_Batteries">Batteries</option>
                   </optgroup>
                   <optgroup label="District Level Components">
                       <option value="Plants">Plants</option>
                       <option value="Public">Public</option>
                       <option value="Transport">Transport</option>
+                      <option value="D_Batteries">Batteries</option>
                   </optgroup>
                   <!--<option value="Other">Other</option>--> 
                    

@@ -218,6 +218,7 @@ export default {
     this.IS_MAIN_INVENTORY =  this.component.IS_MAIN_INVENTORY
     this.bibliography = this.component.bibliography
     this.description = this.component.description
+    this.IS_B_COMPONENT = this.component.IS_B_COMPONENT
 
     
     if(this.component.thermal_properties!=null  && this.component.thermal_properties.hasOwnProperty("conductivity")){

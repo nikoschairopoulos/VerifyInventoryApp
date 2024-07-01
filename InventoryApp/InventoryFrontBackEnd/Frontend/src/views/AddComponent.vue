@@ -50,13 +50,15 @@
                             <option value="Ventilation">Ventilation</option>
                             <option value="PCM">PCM</option>
                             <option value="Water Storage">Water Storage</option>
-                            <option value="El. Storage">Electrical Storage</option>
+                            <option value="El. Storage">Electrical Storage (ESS)</option>
+                            <option value="B_Batteries">Batteries</option>
                             </optgroup>
                             <!--D COMPONENTS:-->
                             <optgroup label="District Level Components">
                             <option value="Plants">Plants</option>
                             <option value="Public">Public</option>
                             <option value="Transport">Transport</option>
+                            <option value="D_Batteries">Batteries</option>
                             </optgroup>
                         </select>
                     </div>
@@ -481,7 +483,7 @@ export default {
         }
 
         // tag the component as B or D 
-        if(this.SHEET_TYPE=="Plants" || this.SHEET_TYPE=="Public" || this.SHEET_TYPE=='Transport'){
+        if(this.SHEET_TYPE=="Plants" || this.SHEET_TYPE=="Public" || this.SHEET_TYPE=='Transport' ||this.SHEET_TYPE=='D_Batteries'){
             dataObject["IS_B_COMPONENT"] = false
             console.log("D COMPONENT")
         }else{
