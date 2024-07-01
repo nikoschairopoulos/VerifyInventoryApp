@@ -127,7 +127,16 @@
                                     </select>
                                     </div>
 
-                                    <div id="options" v-if="SHEET_TYPE==('B_Batteries' || 'D_Batteries') ">
+                                    <div id="options" v-if="SHEET_TYPE=='B_Batteries'">
+                                        <label for="type" class="form-label">Component Type* :</label><br>
+                                        <select id="type" v-model="component_type" required>
+                                        <option value="li_ion">battery Li-ion </option>
+                                        <option value="lead_acid">battery lead acid</option>
+                                        <option value="flow">battery flow</option>
+                                    </select>
+                                    </div>
+
+                                    <div id="options" v-if="SHEET_TYPE === 'D_Batteries' || SHEET_TYPE === 'B_batteries'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                         <option value="li_ion">battery Li-ion </option>
@@ -619,7 +628,7 @@ export default {
             this.ugs_header='Litre'
             this.showSubtype=true;
         }
-        else if(newValue=='El. Storage'){
+        else if(newValue=='El. Storage' ||newValue=='B_Batteries' || newValue=='D_Battteries'){
             this.ugs_header='kWh'
             this.showSubtype=false;
         }
