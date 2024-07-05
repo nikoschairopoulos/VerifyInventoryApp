@@ -7,7 +7,9 @@
         
           <download-excel 
              class="btn btn-info download-btn"
-             :data="components">
+             :data="components"
+              type="xlsx"
+             name="verify_components.xlsx">
              download components
           </download-excel>
         </div>
