@@ -2,7 +2,15 @@
   <div>   
     <div class="tablecontainer">
       <div class="choose_option">
+        <div style="display: flex; justify-content: space-between;">
         <h2>Search components by technology <span class="fa fa-search" ></span></h2><br>
+        
+          <download-excel 
+             class="btn btn-info download-btn"
+             :data="components">
+             download components
+          </download-excel>
+        </div>
         <hr>
       <div class="mb-1 ml-2" id="filter">
                 <label for="Choose Technology" class="form-label"><strong>Choose Technology</strong>:</label>
@@ -189,9 +197,11 @@
 <script>
 import { axios } from "@/common/api.service.js";
 import { TARGET_IP } from "@/common/request_configs.js";
+import JsonExcel from 'vue-json-excel3';
 import UpdateComponent from './UpdateComponent.vue';
 export default {
     name:"ListComponents",
+
     data() {
         return { components: [],
                  updateComponentMode: false,
@@ -274,7 +284,7 @@ export default {
     },
     computed: {
   },
-    components: { UpdateComponent }
+    components: { UpdateComponent ,downloadExcel:JsonExcel }
 } 
 </script>
 
@@ -420,6 +430,12 @@ h2{
   padding-top: 10px;
   margin-bottom: -25px;
   color: seagreen;
+}
+
+.download-btn{
+  margin-top: 7px;
+  margin-right: 1%;
+  border: dashed 0.5px
 }
 
 </style>
