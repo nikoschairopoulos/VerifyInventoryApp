@@ -103,10 +103,7 @@ with open('deleted_components.json', 'r') as file:
     print(deleted_comp)
 
 
-#Change its Ids
-#query = Component.objects.all()
-#ser = ComponentSerializer(query,many=True)
-# find the deleted and add the into the DB
+
 
 for comp in deleted_comp:
     try:

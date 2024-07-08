@@ -1,10 +1,11 @@
+import "bootstrap"
+import "bootstrap/dist/css/bootstrap.min.css"
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap"
-import  MapChart  from 'vue-map-chart'
 
-//Vue.component('MapChart', MapChart);
 
-createApp(App).use(router).mount('#app')
+const app = createApp(App)
+app.config.compilerOptions.isCustomElement = tag => tag === 'JsonExcel';
+app.use(router).mount('#app')
+

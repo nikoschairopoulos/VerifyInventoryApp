@@ -155,3 +155,16 @@ class CreateComponentFromExcell(APIView):
         else:
             return Response(components_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
+###### login redirect: this solves the problem with the use of the Middleware:
+from django.shortcuts import render
+from pathlib import Path
+def homepage_view(request):
+    CURRENT_DIRECTORY = Path(__file__).parent.absolute()
+    print('----------------',CURRENT_DIRECTORY)
+    FILE = f'{CURRENT_DIRECTORY}/../../templates/index.html'
+    print(FILE)
+    return render(request, FILE)  # Vue.js entry point

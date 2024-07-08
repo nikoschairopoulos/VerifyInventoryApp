@@ -61,7 +61,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware'
+    'django.middleware.common.CommonMiddleware',
+    'inventoryapi.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'inventoryapi.urls'
@@ -151,7 +152,7 @@ AUTH_USER_MODEL = 'users.CustomUser' # We use custom user Model for authorizatio
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL = "/accounts/login" 
+LOGIN_URL = "/accounts/login/" 
 LOGIN_REDIRECT_URL = '/'
 #LOGOUT_REDIRECT_URL = "/"
 
@@ -184,4 +185,5 @@ REST_FRAMEWORK = {
 Default permission classes always be applied if 
 you dont declare permissions inside your viewset
 '''
+
 

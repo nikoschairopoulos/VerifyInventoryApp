@@ -1,13 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import MapChart from 'vue-map-chart'
-import Home from '../views/Home.vue'
-import AddComponent from '../views/AddComponent.vue'
-import ListComponents from '../views/ListComponents'
-import ListMyInventories from '../views/ListMyInventories'
-import CreateInventory from '../views/CreateInventory'
-import CountriesFactors from '../views/CountriesFactors'
-import UpdateInventory from '@/views/UpdateInventory.vue'
-import UpdateComponent from '@/views/UpdateComponent.vue'
+import UpdateComponent from '@/views/UpdateComponent.vue';
+import UpdateInventory from '@/views/UpdateInventory.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import AddComponent from '../views/AddComponent.vue';
+import CountriesFactors from '../views/CountriesFactors';
+import CreateInventory from '../views/CreateInventory';
+import Home from '../views/Home.vue';
+import ListComponents from '../views/ListComponents';
+import ListMyInventories from '../views/ListMyInventories';
 
 
 
