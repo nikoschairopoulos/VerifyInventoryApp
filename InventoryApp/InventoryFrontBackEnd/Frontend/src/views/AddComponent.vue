@@ -58,7 +58,7 @@
                             <option value="Plants">Plants</option>
                             <option value="Public">Public</option>
                             <option value="Transport">Transport</option>
-                            <option value="D_Batteries">Batteries (Districts)</option>
+                            <option value="D_Batteries">Batteries + ESS </option>
                             </optgroup>
                         </select>
                     </div>
@@ -136,14 +136,17 @@
                                     </select>
                                     </div>
 
-                                    <div id="options" v-if="SHEET_TYPE === 'D_Batteries' || SHEET_TYPE === 'B_batteries'">
+                                    <div id="options" v-if="SHEET_TYPE == 'D_Batteries'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
                                         <option value="li_ion">battery Li-ion </option>
                                         <option value="lead_acid">battery lead acid</option>
                                         <option value="flow">battery flow</option>
+                                        <option value="flywheel">flywheel </option>
                                     </select>
                                     </div>
+
+                                   
                                     
                                     <div id="options" v-if="SHEET_TYPE=='El. Storage' ">
                                         <label for="type" class="form-label">Component Type* :</label><br>

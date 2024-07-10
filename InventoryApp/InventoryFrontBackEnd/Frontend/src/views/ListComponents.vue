@@ -33,7 +33,7 @@
                       <option value="Plants">Plants</option>
                       <option value="Public">Public</option>
                       <option value="Transport">Transport</option>
-                      <option value="D_Batteries">Batteries</option>
+                      <option value="D_Batteries">Batteries + ESS </option>
                   </optgroup>
                   <!--<option value="Other">Other</option>--> 
                    
