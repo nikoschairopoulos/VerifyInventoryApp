@@ -96,7 +96,7 @@ except Exception as e:
     print(e)
 '''
 
-
+'''
 #READ THE OBJECTS FROM .json
 with open('deleted_components.json', 'r') as file:
     deleted_comp = json.load(file)
@@ -114,9 +114,41 @@ for comp in deleted_comp:
 
     except Exception as e:
         print(f"Error creating component with ID {comp['id']}: {e}")
+'''
 
+'''NOT FOR PK CHANGES DUE TO SERIALIZER DRF DEFAULT BEHAVIOUR'''
+'''
+#use the old (id=3) to restore:
+boiler_biomass_data = {'id': 3, 'name': 'boiler biomass (default)', 
+              'component_type': 'boiler', 'component_subtype': 'biomass',
+              'capex_per_ugs': 54.34782608695652, 'opex_per_capex': 0.02,
+              'embodied_co2_per_ugs': 75.77777777777777, 'embodied_pe_per_ugs': 0.9555555555555555,
+              'lifetime': 20.0, 'pref_cost': 46.0, 'pref_env': 9.0, 'scale_cost': 0.0, 'scale_env': -0.083, 'major_upgrade_point': 999.0,
+              'major_upgrade_share': 0.0, 'annual_performance_degradation': 0.005, 'replace_or_die': 'replace', 'SHEET_TYPE': 'Thermal Sources',
+              'IS_MAIN_INVENTORY': True, 'bibliography': None, 'description': None, 'thermal_properties': None, 'IS_B_COMPONENT': True}
 
+serializer = ComponentSerializer(data = boiler_biomass_data)
+if serializer.is_valid():
+    serializer.save()
+else:
+    print(serializer.error_messages)
+'''
 
+deleted_comp = []
+boiler_biomass_data = {'id': 3, 'name': 'boiler biomass (default)', 
+              'component_type': 'boiler', 'component_subtype': 'biomass',
+              'capex_per_ugs': 54.34782608695652, 'opex_per_capex': 0.02,
+              'embodied_co2_per_ugs': 75.77777777777777, 'embodied_pe_per_ugs': 0.9555555555555555,
+              'lifetime': 20.0, 'pref_cost': 46.0, 'pref_env': 9.0, 'scale_cost': 0.0, 'scale_env': -0.083, 'major_upgrade_point': 999.0,
+              'major_upgrade_share': 0.0, 'annual_performance_degradation': 0.005, 'replace_or_die': 'replace', 'SHEET_TYPE': 'Thermal Sources',
+              'IS_MAIN_INVENTORY': True, 'bibliography': None, 'description': None, 'thermal_properties': None, 'IS_B_COMPONENT': True}
+deleted_comp.append(boiler_biomass_data)
+for comp in deleted_comp:
+    try:
+        # Ensure 'id' is accessed correctly
+        obj_comp = Component(**comp)
+        obj_comp.save()
+        print(f"Created component with ID {obj_comp.id}")
 
-
-
+    except Exception as e:
+        print(f"Error creating component with ID {comp['id']}: {e}")
