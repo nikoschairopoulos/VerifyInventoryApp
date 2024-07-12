@@ -16,6 +16,9 @@ from inventory.models import Inventory
 from inventory.models import Factor
 from rest_framework.exceptions import NotFound
 from rest_framework import status
+import requests
+from django.http import HttpResponse
+import json 
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 
 def error404(request):
@@ -25,6 +28,54 @@ class ComponentViewSet(ModelViewSet):
     queryset = Component.objects.all()
     serializer_class = ComponentSerializer
     #permission_classes = [IsAuthenticated]
+
+    def perform_destroy(self, instance):
+        try:
+            id = self.kwargs['pk']
+            warning = self.check_for_component_usage(id)    
+        except Exception as e:
+            return {'exception':'lci id is not provided at delete request - something went wrong'}
+        # if there is no warnings delete the components:
+        if not warning:
+             instance.delete()
+             return{'success':{'component has been deleted'}}
+        message = {f'warn_{index}':warn  for index,warn in enumerate(warning)}
+        return message
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        result = self.perform_destroy(instance)
+        if 'exception' in result:
+            return Response(result['exception'],status=400)
+        elif 'success' in result:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(result,status=status.HTTP_400_BAD_REQUEST)
+        
+
+        #super().destroy(request, *args, **kwargs)
+        #return Response({'message':'hi'},status=400)
+    
+    def check_for_component_usage(self,lci_id):
+        response = requests.get(f"http://192.168.101.31:3003/api/stored_lci_ids?component_id={lci_id}")
+        json_response = response.json()
+        warnings = []
+        for key in ('verify_buildings', 'verify_districts', 'verify_district_buildings'):
+            elements = json_response.get(key,None)
+            for comp in elements:
+                temp_dict = {'building_id':comp.get('building_id',None),
+                            'scenario_id':comp.get('scenario_id',None),
+                            'building_name':comp.get('building_name',None),
+                            'scenario_name':comp.get('scenario_name'),
+                            'district_id':comp.get('district_id',None),
+                            'district_name':comp.get('district_name',None)
+                            }
+                record = {k:v for k,v in temp_dict.items() 
+                        if v is not None}
+                warnings.append(record)        
+        return warnings
+
+ 
 
 class InventoryViewSet(ModelViewSet):
     queryset=Inventory.objects.all()
