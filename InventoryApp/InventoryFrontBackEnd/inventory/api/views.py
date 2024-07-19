@@ -46,9 +46,11 @@ class ComponentViewSet(ModelViewSet):
         instance = self.get_object()
         result = self.perform_destroy(instance)
         if 'exception' in result:
-            return Response(result['exception'],status=400)
+            return Response(result['exception'],status.HTTP_400_BAD_REQUEST)
+        #successfull Deletion: 
         elif 'success' in result:
             return Response(status=status.HTTP_204_NO_CONTENT)
+        #component has usage -> show warns at vue js modals
         else:
             return Response(result,status=status.HTTP_400_BAD_REQUEST)
         

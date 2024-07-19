@@ -93,7 +93,7 @@
     </div>
     </div>
 
-       <!-- Modal-->
+       <!-- Component Info Modal-->
        <div v-if="detailsComp" class="modal" role="document" :class="{ 'is-active': showModal }">
        <div class="modal-background" @click="closeModal"></div>
        <div class="modal-card">
@@ -186,11 +186,30 @@
             </div> 
       </div>
     </div>
-      
-
-
-
+    
+    <!--Deletion Modal-->
+    <div v-if="showDeleteModal"   class="modal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" :class="{ 'is-active':showDeleteModal}" >
+        <div class="modal-background" @click="closeDeleteModal" >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" style="background-color: cornflowerblue;">Warnings of Deletion Procedure</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>{{this.deletion_warnings}}</p>
+            </div>
+            <div class="modal-footer">
+              <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+               <p>will not be performed deletion</p>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+    </div>
   </div>
+
 </div>
 </template>
   
@@ -213,7 +232,9 @@ export default {
                  detailsComp:null,
                  toShow:false,
                  showModal:false,
-                 NotMainInventory:false
+                 NotMainInventory:false,
+                 deletion_warnings:[],
+                 showDeleteModal:false
 
         };
     },
@@ -256,7 +277,28 @@ export default {
                     .delete(`${TARGET_IP}/api/component/${componentId}/`)
                     .then(()=>this.refreshlist(componentId))
                     .catch(error => {
-                          console.error('Error fetching data:', error)})}},
+                            if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log('Error response data:', error.response.data);
+                            console.log('Error response status:', error.response.status);
+                            console.log('Error response headers:', error.response.headers);
+                            // Show the error message to the user
+                            this.deletion_warnings = JSON.stringify(error.response.data, null, 2);
+                            this. showDeleteModal = true
+                            console.log('delete:',this.deleteComponentModal)
+                            //alert(`Error: ${errorMessage}`);
+                            } else if (error.request) {
+                            // The request was made but no response was received
+                            console.log('Error request:', error.request);
+                            alert('Error: No response received from the server.');
+                            } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log('Error message:', error.message);
+                            alert(`Error: ${error.message}`);
+                            }
+                          })
+                        }},
         
         updateComponent(componentId) {
             // find the component from its Id:
@@ -268,10 +310,14 @@ export default {
                                 params:{id:componentId}});   
         },
         dontshowDetails(){
-          this.toShow=false
+          this.toShow=false;
         },
         closeModal() {
           this.showModal = false;
+        },
+        closeDeleteModal(){
+          console.log('i will close warnings modals .....')
+          this.showDeleteModal=false;
         },
         setDetailsAndShowModal(component) {
           this.detailsComp = JSON.parse(JSON.stringify(component));

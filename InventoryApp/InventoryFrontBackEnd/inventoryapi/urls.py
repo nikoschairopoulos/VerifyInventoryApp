@@ -25,7 +25,7 @@ from rest_auth.views import LoginView
 
 urlpatterns=[
    path("admin/", admin.site.urls),
-    #path('', homepage_view, name='home'),  
+    path('', homepage_view, name='home'),  
     path('api/',include('inventory.api.urls')),
     path("accounts/", include("django.contrib.auth.urls")),  # Here uses the templates/registration/login.html (overrides) (login - log out)
     path("api-auth/", include("rest_framework.urls")),

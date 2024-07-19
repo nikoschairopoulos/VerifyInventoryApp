@@ -66,6 +66,8 @@ MIDDLEWARE = [
     'inventoryapi.middleware.LoginRequiredMiddleware'
 ]
 
+
+
 '''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
