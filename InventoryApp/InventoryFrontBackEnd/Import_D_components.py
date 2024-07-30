@@ -31,7 +31,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryapi.settings')
 django.setup()
 from inventory.models import Component
 from inventory.api.serializers import ComponentSerializer
-import pandas as pd 
+#import pandas as pd 
 
 #FILES PATH:
 CURRENT_DIRECTORY = Path(__file__).parent.absolute()
@@ -134,6 +134,7 @@ else:
     print(serializer.error_messages)
 '''
 
+'''
 deleted_comp = []
 boiler_biomass_data = {'id': 3, 'name': 'boiler biomass (default)', 
               'component_type': 'boiler', 'component_subtype': 'biomass',
@@ -152,3 +153,21 @@ for comp in deleted_comp:
 
     except Exception as e:
         print(f"Error creating component with ID {comp['id']}: {e}")
+'''
+
+def change_component_name(component):
+    #make it list
+    name_temp = component.name.split('_')
+   
+    #remove _
+    name_temp = [elem for elem in name_temp if elem!='_']
+    
+    name_uptaded = " ".join(name_temp).title()
+
+    component.name = name_uptaded
+    component.save()
+
+
+components = Component.objects.all()
+for comp in components:
+    change_component_name(component = comp)
