@@ -7,7 +7,7 @@
         
           <download-excel 
              class="btn btn-info download-btn"
-             :data="components"
+             :data="deepCopyComps"
               type="xlsx"
              name="verify_components.xlsx">
              download components
@@ -234,7 +234,8 @@ export default {
                  showModal:false,
                  NotMainInventory:false,
                  deletion_warnings:[],
-                 showDeleteModal:false
+                 showDeleteModal:false,
+                 deepCopyComps:[]
 
         };
     },
@@ -247,11 +248,13 @@ export default {
             }
             this.componentsPerType=this.components
             console.log(response.data);
-            console.log(this.components);
+            console.log(this.components)
+            this.componentTableForExcell();
         })
             .catch(error => {
             console.error('Error fetching data:', error);
         });
+        
     },
 
     methods: {
@@ -263,7 +266,72 @@ export default {
             this.componentsPerType=this.componentsPerType.filter(comp=>!comp.IS_MAIN_INVENTORY)
           }
         },
-
+        componentTableForExcell(){
+          console.log(this.components[0]);
+          this.deepCopyComps = this.components.map((comp) => JSON.parse(JSON.stringify(comp)));
+          // change column names Dict:
+          let namesDict = {
+            'capex_per_ugs':'Capex Per Functional Unit [Euro/Functional Unit]',
+            'embodied_co2_per_ugs':'Embodied Co2 Per Functional Unit [KgCo2/Functionl Unit]',
+            'embodied_pe_per_ugs':'Embodied Primary Energy Per Functional Unit [Gj/Functional Unit]',
+            'major_upgrade_point':'Major Upgrade Point [years]',
+            'lifetime':'Lifetime [years]',
+            'opex_per_capex':'Annual Maintenance [%Capex]',
+            'replace_or_die':'replace (or) end of life',
+            'pref_env':'Pref_env [Functional Unit]',
+            'pref_cost':'Pref_cost [Functional Unit]'
+          }
+          function renameKey(obj, old_key, new_key) {
+            // Check if old key = new key
+            if (old_key !== new_key) {
+              // Modify old key
+              Object.defineProperty(obj, new_key,
+              Object.getOwnPropertyDescriptor(obj, old_key));
+              //delete old key:
+              delete obj[old_key];
+            }
+          }
+          for (let comp of this.deepCopyComps){
+            for(let key in namesDict){
+              if (key == 'opex_per_capex'){
+                comp[key]*=100
+              }
+              renameKey(comp,key,namesDict[key])
+            }
+            // Add the correct Functional Units:
+            let newValue = comp['SHEET_TYPE']
+            // initialize to None:
+            comp['Functional Unit'] = null
+            if( newValue=="El. Generators" || newValue=="Thermal Sources" || newValue=='PCM' || newValue=='Plants'){
+              comp['Functional Unit'] = 'Kw'
+            }else if(newValue=="Water Storage"){
+              comp['Functional Unit']='Litre'
+            }
+            else if(newValue=='El. Storage' ||newValue=='B_Batteries' || newValue=='D_Battteries'){
+              comp['Functional Unit']='kWh'
+            }
+            else if(newValue=='Insulation'){
+              comp['Functional Unit']='m\u00B3'
+            }
+            else if(newValue=='Glazing'){
+              comp['Functional Unit']='m\u00B2'
+            }
+            else if(newValue=='Other'){
+              comp['Functional Unit']='UGS'
+            }
+            else if(newValue=='Ventilation'){
+              comp['Functional Unit'] = 'kW'
+            }
+          
+        }
+          this.deepCopyComps.sort((a, b) => a.id - b.id);
+          //this.deepCopyComps = this.deepCopyComps.map((comp) =>{ 
+          //  del comp['pref_cost']
+          //  del comp['pref_env']
+          //}))
+          console.log('--------------------')
+          console.log(this.deepCopyComps[0])
+        },
         refreshlist(id) {
             this.components = this.components.filter(comp => comp.id != id);
             this.updateTypeofComponentToRender()
@@ -328,8 +396,7 @@ export default {
           console.log(this.detailsComp)
           this.showModal = true;
   }
-
-    },
+},
     computed: {
   },
     components: { UpdateComponent ,downloadExcel:JsonExcel }
