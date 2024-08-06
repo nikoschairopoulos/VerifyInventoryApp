@@ -292,6 +292,9 @@ export default {
             }
           }
           for (let comp of this.deepCopyComps){
+            if (comp.hasOwnProperty('thermal_properties') && comp.SHEET_TYPE=='Insulation' && comp['thermal_properties']!= null){
+                comp['thermal_properties'] = JSON.stringify(comp['thermal_properties']);
+            }
             for(let key in namesDict){
               if (key == 'opex_per_capex'){
                 comp[key]*=100
@@ -308,7 +311,7 @@ export default {
               comp['Functional Unit']='Litre'
             }
             else if(newValue=='El. Storage' ||newValue=='B_Batteries' || newValue=='D_Battteries'){
-              comp['Functional Unit']='kWh'
+              comp['Functional Unit']='KWh'
             }
             else if(newValue=='Insulation'){
               comp['Functional Unit']='m\u00B3'
@@ -320,17 +323,40 @@ export default {
               comp['Functional Unit']='UGS'
             }
             else if(newValue=='Ventilation'){
-              comp['Functional Unit'] = 'kW'
+              comp['Functional Unit'] = 'Kw'
+            }
+            else if(newValue=='Public' && comp['component_type']=='charging_station'){
+              comp['Functional Unit'] = 'Kw'
+            }
+            else if(newValue=='Public' && comp['component_type']=='transformer'){
+              comp['Functional Unit'] = 'KVA'
+            }
+            else if(newValue=='Public' && comp['component_type']=='lighting'){
+              comp['Functional Unit'] = 'KVA'
+            }
+            else if(newValue=='Transport'){
+              comp['Functional Unit'] = 'vehicle'
             }
           
-        }
+          }
+
+          //********sort the components**********
           this.deepCopyComps.sort((a, b) => a.id - b.id);
-          //this.deepCopyComps = this.deepCopyComps.map((comp) =>{ 
-          //  del comp['pref_cost']
-          //  del comp['pref_env']
-          //}))
-          console.log('--------------------')
-          console.log(this.deepCopyComps[0])
+
+          // ***************filter components*****************:
+          //filter (1)
+          //this.deepCopyComps = this.deepCopyComps.filter((comp)=>comp.IS_B_COMPONENT)
+          //filter (2)
+          this.deepCopyComps = this.deepCopyComps.filter((comp)=>comp['IS_MAIN_INVENTORY'])
+          //***************************************************
+
+          //delete some attributes:
+          this.deepCopyComps = this.deepCopyComps.map((comp) =>{ 
+            delete comp['IS_MAIN_INVENTORY']
+            delete comp['IS_B_COMPONENT']
+            return comp
+          })
+          console.log(this.deepCopyComps)
         },
         refreshlist(id) {
             this.components = this.components.filter(comp => comp.id != id);
