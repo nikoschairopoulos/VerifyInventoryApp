@@ -67,13 +67,19 @@ class Factor(models.Model):
     fuel    = models.CharField(250)
     co2_factor = models.FloatField(null=True) 
     primary_energy_factor = models.FloatField(null=True)
+    ## new fields:
+    year = models.IntegerField(null=True)
+    source = models.TextField(blank=True,null=True)
+    comments = models.TextField(blank=True,null=True)
     class Meta:
         # Define a composite primary key from field1 and field2
         constraints = [
-            models.UniqueConstraint(fields=['country', 'fuel'], name='composite_pk')
+            models.UniqueConstraint(fields=['country', 'fuel','year'], name='composite_pk')
         ]
     
         app_label = 'inventory'
+    def __str__(self):
+        return f"{self.country} {self.fuel} {self.co2_factor} {self.primary_energy_factor} {self.year} {self.source} {self.comments} "
 
 
 class Wall_Materials(models.Model):

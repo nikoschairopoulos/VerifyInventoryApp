@@ -29,7 +29,8 @@ if __name__  != "__main__":
 #add path:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryapi.settings')
 django.setup()
-from inventory.models import Component
+from inventory.models import (Component, 
+                                Factor)
 from inventory.api.serializers import ComponentSerializer
 #import pandas as pd 
 
@@ -154,20 +155,31 @@ for comp in deleted_comp:
     except Exception as e:
         print(f"Error creating component with ID {comp['id']}: {e}")
 '''
-
-def change_component_name(component):
-    #make it list
-    name_temp = component.name.split('_')
-   
-    #remove _
-    name_temp = [elem for elem in name_temp if elem!='_']
+'''
+    def change_component_name(component):
+        #make it list
+        name_temp = component.name.split('_')
     
-    name_uptaded = " ".join(name_temp).title()
+        #remove _
+        name_temp = [elem for elem in name_temp if elem!='_']
+        
+        name_uptaded = " ".join(name_temp).title()
+        
 
-    component.name = name_uptaded
-    component.save()
+        component.name = name_uptaded
+        component.save()
 
 
-components = Component.objects.all()
-for comp in components:
-    change_component_name(component = comp)
+    components = Component.objects.all()
+    for comp in components:
+        change_component_name(component = comp)
+'''
+
+factors = Factor.objects.all()
+print(factors)
+
+for factor in factors:
+    #factor.comments = 'initial year is considered 2018 but it is not sure. Year 2018 is used as a reference'
+    #factor.year = 2018
+    factor.source = 'source is not provided'
+    factor.save()

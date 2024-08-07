@@ -295,6 +295,11 @@ export default {
             if (comp.hasOwnProperty('thermal_properties') && comp.SHEET_TYPE=='Insulation' && comp['thermal_properties']!= null){
                 comp['thermal_properties'] = JSON.stringify(comp['thermal_properties']);
             }
+            //round:
+            comp['embodied_co2_per_ugs'] = Math.round(comp['embodied_co2_per_ugs'] * 1000) / 1000;
+            comp['embodied_pe_per_ugs'] = Math.round(comp['embodied_pe_per_ugs'] * 1000) / 1000;
+            comp['capex_per_ugs'] = Math.round(comp['capex_per_ugs']*1000)/1000;
+
             for(let key in namesDict){
               if (key == 'opex_per_capex'){
                 comp[key]*=100

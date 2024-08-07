@@ -1,15 +1,16 @@
 
 <template>
     <div class="input-form" @submit.prevent="handleSubmit">
-        <h1 v-if="country && fuel">Update: <span style="color:springgreen">{{fullName}}</span></h1>
+        <!--<h1 v-if="country && fuel">Update: <span style="color:springgreen">{{fullName}}</span></h1>-->
         <p>1.Choose a Country</p>
         <p>2.Choose a Fuel</p>
+        <p>3.Choose a Year</p>
 
         <hr>
-        <form class="row g-3 needs-validation" novalidate> 
-            <div class="col-6">
+        <form class="row g-3 needs-validation"  novalidate> 
+            <div class="col-4">
                     <label for="Choose Country" class="form-label">Choose Country:</label>
-                    <select id="Choose Country"   class="form-control" v-model="country" required>
+                    <select id="Choose Country"   class="form-control" v-model="country" style="background: darkseagreen" required>
                         <option value="Albania">Albania</option>
                         <option value="Andorra">Andorra</option>
                         <option value="Austria">Austria</option>
@@ -61,46 +62,107 @@
                     </div>
                 </div>
 
-            <div class="col-6">
-                    <label for="Choose Fuel" class="form-label">Choose Fuel:</label>
-                    <select id="Choose Fuel"  class="form-control" v-model="fuel" required>
-                        <option value="electricity">Electricity</option>
-                        <option value="ngas">Net Gas</option>
-                        <option value="diesel">Diesel</option>
-                        <option value="biomass">Biomass</option>
-                        <option value="biodiesel">Biodiesel</option>
-                        <option value="oil">Oil</option>
-                        <option value="lpg">LPG</option>
-                        <option value="res">RES</option>
-                        <option value="hydrogen">Hydrogen</option>
-                        
-                    </select>
-                    <div class="valid-feedback">
-                        pass
-                    </div>
+            <div class="col-4">
+                <label for="Choose Fuel" class="form-label">Choose Fuel:</label>
+                <select id="Choose Fuel"  class="form-control" style="background: darkseagreen" v-model="fuel" required >
+                    <option value="electricity">Electricity</option>
+                    <option value="ngas">Net Gas</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="biomass">Biomass</option>
+                    <option value="biodiesel">Biodiesel</option>
+                    <option value="oil">Oil</option>
+                    <option value="lpg">LPG</option>
+                    <option value="res">RES</option>
+                    <option value="hydrogen">Hydrogen</option>
+                    
+                </select>
+                <div class="valid-feedback">
+                    pass
                 </div>
+            </div>
 
-                <div class="col-6">
-                <label for="validationCustom01" class="form-label">Primary Energy Factor [kwh/Fuel kwh]</label>
+            <div class="col-4">
+                <label for="Year" class="form-label">Choose Year:</label>
+                <select 
+                    class="form-control" 
+                    id="Year" 
+                    v-model="chooseyear" 
+                    required 
+                    style="background: darkseagreen;">
+                    <option v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                    </option>
+                </select>
+                <div class="valid-feedback">
+                    pass
+                </div>
+            </div>
+
+                                            <!--Output section-->
+            <hr>
+
+            <div class="col-6">
+                <label for="validationCustom01" class="form-label">Primary Energy Factor [kWh/Fuel kWh]</label>
                 <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="pef" required min="1">
                 <div class="valid-feedback">
                 pass
-                </div>
-
             </div>
+            </div>
+
             <div class="col-6">
-                <label for="validationCustom01" class="form-label">CO2 Emission Factor [kgCO2/kwh]</label>
+                <label for="validationCustom01" class="form-label">CO2-eq Emission Factor [kg/kWh]</label>
                 <input type="number" step="any"  class="form-control" id="validationCustom01" v-model="co2" required min="0">
                 <div class="valid-feedback">
                     pass
                 </div>
             </div>
+            
+
+
+             <!--add extra fields (comment and source)-->
+             <div class="col-6">
+                <label for="validationCustom01" class="form-label">Comments</label>
+                <textarea 
+                    class="form-control" 
+                    id="validationCustom01" 
+                    v-model="comments" 
+                    required 
+                    rows="5" 
+                    maxlength="50"
+                    style="resize: none;">
+                    </textarea>
+                    <div class="valid-feedback">
+                        pass
+                    </div>
+                </div>
+
+
+                <div class="col-6">
+                <label for="validationCustom01" class="form-label">Source</label>
+                <textarea 
+                    class="form-control" 
+                    id="validationCustom01" 
+                    v-model="source" 
+                    required 
+                    rows="5" 
+                    maxlength="50"
+                    style="resize: none;">
+                    </textarea>
+                    <div class="valid-feedback">
+                        pass
+                    </div>
+                </div>
+
+            
+
+             <!--submit button-->
+
             <div class="col-12">
                 <button class="btn btn-primary" type="submit">Update Factors</button>
             </div>
         </form>
 
-
+        <!-- 
         <hr>
         <h4 style="text-align:center;">CO2 MAP</h4>
         <hr>
@@ -113,6 +175,7 @@
                 defaultCountryFillColor="#dadada"
             />
         </div>
+        -->
 
     </div>
 
@@ -123,9 +186,9 @@
 </template>
 
 <script>
- import { axios } from "@/common/api.service.js";
-import { TARGET_IP } from "@/common/request_configs.js";
-import MapChart from 'vue-map-chart';
+    import { axios } from "@/common/api.service.js";
+    import { TARGET_IP } from "@/common/request_configs.js";
+    import MapChart from 'vue-map-chart';
     export default {
     name: 'CountriesFactors',
     components: {MapChart},
@@ -136,12 +199,15 @@ import MapChart from 'vue-map-chart';
             co2:null,
             fuel:null,
             country:null,
+            chooseyear:null,
             factorsdb:[],
-            infoObj:{'LS':-100}
+            infoObj:{'LS':-100},
+            comments:null,
+            source:null,
+            years: [] 
         }
     },
     mounted() {
-
         (function() {
         'use strict';
         var forms = document.querySelectorAll('.needs-validation');
@@ -168,6 +234,12 @@ import MapChart from 'vue-map-chart';
             console.error('Error fetching data:', error);
         });
 
+        this.currentYear = new Date().getFullYear()
+           // Populate the years array with values from 2018 to the current year
+        for (let i = 2018; i <= this.currentYear; i++) {
+            this.years.push(i);
+        }
+        //console.log(this.currentYear)
     },
     beforeUnmount(){
         // *******PROPABLY THERE IS A BUG WITH MAP CHART COMPONENT *****
@@ -180,6 +252,9 @@ import MapChart from 'vue-map-chart';
         console.log(e)
       }
     },
+    created() {
+
+    },
     watch:{
         fullName(newValue){
             console.log("change at country-fuel combination have been detected")
@@ -190,13 +265,16 @@ import MapChart from 'vue-map-chart';
         async handleSubmit(){ 
             try{
                 let dataObject = {
-                country:this.country,
-                fuel:this.fuel,
-                co2_factor:this.co2,
-                primary_energy_factor:this.pef
-            }
+                    country:this.country,
+                    fuel:this.fuel,
+                    year:this.chooseyear,
+                    co2_factor:this.co2,
+                    primary_energy_factor:this.pef,
+                    source:this.source,
+                    comments:this.comments,
+                }
                 //returns only one object (there is resriction from the DB)
-                let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel )
+                let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel && comp.year==this.chooseyear )
                 console.log("i try to send data at the Backend....",this.$data)
                 const {data} = await axios.put(`${TARGET_IP}/api/factor/${obj[0].id}/`,dataObject)
                     alert("Success")
@@ -208,10 +286,15 @@ import MapChart from 'vue-map-chart';
     fillDataofCountry(){
         try{    
             this.infoObj={} 
-            let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel)
+            let obj = this.factorsdb.filter(comp=>comp.country==this.country && comp.fuel == this.fuel && comp.year == this.chooseyear)
+            console.log(obj[0])
+            console.log('--------Inform the attributes--------')
             this.pef  = obj[0].primary_energy_factor
             this.co2  = obj[0].co2_factor
             this.id   = obj[0].id
+            //this.year = obj[0].year
+            this.source = obj[0].source
+            this.comments = obj[0].comments
             
             //after updating co2 for the Map:
             console.log("there  data for this country fuel combination")
@@ -223,6 +306,10 @@ import MapChart from 'vue-map-chart';
             console.log(e)
             this.co2=null;
             this.pef=null;
+            this.id   = null
+            //this.year = null
+            this.source = null
+            this.comments = null
         }
     },
     getCountryCodeOrName (inputValue) {
@@ -541,7 +628,7 @@ import MapChart from 'vue-map-chart';
   },
   computed: {
     fullName() {
-      return this.country + '-' + this.fuel
+      return this.country + '-' + this.fuel + '-' + this.chooseyear
     }
   }
     }
@@ -554,7 +641,7 @@ import MapChart from 'vue-map-chart';
 <style scoped>
 .input-form{
     margin: 0 auto;
-    width:50%;
+    width:99.5%;
     border: solid greenyellow 1px;
     padding: 20px;
 }
