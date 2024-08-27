@@ -13,19 +13,27 @@
 
         <div  @submit.prevent="handleSubmit">
             <form class="input-form row mt-4 needs-validation myform" ref="anyName" novalidate> 
+
                         <div class="mt-3">
                             <h5><b>1. Add the basic attributes to define the component:</b></h5>
                         </div>
-                 
-<!-- Add Name -->
-                        <div class="col-6 ">
+                        
+                        <div class="row">
+                            <div class="col">
+                                <label class="form-label" for="isMainInventory">Is Default Component</label>
+                                <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false">
+                            </div>
+                        </div>
+
+                        <!-- Add Name -->
+                        <div class="col-6">
                                 <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="It is Important to give a formated name e.g: for the Rehouse Project at Greek Demo, a heatpump named Psyctotherm would named: Rehouse_Greek_Heatpump_Psyctotherm "></i>
                                 <label for="name" class="form-label">Name*:</label>
                                 <input type="text" class="form-control" id="name" v-model="name" placeholder="format: Project_Demo_Building_Name" required>
                         </div>
-
+                        
 <!-- Add technology Key -->
-                        <div class="col-6 ">
+                        <div class="col-6">
                             <label for="Choose Technology" class="form-label">Choose Technology*:</label>
                             <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                             <optgroup label="Building Level Components">
@@ -299,45 +307,10 @@
                                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
                         </div>
 
-<!--add regression attributes if is a default component-->
-
-                    <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
-                        <div class="mt-3">
-                            <h5><b>5. Add Regression Attributes:</b></h5>
-                            <p>-In this section attributes are added for Default components,<br>
-                               that have been calculated for many values with SimaPro or another source and will be used using scaling</p>
-                        </div>
-
-                        <div class="col-3">
-                            <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_cost']"></i> 
-                            Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
-                            <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
-                        </div>
-
-                        <div class="col-3">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_env']"></i> Pref Env*
-                                    <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
-                            <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
-                        </div>
-
-                        <div class="col-3">
-                            <label for="quantity" class="form-label">
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_env']"></i>
-                                Scale Env*:</label>
-                            <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env"  required>
-                        </div>
-
-                        <div class="col-3">
-                            <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_cost']"></i>
-                                <label for="quantity" class="form-label">Scale Cost*:</label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
-                            </div>
-
 <!--add eol attributes-->
                         <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
                         <div class="mt-3">
-                            <h5><b>6. Add environmental end of life attributes:</b></h5>
+                            <h5><b>5. Add environmental end of life attributes:</b></h5>
                             <p>-In this section attributes about EoL are added for the component,<br>
                             </p>
                         </div>
@@ -360,6 +333,42 @@
                             <option value="die">die</option>
                         </select>
                     </div>
+
+<!--add regression attributes if is a default component-->
+
+                <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                    <div v-if="IS_MAIN_INVENTORY"  class="mt-3" >
+                        <h5><b>6. Add Regression Attributes:</b></h5>
+                        <p>-In this section attributes are added for Default components,<br>
+                            that have been calculated for many values with SimaPro or another source and will be used using scaling</p>
+                    </div>
+
+                    <div class="col-3">
+                        <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_cost']"></i> 
+                        Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
+                    </div>
+
+                    <div class="col-3">
+                            <label for="quantity" class="form-label">
+                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_env']"></i> Pref Env*
+                                <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
+                    </div>
+
+                    <div class="col-3">
+                        <label for="quantity" class="form-label">
+                            <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_env']"></i>
+                            Scale Env*:</label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env"  required>
+                    </div>
+
+                    <div class="col-3">
+                        <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_cost']"></i>
+                            <label for="quantity" class="form-label">Scale Cost*:</label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
+                        </div>
+
          
 
 <!-- add extra element which are non common-->
@@ -369,7 +378,7 @@
                         
                         <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
                         <div class="mt-3">
-                            <h5><b>6. Add some extra attributes which are not common to all components (technology specific):</b></h5>
+                            <h5><b>Add some extra attributes which are not common to all components (technology specific):</b></h5>
                         </div>
 
                             <div v-if="component_type=='glass' ||component_type=='frame' " class="col-6">
@@ -389,7 +398,7 @@
                     <!--for insulation-->
                     <div class="row mb-1" v-if="SHEET_TYPE=='Insulation'">
                         <div class="mt-3">
-                            <h5><b>7. Add some extra attributes which are not common to all components (technology specific):</b></h5>
+                            <h5><b>Add some extra attributes which are not common to all components (technology specific):</b></h5>
                         </div>
                             <div class="col-4">
                                 <label for="quantity" class="form-label thermals">Density<strong>[Kg/m&sup3;]</strong>:<span v-if="density<0" class="text-danger"> <br> valid value is non negative</span></label>
