@@ -175,11 +175,35 @@ for comp in deleted_comp:
         change_component_name(component = comp)
 '''
 
-factors = Factor.objects.all()
-print(factors)
 
-for factor in factors:
+#print(factors)
+#iterate on every country and take a set of countries:
+
+'''
+factors = Factor.objects.all()
+s1 = set()
+for f in factors:
+    s1.add(f.country)
+print(s1)
+
+#create gasoline factors:
+for country in s1:
+    obj1 = Factor(country=country,
+                  fuel='gasoline',
+                  co2_factor=0.27,
+                  primary_energy_factor=1.2)
+    obj1.save()
+'''
+#gasoline_objects = Factor.objects.values('country')
+gasoline_objects = Factor.objects.values('country').distinct()
+print(type(gasoline_objects))
+
+for item in gasoline_objects:
+    print(item)
+    print(type(item))
+    
+#for factor in factors:
     #factor.comments = 'initial year is considered 2018 but it is not sure. Year 2018 is used as a reference'
     #factor.year = 2018
-    factor.source = 'source is not provided'
-    factor.save()
+#    factor.source = 'source is not provided'
+#    factor.save()

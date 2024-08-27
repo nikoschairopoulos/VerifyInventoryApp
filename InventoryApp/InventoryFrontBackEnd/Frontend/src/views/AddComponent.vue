@@ -3,81 +3,54 @@
     <div container>
     
     <div class="form-photo">
-        <div class="directives">
-            <br>
-            <p><strong>tip to Import Component:</strong>In case you want  to set the <br> <strong style="color:darkgreen">CAPEX, Embodied PE and CO2</strong>
-            from a Project Inventory<br> as it is given:<br>
-            - set <strong>scale env = 0</strong><br>
-            - set <strong>scale cost = 0</strong>
-            </p>
-            <img id="tech_image" src="../../public/pv.jpg" alt="">
-        </div>
-        <div class="input-form" @submit.prevent="handleSubmit">
-            <form ref="anyName" class="container mt-4 needs-validation" novalidate id="component">
-                <div class="container">
 
-                    <div class="row mt-1">
-                        <div class="col-6">
-                            <div class="mb-1">
+        <!--
+            <div class="col-12">
+                <h3>Find a Good Header ..</h3>
+            </div>
+        <hr>
+        -->
+
+        <div  @submit.prevent="handleSubmit">
+            <form class="input-form row mt-4 needs-validation myform" ref="anyName" novalidate> 
+                        <div class="mt-3">
+                            <h5><b>1. Add the basic attributes to define the component:</b></h5>
+                        </div>
+                 
+<!-- Add Name -->
+                        <div class="col-6 ">
                                 <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="It is Important to give a formated name e.g: for the Rehouse Project at Greek Demo, a heatpump named Psyctotherm would named: Rehouse_Greek_Heatpump_Psyctotherm "></i>
                                 <label for="name" class="form-label">Name*:</label>
                                 <input type="text" class="form-control" id="name" v-model="name" placeholder="format: Project_Demo_Building_Name" required>
-                            </div>
                         </div>
 
-
-                        <div class="col-6">
-                            <div class="mb-1">
-                               
-                                <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_cost']"></i> 
-                                Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-1">
-                        <label for="Choose Technology" class="form-label">Choose Technology*:</label>
-                        <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
+<!-- Add technology Key -->
+                        <div class="col-6 ">
+                            <label for="Choose Technology" class="form-label">Choose Technology*:</label>
+                            <select id="Choose Technology" v-model="SHEET_TYPE" class="custom-select" required>
                             <optgroup label="Building Level Components">
-                            <option value="El. Generators">Electrical Generators</option>
-                            <option value="Thermal Sources">Thermal Sources</option>
-                            <option value="Glazing">Glazing</option>
-                            <option value="Insulation">Insulation</option>
-                            <option value="Ventilation">Ventilation</option>
-                            <option value="PCM">PCM</option>
-                            <option value="Water Storage">Water Storage</option>
-                            <option value="El. Storage">Electrical Storage (ESS)</option>
-                            <option value="B_Batteries"> Batteries (Buildings)</option>
+                                <option value="El. Generators">Electrical Generators</option>
+                                <option value="Thermal Sources">Thermal Sources</option>
+                                <option value="Glazing">Glazing</option>
+                                <option value="Insulation">Insulation</option>
+                                <option value="Ventilation">Ventilation</option>
+                                <option value="PCM">PCM</option>
+                                <option value="Water Storage">Water Storage</option>
+                                <option value="El. Storage">Electrical Storage (ESS)</option>
+                                <option value="B_Batteries"> Batteries (Buildings)</option>
                             </optgroup>
                             <!--D COMPONENTS:-->
                             <optgroup label="District Level Components">
-                            <option value="Plants">Plants</option>
-                            <option value="Public">Public</option>
-                            <option value="Transport">Transport</option>
-                            <option value="D_Batteries">Batteries + ESS </option>
+                                <option value="Plants">Plants</option>
+                                <option value="Public">Public</option>
+                                <option value="Transport">Transport</option>
+                                <option value="D_Batteries">Batteries + ESS </option>
                             </optgroup>
                         </select>
-                    </div>
                         </div>
-
-                            <div class="col-6">
-                                <div class="mb-1">
-                                    <label for="quantity" class="form-label">
-                                        <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_env']"></i> Pref Env*
-                                         <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
-                                    <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                        <div class="col-6">
-                           <!--Add types-----------------------------------------------------------------------------> 
+                      
+<!--Add types-----------------------------------------------------------------------------> 
+                        <div class="col-6 mt-3">
                                 <div id="options" v-if="SHEET_TYPE==null">
                                     <label for="type" class="form-label">
                                         Component Type* :</label><br>
@@ -89,14 +62,14 @@
                                         <label for="type" class="form-label">
                                             Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
-                                        <option value="boiler">boiler</option>
-                                        <option value="heat_pump">heatpump</option>
-                                        <option value="air_conditioning">aircondition</option>
-                                        <option value="solar">solar thermal panel</option>
-                                        <option value="district_heating">district heating </option>
-                                        <option value="geo">geo thermal</option>
-                                        <option value="fan">fan coil </option>
-                                    </select>
+                                            <option value="boiler">boiler</option>
+                                            <option value="heat_pump">heatpump</option>
+                                            <option value="air_conditioning">aircondition</option>
+                                            <option value="solar">solar thermal panel</option>
+                                            <option value="district_heating">district heating </option>
+                                            <option value="geo">geo thermal</option>
+                                            <option value="fan">fan coil </option>
+                                        </select>
                                     </div>
                                     <div id="options" v-if="SHEET_TYPE=='El. Generators'">
                                         <label for="type">Component Type* :</label><br>
@@ -146,8 +119,6 @@
                                     </select>
                                     </div>
 
-                                   
-                                    
                                     <div id="options" v-if="SHEET_TYPE=='El. Storage' ">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
@@ -172,7 +143,7 @@
                                         <option value="micro_ventilation">micro ventilation</option>
                                         </select>
                                     </div>
-                                    <!--D COMPONENT TYPES-->
+                                                            <!--D COMPONENT TYPES-->
                                     <div id="optionsD" v-if="SHEET_TYPE=='Plants'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
@@ -205,54 +176,221 @@
                                     </div>
                                 </div>
                         </div>
-                        <div class="col-6">
-                            <div class="mb-1"> 
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_env']"></i>
-                                    Scale Env*:</label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env"  required>
+<!--Add subtypes-->
+
+                        <div class="col-6 mt-3">
+                            <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' && SHEET_TYPE=='Thermal Sources' "> 
+                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="this is a test"></i>
+                                <label for="type" class="form-label" id="subtype_element">Component Subtype (Fuel) :</label><br>
+                                <select  id="type" v-model="component_subtype" required>
+                                    <option value="ngas">  natural gas </option>
+                                    <option value="diesel"> diesel  </option>
+                                    <option value="biomass"> biomass </option>
+                                    <option value="oil"> oil  </option>
+                                    <option value="lpg"> lpg </option>
+                                </select>
+                            </div>
+                            <div  v-else-if="!showSubtype">
+                                <label for="type" class="form-label" id="subtype_element">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['subtype']"></i>
+                                    Component Subtype*:</label>
+                                <input style="background-color: gray;" type="text" class="form-control" id="type" v-model="component_subtype" required readonly placeholder="not required">
+                            </div>  
+                            <div  v-else-if="showSubtype">
+                                <label for="type" class="form-label" id="subtype_element">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['subtype']"></i>
+                                    Component Subtype*:</label>
+                                <input type="text" class="form-control" id="type" v-model="component_subtype" required>
                             </div>
                         </div>
+                        
+<!-- common section  -->
+                    <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                    <div class="mt-3">
+                            <h5><b>2. Add common fields:</b></h5>
                     </div>
 
                     <div class="row">
-                        <div class="col-6">
-                            <div id="options" class="mb-1" v-if="showSubtype && component_type=='boiler' && SHEET_TYPE=='Thermal Sources' "> 
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" title="this is a test"></i>
-                            <label for="type" class="form-label" id="subtype_element">Component Subtype (Fuel) :</label><br>
-                            <select  id="type" v-model="component_subtype" required>
-                            <option value="ngas">  natural gas </option>
-                            <option value="diesel"> diesel  </option>
-                            <option value="biomass"> biomass </option>
-                            <option value="oil"> oil  </option>
-                            <option value="lpg"> lpg </option>
-                        </select>
+                        <div class="col-4">
+                                <label for="quantity" class="form-label">Component Lifetime* <strong>[Years]:</strong><span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
                         </div>
-                        <div  v-else-if="!showSubtype" class="mb-1">
-                            <label for="type" class="form-label" id="subtype_element">
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['subtype']"></i>
-                                Component Subtype*:</label>
-                            <input style="background-color: gray;" type="text" class="form-control" id="type" v-model="component_subtype" required readonly placeholder="not required">
-                        </div>  
-                        <div  v-else-if="showSubtype" class="mb-1">
-                            <label for="type" class="form-label" id="subtype_element">
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['subtype']"></i>
-                                Component Subtype*:</label>
-                            <input type="text" class="form-control" id="type" v-model="component_subtype" required>
+
+                        <div class="col-4">    
+                            <label for="quantity" class="form-label">
+                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_point']"></i>
+                                Major Upgrade Point* <strong> 
+                                [Years]:</strong><span v-if="major_upgrade_point<0" class="text-danger"><br> valid value is non negative</span></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" placeholder="For No Replacement put : 1000" required>
                         </div>
-                    
-                        </div>
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_cost']"></i>
-                                <label for="quantity" class="form-label">Scale Cost*:</label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
-                            </div>
+
+                        <div class="col-4">
+                                <label for="quantity" class="form-label">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_share']"></i>
+                                    Major Upgrade Share* <strong>[CAPEX%]:</strong> <span v-if="major_upgrade_share>100 || major_upgrade_share<0" class="text-danger"><br>valid range is [0,100]</span></label>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required >
                         </div>
                     </div>
 
+                    <div class="col-4 mt-3">
+                        <label for="quantity" class="form-label">
+                        <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['annual_performance_degradation']"></i>
+                                    Annual Performance Degradation[%]*: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br>  valid range is [0,100]</span></label>
+                        <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="100" required>
+                    </div>
 
+                    <div class="col-4 mt-3">
+                        <label for="quantity" class="form-label">
+                            <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['OPEX_PER_CAPEX']"></i>
+                                    Annual Maintenance <strong>[CAPEX%]:</strong> <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="100" required>
+                    </div>
+
+
+<!--sources section-->
+                    <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                    <div class="mt-3">
+                            <h5><b>3. Add Description and Sources:</b></h5>
+                    </div>
+
+                        <div class="col-6">     
+                                <label for="description" style="display:block;">Description:</label>
+                                <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="bibliography" style="display:block;">Bibliography:</label>
+                            <textarea id="bibliography" v-model="bibliography" rows="2" cols="30" placeholder="Add bibliography links or other sources"></textarea>
+                        </div>
+
+<!--add related components with Capex - embodied CO2 - embodied Pe -->
+                    
+                    <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                    <div class="mt-3">
+                        <h5><b>4. Add: CAPEX per FU - CO2 per FU - Primary Energy per FU :</b></h5>
+                        <ul>
+                          <span>-In this section user must add the ratio of the:</span>
+                          <li>CAPEX of the component divided by overall installed magnituded </li>
+                          <li>Embodied CO2 of the component divided by overall installed magnituded</li>
+                          <li>Embodied Primary Energy of the component divided by overall installed magnituded</li>
+                        </ul> 
+                    </div>
+
+                        <div class="col-4">
+                                <label for="quantity" class="form-label">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['CAPEX/UGS']"></i>
+                                    CAPEX/UGS*<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control"  id="validationCustom01" v-model="capex_per_ugs" min="0" required>
+                        </div>
+
+                        
+                        <div class="col-4">
+                                <label for="quantity" class="form-label" >
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_co2_per_ugs']"></i>
+                                    Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required>
+                        </div>
+
+
+                        <div class="col-4">
+                            <label for="quantity" class="form-label">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_pe_per_ugs']"></i>
+                                    Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
+                        </div>
+
+<!--add regression attributes if is a default component-->
+
+                    <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                        <div class="mt-3">
+                            <h5><b>5. Add Regression Attributes:</b></h5>
+                            <p>-In this section attributes are added for Default components,<br>
+                               that have been calculated for many values with SimaPro or another source and will be used using scaling</p>
+                        </div>
+
+                        <div class="col-3">
+                            <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_cost']"></i> 
+                            Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_cost" min="0" required>
+                        </div>
+
+                        <div class="col-3">
+                                <label for="quantity" class="form-label">
+                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_env']"></i> Pref Env*
+                                    <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_env<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="pref_env" min="0" required>
+                        </div>
+
+                        <div class="col-3">
+                            <label for="quantity" class="form-label">
+                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_env']"></i>
+                                Scale Env*:</label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_env"  required>
+                        </div>
+
+                        <div class="col-3">
+                            <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['scale_cost']"></i>
+                                <label for="quantity" class="form-label">Scale Cost*:</label>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
+                            </div>
+
+<!--add eol attributes-->
+                        <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                        <div class="mt-3">
+                            <h5><b>6. Add environmental end of life attributes:</b></h5>
+                            <p>-In this section attributes about EoL are added for the component,<br>
+                            </p>
+                        </div>
+                        <div class="col-4 mt-3">
+                            <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['eol_co2_cost']"></i> 
+                            EoL CO2 cost* <strong> [KgCO2] </strong>:<span v-if="eol_co2_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="eol_co2_cost" min="0" required>
+                        </div>
+
+                            <div class="col-4 mt-3">
+                            <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['eol_pe_cost']"></i> 
+                            EoL Primary Energy cost* <strong> [Gj] </strong>:<span v-if="eol_pe_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
+                            <input type="number" step="any" class="form-control"  id="quantity" v-model="eol_pe_cost" min="0" required>
+                        </div>
+
+                        <div class="col-4 mt-3">
+                        <label for="EOL_ACTION" class="form-label">EoL Action*:</label>
+                        <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select" required>
+                            <option value="replace">replace</option>
+                            <option value="die">die</option>
+                        </select>
+                    </div>
+         
+
+<!-- add extra element which are non common-->
+
+                    <!--for glazing-->
+                    <div v-if="SHEET_TYPE=='Glazing'" class="row mb-2">
+                        
+                        <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
+                        <div class="mt-3">
+                            <h5><b>6. Add some extra attributes which are not common to all components (technology specific):</b></h5>
+                        </div>
+
+                            <div v-if="component_type=='glass' ||component_type=='frame' " class="col-6">
+                                <label for="quantity" class="form-label thermals">U-value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
+                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="uvalue" min="0" required>
+                            </div>
+                            <div v-if="component_type=='glass'" class="col-6">
+                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
+                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="gvalue" min="0" required>
+                            </div>
+                            <div v-else-if="component_type=='frame'"  class="col-6">
+                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
+                                <input type="number" step="any" class="form-control thermals"  style="background-color:grey" id="validationCustom01" value="not required"  readonly placeholder="not required">
+                            </div>
+                    </div>
+
+                    <!--for insulation-->
                     <div class="row mb-1" v-if="SHEET_TYPE=='Insulation'">
+                        <div class="mt-3">
+                            <h5><b>7. Add some extra attributes which are not common to all components (technology specific):</b></h5>
+                        </div>
                             <div class="col-4">
                                 <label for="quantity" class="form-label thermals">Density<strong>[Kg/m&sup3;]</strong>:<span v-if="density<0" class="text-danger"> <br> valid value is non negative</span></label>
                                 <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="density" min="0">
@@ -267,143 +405,14 @@
                             </div>
                     </div>
 
+<!--sumbit button-->
 
-                    <div class="row">
-                        <div class="col">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">Component Lifetime* <strong>[Years]:</strong><span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
-                            </div>
-                        </div>
-                        <div class="col">    
-                            <div class="mb-1">
-                            
-                            <label for="quantity" class="form-label">
-                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_point']"></i>
-                                Major Upgrade Point* <strong> 
-                                [Years]:</strong><span v-if="major_upgrade_point<0" class="text-danger"><br> valid value is non negative</span></label>
-                            <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_point" min="0" placeholder="For No Replacement put : 1000" required>
-                        </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['major_upgrade_share']"></i>
-                                    Major Upgrade Share* <strong>[CAPEX%]:</strong> <span v-if="major_upgrade_share>100 || major_upgrade_share<0" class="text-danger"><br>valid range is [0,100]</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="major_upgrade_share" min="0" max="100" required >
-                        </div>
-                        </div>
-
-                    </div>
-
-                    <div v-if="SHEET_TYPE=='Glazing'" class="row mb-2">
-                            <div v-if="component_type=='glass' ||component_type=='frame' " class="col-6">
-                                <label for="quantity" class="form-label thermals">U-value <strong>[W/(m&sup2;K)]</strong>:<span v-if="uvalue<0" class="text-danger"> <br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="uvalue" min="0" required>
-                            </div>
-                            <div v-if="component_type=='glass'" class="col-6">
-                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
-                                <input type="number" step="any" class="form-control thermals"  id="validationCustom01" v-model="gvalue" min="0" required>
-                            </div>
-                            <div v-else-if="component_type=='frame'"  class="col-6">
-                                <label for="quantity" class="form-label thermals">G-value :<span v-if="gvalue<0 || gvalue>1" class="text-danger"> <br> valid range is (0,1)</span></label>
-                                <input type="number" step="any" class="form-control thermals"  style="background-color:grey" id="validationCustom01" value="not required"  readonly placeholder="not required">
-                            </div>
-                           
+                    <div class="col-2 mt-2">
+                        <button type="submit" id="sumbit-button" class="btn btn-primary mb-2">Create Component</button>
                     </div>
 
 
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['CAPEX/UGS']"></i>
-                                    CAPEX/UGS*<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control"  id="validationCustom01" v-model="capex_per_ugs" min="0" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['annual_performance_degradation']"></i>
-                                    Annual Performance Degradation[%]*: <span v-if="annual_performance_degradation>100 || annual_performance_degradation<0" class="text-danger"> <br>  valid range is [0,100]</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="annual_performance_degradation" min="0" max="100" required>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['OPEX_PER_CAPEX']"></i>
-                                    Annual Maintenance <strong>[CAPEX%]:</strong> <span v-if="opex_per_capex>100 || opex_per_capex<0" class="text-danger"> <br> valid range is [0,100]</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="opex_per_capex" min="0" max="100" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="EOL_ACTION" class="form-label">EOL ACTION*:</label>
-                                <select id="EOL_ACTION" v-model="replace_or_die" class="custom-select" required>
-                                    <option value="replace">replace</option>
-                                    <option value="die">die</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label" >
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_co2_per_ugs']"></i>
-                                    Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required>
-                            </div>
-                        </div>
-                        <div class="col-6">     
-                            <div class="mb-1">
-                                <label for="description" style="display:block;">Description:</label>
-                                <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-1">
-                                <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_pe_per_ugs']"></i>
-                                    Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="mb-1" >
-                                <label for="bibliography" style="display:block;">Bibliography:</label>
-                                <textarea id="bibliography" v-model="bibliography" rows="2" cols="30" placeholder="Add bibliography links or other sources"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-2 mt-2">
-                            <button type="submit" id="sumbit-button" class="btn btn-primary mb-2">Create Component</button>
-
-                            
-                        </div>
-                        <p  id='mandatory' class="col-10 mt-2"><strong>All fields with * are Mandatory</strong></p>
-                        <label for="formFileSm" class="form-label"> <strong>Create Component from .xlsx file</strong></label>
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" @change="onFileChange" />
-                    </div>  
-               
-                   
-
-                </div>
+                      
             </form>
         </div>
     </div>
@@ -450,6 +459,8 @@ export default {
         explanationMode:false,
         showSubtype:true,
         file :null,
+        eol_pe_cost:null,
+        eol_co2_cost:null,
         explain_dict:{
             "type":'Is the Components type e.g.  Heatpump',
             "subtype":'Is the Components subtype e.g. for a Heatpump a subtype would be: water to water',
@@ -665,17 +676,7 @@ export default {
 h1{
     text-align: center;
 }
-#component {
-    position: relative;
-    width: 120%;
-    background-color: aliceblue;
-    border: 2px solid lightsteelblue;
-    display: flex;
-    justify-content: space-evenly;
-    border-radius: 1%;
-    height: 98%;
-   
-}
+
 /* Apply different styles for smaller viewports */
 
 
@@ -704,14 +705,12 @@ width:100%;
 }
 
 .form-photo{
-width: 80%;
-display: flex;
-justify-content: space-around;
+    margin:0 auto;
+    width:90%;
+    padding: 20px;
 }
 
-#tech_image{
-width:400px;
-}
+
 .directives{
 margin-left:50px;
 position:relative;
@@ -720,20 +719,6 @@ height:50%;
 }
 .directives p{
     margin-bottom:0px;
-}
-
-@media (max-width: 1000px){
-    .directives{
-        display: none;
-    }
-    .form-photo{
-        width:70%;
-    }
-    #component{
-        width:100%;
-        position:relative;
-        left:28%;
-    }
 }
 
 
@@ -772,6 +757,15 @@ input{
 #tooltip-explain{
     size: 15px;
 }
+
+.myform{
+    border: solid 0.75px lavender;
+}
+
+hr{
+    height: 5px;
+}
+
 
 
 </style>

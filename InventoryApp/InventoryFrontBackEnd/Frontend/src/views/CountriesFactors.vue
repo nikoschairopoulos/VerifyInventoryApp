@@ -74,7 +74,6 @@
                     <option value="lpg">LPG</option>
                     <option value="res">RES</option>
                     <option value="hydrogen">Hydrogen</option>
-                    
                 </select>
                 <div class="valid-feedback">
                     pass
