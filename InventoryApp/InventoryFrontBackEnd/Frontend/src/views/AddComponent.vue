@@ -1,6 +1,6 @@
 <template>
 
-    <div container>
+    <div class="container">
     
     <div class="form-photo">
 
@@ -18,7 +18,7 @@
                             <h5><b>1. Add the basic attributes to define the component:</b></h5>
                         </div>
                         
-                        <div class="row">
+                        <div v-if="is_admin"  class="row">
                             <div class="col">
                                 <label class="form-label" for="isMainInventory">Is Default Component</label>
                                 <input type="checkbox" class="form-check-input" id="isMainInventory" v-model="IS_MAIN_INVENTORY" value="false">
@@ -302,9 +302,16 @@
 
                         <div class="col-4">
                             <label for="quantity" class="form-label">
-                                    <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_pe_per_ugs']"></i>
-                                    Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:<span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
+                                <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_pe_per_ugs']"></i>
+                                <span v-if="!IS_MAIN_INVENTORY">
+                                Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:
+                                </span>
+                                <span v-else>
+                                Embodied Pe* <strong>[GJ]</strong>:
+                                </span>
+                                <span v-if="embodied_pe_per_ugs<0" class="text-danger"><br> valid value is non negative</span>
+                            </label>
+                            <input type="number" step="any" class="form-control" id="quantity" v-model="embodied_pe_per_ugs" min="0" required>
                         </div>
 
 <!--add eol attributes-->
@@ -336,13 +343,14 @@
 
 <!--add regression attributes if is a default component-->
 
+                <div v-if="IS_MAIN_INVENTORY" class="regression">
                 <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
-                    <div v-if="IS_MAIN_INVENTORY"  class="mt-3" >
+                    <div class="mt-3" >
                         <h5><b>6. Add Regression Attributes:</b></h5>
                         <p>-In this section attributes are added for Default components,<br>
                             that have been calculated for many values with SimaPro or another source and will be used using scaling</p>
                     </div>
-
+                    <div class="row">
                     <div class="col-3">
                         <label for="quantity" class="form-label"> <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['pref_cost']"></i> 
                         Pref Cost* <strong> [{{ ugs_header }}]</strong>:<span v-if="pref_cost<0" class="text-danger"><br> valid value is non negative</span><br></label>
@@ -368,6 +376,8 @@
                             <label for="quantity" class="form-label">Scale Cost*:</label>
                             <input type="number" step="any" class="form-control"  id="quantity" v-model="scale_cost"  required>
                         </div>
+                    </div> <!--end row-->
+                    </div>
 
          
 
@@ -470,6 +480,7 @@ export default {
         file :null,
         eol_pe_cost:null,
         eol_co2_cost:null,
+        is_admin:false,
         explain_dict:{
             "type":'Is the Components type e.g.  Heatpump',
             "subtype":'Is the Components subtype e.g. for a Heatpump a subtype would be: water to water',
@@ -639,6 +650,13 @@ export default {
             }, false);
         });
         })();
+
+        //check if you are the admin user:
+        axios.get(`${TARGET_IP}/api/is_admin_user`).
+        then(response=>{
+          this.is_admin = response.data.is_admin
+          console.log(`is the user admin: ${this.is_admin}`)
+        })
   },
   watch: {
     SHEET_TYPE(newValue) {
@@ -682,6 +700,8 @@ export default {
 
 
 
+
+
 h1{
     text-align: center;
 }
@@ -713,10 +733,11 @@ width:100%;
 width:100%;
 }
 
+.container{}
+
 .form-photo{
     margin:0 auto;
     width:90%;
-    padding: 20px;
 }
 
 
@@ -773,6 +794,20 @@ input{
 
 hr{
     height: 5px;
+}
+
+
+input, select, textarea {
+  background-color: #ffffff; /* White input background */
+  border: 1px solid #ced4da; /* Medium gray border */
+}
+
+#sumbit-button:hover {
+  background-color: #0b5ed7; /* Darkened primary color for hover */
+}
+
+h5{
+    color:cornflowerblue;
 }
 
 

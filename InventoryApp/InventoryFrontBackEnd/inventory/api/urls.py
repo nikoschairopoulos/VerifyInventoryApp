@@ -10,7 +10,8 @@ from inventory.api.views import (
           find_fuel_factors_specific_country,
           inventory_without_components,
           only_main_inventory,
-          CreateComponentFromExcell
+          CreateComponentFromExcell,
+          IsAdminUser
           )
 
 #from django.urls import path
@@ -33,7 +34,8 @@ urlpatterns = [
     path("factors/<str:country>",find_fuel_factors_specific_country.as_view(),name='fuel_factors_specific_country'),
     path("verify/all_inventories",inventory_without_components.as_view(),name='all_inventories'),
     path("verify/component_main_inventory",only_main_inventory.as_view(),name='all_main_components'),
-    path("excell_create",CreateComponentFromExcell.as_view(),name='create_components_from_excell')
+    path("excell_create",CreateComponentFromExcell.as_view(),name='create_components_from_excell'),
+    path("is_admin_user",IsAdminUser.as_view(),name='is_admin_user')
 ]
 
 

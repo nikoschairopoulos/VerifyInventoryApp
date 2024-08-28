@@ -51,11 +51,11 @@
       <div class="table-responsive">
       <table class=" table  table-hover">
           <tr style="background-color:#054673;color:#F7F7F7;">
-            <th scope="col" class="text-center">ID</th>
+            <th id="id_element" scope="col" class="text-center">ID</th>
             <th scope="col" class="text-center">Name</th>
             <th scope="col" class="text-center">Type</th>
             <th scope="col" class="text-center">Subtype</th>
-            <th scope="col" class="text-center">Actions</th>
+            <th id="actions_element" scope="col" class="text-center">Actions</th>
           </tr>
         <tbody>
           <tr v-for="component in componentsPerType"  :key="component.id">
@@ -247,6 +247,7 @@ export default {
                 this.components.push(comp);
             }
             this.componentsPerType=this.components
+            this.componentsPerType.sort((a, b) => a.id - b.id);
             console.log(response.data);
             console.log(this.components)
             this.componentTableForExcell();
@@ -254,7 +255,6 @@ export default {
             .catch(error => {
             console.error('Error fetching data:', error);
         });
-        
     },
 
     methods: {
@@ -265,6 +265,9 @@ export default {
           if(this.NotMainInventory){
             this.componentsPerType=this.componentsPerType.filter(comp=>!comp.IS_MAIN_INVENTORY)
           }
+
+          //sort by id the components per type:
+          this.componentsPerType.sort((a, b) => a.id - b.id);
         },
         componentTableForExcell(){
           console.log(this.components[0]);
@@ -441,6 +444,11 @@ export default {
 /* Add styles as needed */
 .tablecontainer{}
 
+.responsive{
+  margin: 0 auto;
+  width:99%;
+}
+
 table {
   border-collapse: collapse;
 }
@@ -582,6 +590,13 @@ h2{
   margin-top: 7px;
   margin-right: 1%;
   border: dashed 0.5px
+}
+
+#id_element{
+  width: 5%;
+}
+#actions_element{
+  width:10%;
 }
 
 </style>

@@ -208,7 +208,10 @@ class CreateComponentFromExcell(APIView):
         else:
             return Response(components_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#check if the user is staff user:
+class IsAdminUser(APIView):
+    def get(self,request):
+        return Response({'is_admin': request.user.is_staff}) 
 
 
 
