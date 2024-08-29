@@ -11,7 +11,8 @@ from inventory.api.views import (
           inventory_without_components,
           only_main_inventory,
           CreateComponentFromExcell,
-          IsAdminUser
+          IsAdminUser,
+          ImportElectricityData
           )
 
 #from django.urls import path
@@ -35,7 +36,8 @@ urlpatterns = [
     path("verify/all_inventories",inventory_without_components.as_view(),name='all_inventories'),
     path("verify/component_main_inventory",only_main_inventory.as_view(),name='all_main_components'),
     path("excell_create",CreateComponentFromExcell.as_view(),name='create_components_from_excell'),
-    path("is_admin_user",IsAdminUser.as_view(),name='is_admin_user')
+    path("is_admin_user",IsAdminUser.as_view(),name='is_admin_user'),
+    path('load_electricity_measurements',ImportElectricityData.as_view(),name='import_electricity_data')
 ]
 
 

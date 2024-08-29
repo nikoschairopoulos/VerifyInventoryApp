@@ -19,6 +19,8 @@ from rest_framework import status
 import requests
 from django.http import HttpResponse
 import json 
+import pandas as pd 
+from inventory.models import CarbonIntensityData
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 
 def error404(request):
@@ -224,3 +226,35 @@ def homepage_view(request):
     FILE = f'{CURRENT_DIRECTORY}/../../templates/index.html'
     print(FILE)
     return render(request, FILE)  # Vue.js entry point
+
+##### this is a view to import excell file with hour electricity factors (converted before to dictionairy) into the Database
+##### at the CarbonIntensityData Table
+class ImportElectricityData(APIView):
+    def post(self,request):
+        #measurements = json.loads(request.data)
+        measurements = json.loads(request.data)
+        print(measurements)
+        df = pd.DataFrame(measurements)
+        print(df)
+        try:
+            for index,row in df.iterrows():
+                record = CarbonIntensityData(
+                    datetime = row['Datetime (UTC)'],
+                    country  = row['Country'],
+                    zone_name = row['Zone Name'],
+                    zone_id = row['Zone Id'],
+                    carbon_intensity_gco2_eq_kwh_direct = row['Carbon Intensity gCO₂eq/kWh (direct)'],
+                    carbon_intensity_gco2_eq_kwh_lca = row['Carbon Intensity gCO₂eq/kWh (LCA)'],
+                    low_carbon_percentage = row['Low Carbon Percentage'],
+                    renewable_percentage = row['Renewable Percentage'],
+                    data_source = row['Data Source'],
+                    data_estimated = row['Data Estimated'],
+                    data_estimation_method = row['Data Estimation Method']
+                )
+                record.save()
+            data = {'message': 'Success'}
+            return Response(data)  # Defaults to HTTP 200 OK
+        except Exception as e:
+            print(e)
+            data = {'error': 'Invalid data'}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)

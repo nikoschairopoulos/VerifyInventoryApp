@@ -30,7 +30,8 @@ if __name__  != "__main__":
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryapi.settings')
 django.setup()
 from inventory.models import (Component, 
-                                Factor)
+                                Factor,
+                                CarbonIntensityData)
 from inventory.api.serializers import ComponentSerializer
 #import pandas as pd 
 
@@ -194,6 +195,7 @@ for country in s1:
                   primary_energy_factor=1.2)
     obj1.save()
 '''
+'''
 #gasoline_objects = Factor.objects.values('country')
 gasoline_objects = Factor.objects.values('country').distinct()
 print(type(gasoline_objects))
@@ -207,3 +209,4 @@ for item in gasoline_objects:
     #factor.year = 2018
 #    factor.source = 'source is not provided'
 #    factor.save()
+'''

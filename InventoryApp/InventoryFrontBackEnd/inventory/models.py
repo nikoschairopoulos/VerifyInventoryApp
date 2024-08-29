@@ -68,18 +68,15 @@ class Factor(models.Model):
     co2_factor = models.FloatField(null=True) 
     primary_energy_factor = models.FloatField(null=True)
     ## new fields:
-    year = models.IntegerField(null=True)
+    #year = models.IntegerField(null=True)
     source = models.TextField(blank=True,null=True)
     comments = models.TextField(blank=True,null=True)
     class Meta:
         # Define a composite primary key from field1 and field2
-        constraints = [
-            models.UniqueConstraint(fields=['country', 'fuel','year'], name='composite_pk')
-        ]
-    
+        constraints = [models.UniqueConstraint(fields=['country', 'fuel'], name='composite_pk')]
         app_label = 'inventory'
     def __str__(self):
-        return f"{self.country} {self.fuel} {self.co2_factor} {self.primary_energy_factor} {self.year} {self.source} {self.comments} "
+        return f"{self.country} {self.fuel} {self.co2_factor} {self.primary_energy_factor}  {self.source} {self.comments}"
 
 
 class Wall_Materials(models.Model):
@@ -91,8 +88,51 @@ class Wall_Materials(models.Model):
 
     class Meta:
         app_label = 'inventory'
-    
-    
 
 
+#########
+# in the bellow Model we add the hourly 
+# measurements for electricity:
+#########
+    
+'''
+comment --> is the mapping from excell to databse: 
+Datetime (UTC)                        --> datetime	
+Country	   	                          --> country
+Zone Name                             --> zone_name
+Zone Id	                              --> zone_id
+Carbon Intensity gCO₂eq/kWh (direct)  --> carbon_intensity_gco2_eq_kwh_direct	
+Carbon Intensity gCO₂eq/kWh (LCA)	  --> carbon_intensity_gco2_eq_kwh_lca	
+Low Carbon Percentage	              --> low_carbon_percentage
+Renewable Percentage	              --> renewable_percentage
+Data Source	                          --> data_source
+Data Estimated	                      --> data_estimated
+Data Estimation Method                -->data_estimation_method
+'''
+
+class CarbonIntensityData(models.Model):
+    datetime = models.DateTimeField()
+    country  = models.CharField(max_length=255) 
+    zone_name = models.CharField(max_length=255)
+    zone_id = models.CharField(max_length=100)  
+    carbon_intensity_gco2_eq_kwh_direct = models.FloatField()
+    carbon_intensity_gco2_eq_kwh_lca = models.FloatField()
+    low_carbon_percentage = models.FloatField()
+    renewable_percentage = models.FloatField()
+    data_source = models.CharField(max_length=255)
+    data_estimated = models.BooleanField() 
+    data_estimation_method = models.CharField(max_length=255, null=True, blank=True)
+    
+
+    def __str__(self):
+        return f"{self.country_zone_name} - {self.datetime}"
+
+    class Meta:
+        #verbose_name_plural = "Carbon Intensity Data"
+        
+        indexes = [
+            models.Index(fields=['country', 'datetime']),
+        ]
+
+        unique_together = [['country', 'datetime']]
 

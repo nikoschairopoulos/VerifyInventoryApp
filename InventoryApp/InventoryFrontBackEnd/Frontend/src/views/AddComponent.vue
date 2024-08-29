@@ -275,35 +275,50 @@
                     
                     <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
                     <div class="mt-3">
-                        <h5><b>4. Add: CAPEX per FU - CO2 per FU - Primary Energy per FU :</b></h5>
-                        <ul>
-                          <span>-In this section user must add the ratio of the:</span>
+                        <h5 v-if="IS_MAIN_INVENTORY"><b>4. Add  CAPEX - Embodied CO2 per FU - Embodied Primary Energy per FU:</b></h5>
+                        <h5 v-else><b>4. Add  Embodied CO2 - Embodied Primary Energy:</b></h5>
+                     
+                        
+                        <ul v-if="IS_MAIN_INVENTORY">
                           <li>CAPEX of the component divided by overall installed magnituded </li>
                           <li>Embodied CO2 of the component divided by overall installed magnituded</li>
                           <li>Embodied Primary Energy of the component divided by overall installed magnituded</li>
-                        </ul> 
+                        </ul>
+                        <ul v-else>
+                          <li>Embodied CO2 of the component</li>
+                          <li>Embodied Primary Energy of the component</li>
+                        </ul>  
+                    
                     </div>
 
-                        <div class="col-4">
+                       
+                        <div v-if="IS_MAIN_INVENTORY" class="col-6 mt-3">
                                 <label for="quantity" class="form-label">
                                     <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['CAPEX/UGS']"></i>
                                     CAPEX/UGS*<strong>[€/{{ ugs_header }}]</strong>:<span v-if="capex_per_ugs<0" class="text-danger"> <br> valid value is non negative</span></label>
                                 <input type="number" step="any" class="form-control"  id="validationCustom01" v-model="capex_per_ugs" min="0" required>
                         </div>
+                        
 
                         
-                        <div class="col-4">
-                                <label for="quantity" class="form-label" >
+                        <div class="col-6">
+                                <label for="quantity" class="form-label mt-3" >
                                     <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_co2_per_ugs']"></i>
-                                    Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:</label>
+                                    <span v-if="IS_MAIN_INVENTORY">
+                                    Embodied CO2/UGS* <strong>[kgCO2/{{ ugs_header }}]</strong>:
+                                    </span>
+                                    <span v-else>
+                                    Embodied CO2* <strong>[kgCO2]</strong>:
+                                    </span>
+                                </label>
                                 <input type="number" step="any" class="form-control"  id="quantity" v-model="embodied_co2_per_ugs" required>
                         </div>
 
 
-                        <div class="col-4">
-                            <label for="quantity" class="form-label">
+                        <div class="col-6">
+                            <label for="quantity" class="form-label mt-3">
                                 <i id='tooltip-explain' class="fa fa-question-circle" data-toggle="tooltip" data-placement="left" :title="explain_dict['embodied_pe_per_ugs']"></i>
-                                <span v-if="!IS_MAIN_INVENTORY">
+                                <span v-if="IS_MAIN_INVENTORY">
                                 Embodied Pe/UGS* <strong>[GJ/{{ ugs_header }}]</strong>:
                                 </span>
                                 <span v-else>
@@ -456,10 +471,10 @@ export default {
         embodied_co2_per_ugs:null,
         embodied_pe_per_ugs:null,
         lifetime:null,
-        pref_cost:null,
-        pref_env:null,
-        scale_cost:null,
-        scale_env:null,
+        pref_cost:1,
+        pref_env:1,
+        scale_cost:1,
+        scale_env:1,
         major_upgrade_point:null,
         major_upgrade_share:null,
         annual_performance_degradation:null,
@@ -688,6 +703,15 @@ export default {
         if(newValue=='Ventilation'){
             this.ugs_header = 'kW'
             this.showSubtype=false;
+        }
+    },
+    IS_MAIN_INVENTORY(newValue){
+        if(newValue==true){
+
+            this.scale_cost=null
+            this.scale_env=null
+            this.pref_cost=null
+            this.pref_env=null
         }
     }
   }
