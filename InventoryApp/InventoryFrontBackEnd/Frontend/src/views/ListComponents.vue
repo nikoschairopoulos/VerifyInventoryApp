@@ -127,6 +127,9 @@
                         <label for="quantity" class="form-label">Component Lifetime[years]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.lifetime" min="0">
 
+                        <label for="quantity" class="form-label">EoL CO2 Cost[KgCO2]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.eol_co2_cost" min="0"> 
+
                         <hr>
                         <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
                           <label for="quantity" class="form-label">Density<strong>[Kg/m&sup3;]</strong>:</label>
@@ -165,6 +168,9 @@
     
                         <label for="quantity" class="form-label">Annual Performance Degradation[%]:</label>
                         <input type="text" class="form-control"  id="quantity" v-model="detailsComp.annual_performance_degradation" min="0"> 
+
+                        <label for="quantity" class="form-label">EoL primary energy cost[Gj]:</label>
+                        <input type="text" class="form-control"  id="quantity" v-model="detailsComp.eol_pe_cost" min="0"> 
 
                         <hr>
                         <div v-if="detailsComp.SHEET_TYPE=='Insulation'">
@@ -597,6 +603,10 @@ h2{
 }
 #actions_element{
   width:10%;
+}
+
+.form-label{
+  margin-bottom: 0px;
 }
 
 </style>

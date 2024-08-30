@@ -475,6 +475,7 @@ export default {
         pref_env:1,
         scale_cost:1,
         scale_env:1,
+        capex_per_ugs:1,
         major_upgrade_point:null,
         major_upgrade_share:null,
         annual_performance_degradation:null,
@@ -712,6 +713,7 @@ export default {
             this.scale_env=null
             this.pref_cost=null
             this.pref_env=null
+            this.capex_per_ugs=null
         }
     }
   }

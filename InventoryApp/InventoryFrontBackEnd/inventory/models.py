@@ -32,11 +32,14 @@ class Component(models.Model):
     annual_performance_degradation = models.FloatField() 
     replace_or_die = models.CharField(max_length=250)
     SHEET_TYPE = models.CharField(max_length=250)             # HERE WE DECLERE THE SHEET_TYPE  e.g El.Generators,Insulation etc
-    IS_MAIN_INVENTORY = models.BooleanField()                # HERE WE DECLARE IF IT IS AT THE MAIN INVENTORY
+    IS_MAIN_INVENTORY = models.BooleanField()                 # HERE WE DECLARE IF IT IS AT THE MAIN INVENTORY
     bibliography = models.TextField(blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thermal_properties = models.JSONField(null=True, blank=True)
     IS_B_COMPONENT = models.BooleanField()
+    eol_pe_cost = models.FloatField(null=True,blank=True)
+    eol_co2_cost = models.FloatField(null=True,blank=True)
+
 
     class Meta:
         app_label = 'inventory'
