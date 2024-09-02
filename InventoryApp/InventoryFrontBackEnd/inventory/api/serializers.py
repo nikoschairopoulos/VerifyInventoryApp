@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.utils.timesince import timesince
 from rest_framework import serializers
-from inventory.models import Inventory,Component,Factor
+from inventory.models import Inventory,Component,Factor,CarbonIntensityData
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 
@@ -100,5 +100,10 @@ class FactorSerializer(serializers.ModelSerializer):
         
         return data
 
+class CarbonIntensityDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarbonIntensityData
+        fields = '__all__'
+    
 
     

@@ -123,7 +123,7 @@ class CarbonIntensityData(models.Model):
     low_carbon_percentage = models.FloatField()
     renewable_percentage = models.FloatField()
     data_source = models.CharField(max_length=255)
-    data_estimated = models.BooleanField() 
+    data_estimated = models.BooleanField(blank=True,null=True) 
     data_estimation_method = models.CharField(max_length=255, null=True, blank=True)
     
 

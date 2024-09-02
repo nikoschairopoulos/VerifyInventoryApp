@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import mixins
-from inventory.api.serializers import ComponentSerializer,InventorySerializer,FactorSerializer
+from inventory.api.serializers import ComponentSerializer,InventorySerializer,FactorSerializer,CarbonIntensityDataSerializer
 from inventory.models import Component,Inventory
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
@@ -233,9 +233,9 @@ class ImportElectricityData(APIView):
     def post(self,request):
         #measurements = json.loads(request.data)
         measurements = json.loads(request.data)
-        print(measurements)
+        #print(measurements)
         df = pd.DataFrame(measurements)
-        print(df)
+        #print(df)
         try:
             for index,row in df.iterrows():
                 record = CarbonIntensityData(
@@ -251,6 +251,9 @@ class ImportElectricityData(APIView):
                     data_estimated = row['Data Estimated'],
                     data_estimation_method = row['Data Estimation Method']
                 )
+                print(row)
+                print(index)
+                print('---------------')
                 record.save()
             data = {'message': 'Success'}
             return Response(data)  # Defaults to HTTP 200 OK
@@ -258,3 +261,17 @@ class ImportElectricityData(APIView):
             print(e)
             data = {'error': 'Invalid data'}
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class get_hourly_electricity_fuel_factors(APIView):
+    def get(self, request, country, year):
+        queryset = CarbonIntensityData.objects.filter(
+            country=country,
+            datetime__year=year
+        )
+        serializer = CarbonIntensityDataSerializer(queryset, many=True)
+        df = pd.DataFrame(serializer.data)
+        res = df.to_json()
+        return Response(res)
+
+
