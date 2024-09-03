@@ -111,7 +111,7 @@
                                     <div id="options" v-if="SHEET_TYPE=='B_Batteries'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
-                                        <option value="li_ion">battery Li-ion </option>
+                                        <option value="battery_li_ion">battery Li-ion </option>
                                         <option value="lead_acid">battery lead acid</option>
                                         <option value="flow">battery flow</option>
                                     </select>
@@ -120,7 +120,7 @@
                                     <div id="options" v-if="SHEET_TYPE == 'D_Batteries'">
                                         <label for="type" class="form-label">Component Type* :</label><br>
                                         <select id="type" v-model="component_type" required>
-                                        <option value="li_ion">battery Li-ion </option>
+                                        <option value="battery_li_ion">battery Li-ion </option>
                                         <option value="lead_acid">battery lead acid</option>
                                         <option value="flow">battery flow</option>
                                         <option value="flywheel">flywheel </option>
