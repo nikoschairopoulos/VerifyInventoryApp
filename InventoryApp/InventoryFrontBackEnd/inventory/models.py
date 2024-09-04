@@ -139,3 +139,16 @@ class CarbonIntensityData(models.Model):
 
         unique_together = [['country', 'datetime']]
 
+
+
+class FactorElectricityYear(models.Model):
+    country = models.CharField(250)
+    year = models.IntegerField()
+    measurement_co2 = models.FloatField() 
+    source = models.TextField(blank=True,null=True)
+    comments = models.TextField(blank=True,null=True)
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['country', 'year'], name='composite_pk_2')]
+        app_label = 'inventory'
+    def __str__(self):
+        return f"{self.country} {self.year} {self.measurement_co2}"

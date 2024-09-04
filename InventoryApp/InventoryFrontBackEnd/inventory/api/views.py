@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import mixins
-from inventory.api.serializers import ComponentSerializer,InventorySerializer,FactorSerializer,CarbonIntensityDataSerializer
+from inventory.api.serializers import (ComponentSerializer,
+                                       InventorySerializer,
+                                       FactorSerializer,
+                                       CarbonIntensityDataSerializer,
+                                       CarbonIntensityDataSerializerYear)
 from inventory.models import Component,Inventory
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
@@ -20,7 +24,7 @@ import requests
 from django.http import HttpResponse
 import json 
 import pandas as pd 
-from inventory.models import CarbonIntensityData
+from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 
 def error404(request):
@@ -227,8 +231,12 @@ def homepage_view(request):
     print(FILE)
     return render(request, FILE)  # Vue.js entry point
 
-##### this is a view to import excell file with hour electricity factors (converted before to dictionairy) into the Database
+##### this is (bellow) a view to import excell file with hour electricity factors (converted before to dictionairy) into the Database
 ##### at the CarbonIntensityData Table
+
+#####################################
+#this is for hourly electricity data:
+#####################################
 class ImportElectricityData(APIView):
     def post(self,request):
         #measurements = json.loads(request.data)
@@ -263,6 +271,9 @@ class ImportElectricityData(APIView):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
+#####################################
+#this is for hourly electricity data:
+#####################################
 class get_hourly_electricity_fuel_factors(APIView):
     def get(self, request, country, year):
         queryset = CarbonIntensityData.objects.filter(
@@ -278,3 +289,38 @@ class get_hourly_electricity_fuel_factors(APIView):
         return Response(res)
 
 
+#####################################
+#this is for yearly electricity data:
+#####################################
+class ImportElectricityDataYearly(APIView):
+    def post(self,request):
+        try:
+            co2_data = request.data
+            for element in co2_data:
+                record  = FactorElectricityYear(
+                    country = element['country'] ,
+                    year = element['year'],
+                    measurement_co2 = element['measurement']
+                )
+                #save to DB
+                print(element)
+                print('--------------')
+                record.save()
+            data = {'message': 'Success'}
+            return Response(data)  # Defaults to HTTP 200 OK
+        except Exception as e:
+            print(e)
+            data = {'error': 'Invalid data'}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+#####################################
+#this is for yearly electricity data:
+#####################################
+class get_yearly_electricity_fuel_factors(APIView):    
+    def get(self,request,country):
+            try:
+                queryset = FactorElectricityYear.objects.filter(country=country)
+                data  = CarbonIntensityDataSerializerYear(queryset,many=True).data
+                return Response(data)
+            except Exception as e :
+                return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)

@@ -13,7 +13,9 @@ from inventory.api.views import (
           CreateComponentFromExcell,
           IsAdminUser,
           ImportElectricityData,
-          get_hourly_electricity_fuel_factors
+          get_hourly_electricity_fuel_factors,
+          ImportElectricityDataYearly,
+          get_yearly_electricity_fuel_factors
         )
 
 #from django.urls import path
@@ -38,8 +40,10 @@ urlpatterns = [
     path("verify/component_main_inventory",only_main_inventory.as_view(),name='all_main_components'),
     path("excell_create",CreateComponentFromExcell.as_view(),name='create_components_from_excell'),
     path("is_admin_user",IsAdminUser.as_view(),name='is_admin_user'),
-    path('load_electricity_measurements',ImportElectricityData.as_view(),name='import_electricity_data'),
-    path('get_electricity_measurements/<str:country>/<int:year>', get_hourly_electricity_fuel_factors.as_view(),name='get_electricity_factors')
+    path('load_electricity_measurements',ImportElectricityData.as_view(),name='import_electricity_data_hourly'),
+    path('get_electricity_measurements/<str:country>/<int:year>', get_hourly_electricity_fuel_factors.as_view(),name='get_electricity_factors'),
+    path('load_electricity_measurements_yearly',ImportElectricityDataYearly.as_view(),name='import_electricity_data_yearly'),
+    path('get_electricity_measurements_yearly/<str:country>',get_yearly_electricity_fuel_factors.as_view(),name='get_yearly_electricity_factors'),
 ]
 
 
