@@ -271,7 +271,10 @@ class get_hourly_electricity_fuel_factors(APIView):
         )
         serializer = CarbonIntensityDataSerializer(queryset, many=True)
         df = pd.DataFrame(serializer.data)
+        if df.empty:
+            return Response({'error':'no country or year supported --> something went wrong'},status=status.HTTP_400_BAD_REQUEST)
         res = df.to_json()
+        #is not empty so send it:
         return Response(res)
 
 
