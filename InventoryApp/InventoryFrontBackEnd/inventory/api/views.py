@@ -235,7 +235,7 @@ def homepage_view(request):
 ##### at the CarbonIntensityData Table
 
 #####################################
-#this is for hourly electricity data:
+#this is for hourly electricity data(post):
 #####################################
 class ImportElectricityData(APIView):
     def post(self,request):
@@ -272,25 +272,28 @@ class ImportElectricityData(APIView):
 
 
 #####################################
-#this is for hourly electricity data:
+#this is for hourly electricity data(get):
 #####################################
 class get_hourly_electricity_fuel_factors(APIView):
     def get(self, request, country, year):
-        queryset = CarbonIntensityData.objects.filter(
-            country=country,
-            datetime__year=year
-        )
-        serializer = CarbonIntensityDataSerializer(queryset, many=True)
-        df = pd.DataFrame(serializer.data)
-        if df.empty:
-            return Response({'error':'no country or year supported --> something went wrong'},status=status.HTTP_400_BAD_REQUEST)
-        res = df.to_json()
-        #is not empty so send it:
-        return Response(res)
+        try:
+            queryset = CarbonIntensityData.objects.filter(
+                country=country,
+                datetime__year=year
+            )
+            serializer = CarbonIntensityDataSerializer(queryset, many=True)
+            df = pd.DataFrame(serializer.data)
+            if df.empty:
+                return Response({'error':'no country or year supported --> something went wrong'},status=status.HTTP_404_NOT_FOUND)
+            res = df.to_json()
+            #is not empty so send it:
+            return Response(res)
+        except Exception as e:
+            return Response({'error':str(e)},status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 #####################################
-#this is for yearly electricity data:
+#this is for yearly electricity data (post):
 #####################################
 class ImportElectricityDataYearly(APIView):
     def post(self,request):
@@ -314,7 +317,7 @@ class ImportElectricityDataYearly(APIView):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 #####################################
-#this is for yearly electricity data:
+#this is for yearly electricity data (get):
 #####################################
 class get_yearly_electricity_fuel_factors(APIView):    
     def get(self,request,country):
@@ -327,4 +330,4 @@ class get_yearly_electricity_fuel_factors(APIView):
                     return Response({'error': f"No data found for country: {country}"}, status=status.HTTP_404_NOT_FOUND)
             #catch any other exception
             except Exception as e :
-                return Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
