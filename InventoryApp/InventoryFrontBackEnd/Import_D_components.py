@@ -210,3 +210,23 @@ for item in gasoline_objects:
 #    factor.source = 'source is not provided'
 #    factor.save()
 '''
+
+
+# make eol equal to zero:
+for element in Component.objects.all():
+    element.eol_co2_cost = 0
+    element.eol_pe_cost  = 0
+    element.save()
+
+# add gasoline to all countries:
+factors = Factor.objects.all()
+s1 = set()
+for f in factors:
+    s1.add(f.country)
+print(s1)
+for country in s1:
+    obj1 = Factor(country=country,
+                  fuel='gasoline',
+                  co2_factor=0.314,
+                  primary_energy_factor=1.1)
+    obj1.save()

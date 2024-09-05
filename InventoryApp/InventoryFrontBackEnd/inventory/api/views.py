@@ -321,6 +321,10 @@ class get_yearly_electricity_fuel_factors(APIView):
             try:
                 queryset = FactorElectricityYear.objects.filter(country=country)
                 data  = CarbonIntensityDataSerializerYear(queryset,many=True).data
-                return Response(data)
+                if queryset.exists():
+                    return Response(data)
+                else:
+                    return Response({'error': f"No data found for country: {country}"}, status=status.HTTP_404_NOT_FOUND)
+            #catch any other exception
             except Exception as e :
-                return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error':str(e)},status=status.HTTP_400_BAD_REQUEST)
