@@ -621,7 +621,7 @@
 .input-form{
     margin: 0 auto;
     width:99.5%;
-    border: solid greenyellow 1px;
+    /*border: solid greenyellow 1px;*/
     padding: 20px;
 }
 
