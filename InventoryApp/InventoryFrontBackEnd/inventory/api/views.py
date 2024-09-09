@@ -316,6 +316,7 @@ class ImportElectricityDataYearly(APIView):
             data = {'error': 'Invalid data'}
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+
 #####################################
 #this is for yearly electricity data (get):
 #####################################
@@ -331,3 +332,21 @@ class get_yearly_electricity_fuel_factors(APIView):
             #catch any other exception
             except Exception as e :
                 return Response({'error':str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+#####################################
+#get countries that have yearly Data:
+#get countries that have hourly Data:
+#####################################
+class get_countries_hourly_yearly_electricity_factors(APIView):
+    def get(self,request):
+        queryset_hourly =  CarbonIntensityData.objects.values_list('country',flat=True).distinct()
+        queryset_yearly =  FactorElectricityYear.objects.values_list('country',flat=True).distinct()
+        response_data = {'hourly':queryset_hourly,
+                         'yearly':queryset_yearly,
+                         'common': list(set(queryset_hourly) & set(queryset_yearly))
+                         }
+        return Response(response_data)
+
+
+
