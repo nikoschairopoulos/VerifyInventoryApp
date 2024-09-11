@@ -261,8 +261,8 @@ class ImportElectricityData(APIView):
                 )
                 print(row)
                 print(index)
-                print('---------------')
                 record.save()
+                print('------PASS---------')
             data = {'message': 'Success'}
             return Response(data)  # Defaults to HTTP 200 OK
         except Exception as e:
@@ -280,7 +280,7 @@ class get_hourly_electricity_fuel_factors(APIView):
             queryset = CarbonIntensityData.objects.filter(
                 country=country,
                 datetime__year=year
-            )
+            ).order_by('datetime') 
             serializer = CarbonIntensityDataSerializer(queryset, many=True)
             df = pd.DataFrame(serializer.data)
             if df.empty:
