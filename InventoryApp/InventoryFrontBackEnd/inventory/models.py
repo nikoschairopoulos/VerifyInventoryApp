@@ -39,6 +39,12 @@ class Component(models.Model):
     IS_B_COMPONENT = models.BooleanField()
     eol_pe_cost = models.FloatField(null=True,blank=True)
     eol_co2_cost = models.FloatField(null=True,blank=True)
+    ######## (new attributes to confront with new Database Fields:)
+    simapro_version = models.CharField(null=True,blank=True)
+    ia_method_ghg   = models.CharField(null=True,blank=True)
+    ia_method_pe    = models.CharField(null=True,blank=True)
+    lca_db          = models.CharField(null=True,blank=True)
+    functional_unit = models.CharField(null=True,blank=True)
 
 
     class Meta:

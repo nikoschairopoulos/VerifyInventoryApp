@@ -221,7 +221,7 @@
                     <div class="row">
                         <div class="col-4">
                                 <label for="quantity" class="form-label">Component Lifetime* <strong>[Years]:</strong><span v-if="lifetime<0" class="text-danger"><br> valid value is non negative</span></label>
-                                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" min="0" required>
+                                <input type="number" step="any" class="form-control"  id="quantity" v-model="lifetime" oninput="this.value|=0" min="0" required>
                         </div>
 
                         <div class="col-4">    
@@ -255,21 +255,55 @@
                     </div>
 
 
-<!--sources section-->
+<!--sources section AND  LCA information--> 
                     <hr class="mt-3 mb-3" style="width: 98%; margin: 0 auto;">
                     <div class="mt-3">
                             <h5><b>3. Add Description and Sources:</b></h5>
                     </div>
 
-                        <div class="col-6">     
+                    <div class="col-12 mt-3">
+                            <label for="simapro_version" style="display:block;">Simapro Version:</label>
+                            <input class="form-control" type="text" v-model="simapro_version">
+                    </div>
+
+                        <!--Add Description and Bibliography-->
+                        <div class="col-12 mt-3">     
                                 <label for="description" style="display:block;">Description:</label>
-                                <textarea id="description" v-model="description" rows="2" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
+                                <textarea id="description" v-model="description" rows="4" cols="30"  placeholder="fulfill with usefull info about the Component"></textarea>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-12 mt-3">
                             <label for="bibliography" style="display:block;">Bibliography:</label>
-                            <textarea id="bibliography" v-model="bibliography" rows="2" cols="30" placeholder="Add bibliography links or other sources"></textarea>
+                            <textarea id="bibliography" v-model="bibliography" rows="4" cols="30" placeholder="Add bibliography links or other sources"></textarea>
                         </div>
+
+                           <!-- Add some new element about LCA info-->
+                           <div class="col-6 mt-3">
+                            <label for="ia_method_ghg" style="display:block;">Impact Assessment Method (GHG emissions):</label>
+                            <input class="form-control" type="text" v-model="ia_method_ghg">
+                        </div>
+
+
+                        <div class="col-6 mt-3">
+                            <label for="ia_method_pe" style="display:block;">Impact Assessment Method (Primary Energy Demand):</label>
+                            <input class="form-control" type="text" v-model="ia_method_pe">
+                        </div>
+
+                        <div class="col-6 mt-3">
+                            <label for="lca_db" style="display:block;">Life Cycle Analysis Database:</label>
+                            <input class="form-control" type="text" id="lca_db" v-model="lca_db">
+                        </div>
+
+                        <div class="col-6 mt-3">
+                            <label for="custom" style="display:block;">Functional Unit:</label>
+                            <input id="custom" class="form-control" type="text"  v-model="functional_unit">
+                        </div>
+
+
+
+
+
+
 
 <!--add related components with Capex - embodied CO2 - embodied Pe -->
                     
@@ -484,6 +518,11 @@ export default {
         IS_MAIN_INVENTORY:false,
         description:null,
         bibliography:null,
+        ia_method_ghg:null,
+        ia_method_pe:null,
+        lca_db:null,
+        simapro_version:null,
+        functional_unit:null,
         conductivity:null,
         density:null,
         capacity:null,
@@ -677,7 +716,10 @@ export default {
   watch: {
     SHEET_TYPE(newValue) {
 
-        if( newValue=="El. Generators" || newValue=="Thermal Sources" || newValue=='PCM'){
+        // at every change of sheet type make it null:
+        this.ugs_header = null
+        
+         if( newValue=="El. Generators" || newValue=="Thermal Sources" || newValue=='Ventilation' || newValue=='PCM' || newValue=='Plants'){
             console.log(this.ugs_header)
             this.ugs_header = 'kW'
             this.showSubtype=true;
@@ -685,9 +727,9 @@ export default {
             this.ugs_header='Litre'
             this.showSubtype=true;
         }
-        else if(newValue=='El. Storage' ||newValue=='B_Batteries' || newValue=='D_Battteries'){
+        else if(newValue=='El. Storage' ||newValue=='B_Batteries' || newValue=='D_Batteries'){
             this.ugs_header='kWh'
-            this.showSubtype=false;
+            this.showSubtype=true;
         }
         else if(newValue=='Insulation'){
             this.ugs_header='m\u00B3'
@@ -697,24 +739,40 @@ export default {
             this.ugs_header='m\u00B2'
             this.showSubtype=true;
         }
-        else if(newValue=='Other'){
-            this.ugs_header='UGS'
+        else if(newValue=='Other' || newValue=='Transport'){
+            this.ugs_header='FU'
             this.showSubtype=true;
         }
-        if(newValue=='Ventilation'){
-            this.ugs_header = 'kW'
-            this.showSubtype=false;
+    },
+    typeSubtypeCombination(newValue){
+        if(this.SHEET_TYPE=='Public'){
+            if(newValue=='Public transformer'){
+
+                this.ugs_header='kVA'
+                this.showSubtype=true;
+
+            }else if (newValue=='Public interconnection'){
+                this.ugs_header='FU'
+                this.showSubtype=true;
+            }else{
+                this.ugs_header='kW'
+                this.showSubtype=true;
+            }
         }
     },
     IS_MAIN_INVENTORY(newValue){
         if(newValue==true){
-
             this.scale_cost=null
             this.scale_env=null
             this.pref_cost=null
             this.pref_env=null
             this.capex_per_ugs=null
         }
+    }
+  },
+  computed: {
+    typeSubtypeCombination() {
+      return `${this.SHEET_TYPE} ${this.component_type}`
     }
   }
   
