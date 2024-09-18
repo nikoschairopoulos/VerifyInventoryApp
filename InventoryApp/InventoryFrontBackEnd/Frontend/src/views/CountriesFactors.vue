@@ -163,13 +163,22 @@
         </div>
         <br>
         <br>
+        <div v-if="plotTrigered">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+            </div>
+        </div>
+        <br>
+        <br>
 
         <div class="plots">
+            <!--add the loading bar when a plot is trigerred-->
+            <!--every time chartData are set before fossils due to calculation load-->
             <div v-if='chartData' class="diagram">
                 <Bar :data="chartData" :options="options" />
             </div>
 
-            <div v-if='country' class="diagram">
+            <div v-if='chartDataFossils' class="diagram">
                 <Bar :data="chartDataFossils" :options="options" />
             </div>
         </div>
@@ -226,13 +235,14 @@ export default {
             fuel: null,
             country: null,
             factorsdb: [],
-            infoObj: { 'LS': -100 },
             comments: null,
             source: null,
             sample_data: null,
             yearMonthOption: 'month',
             co2SeriesData: null,
             errorMessageHourlyFactors: 'no country selected to plot data',
+            plotTrigered:false,
+            showDiagramms:false,
             chartData: null,
             chartDataFossils:null,
             options: {
@@ -299,17 +309,8 @@ export default {
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
-
-
-        //this.currentYear = new Date().getFullYear()
-        // Populate the years array with values from 2018 to the current year
-        //for (let i = 2018; i <= this.currentYear; i++) {
-        //    this.years.push(i);
-        //}
-        //console.log(this.currentYear)
     },
     beforeUnmount() {
-        // *******PROPABLY THERE IS A BUG WITH MAP CHART COMPONENT *****
         try {
             let countryname = this.getCountryCodeOrName(this.country)[1]
             this.infoObj[countryname] = 0;
@@ -319,9 +320,7 @@ export default {
             console.log(e)
         }
     },
-    created() {
-
-    },
+    created() {},
     watch: {
         fullName(newValue) {
             console.log("change at country-fuel combination have been detected")
@@ -366,15 +365,17 @@ export default {
             }
             */
         },
+        // when you select a country --> data for both diagrams are trigered (v-if at diagrams are updated implicitly)
+        // because they will have data
         country(newValue) {
-            console.log("i am in country watcher")
-            // heare update the the electricity series (for now is for 2023)
-            //f"http://192.168.101.31:8003/api/get_electricity_measurements/{country}/{year_to_retrieve_data}
-
+            //you add new country so se diagramms to null -> diagramms will not appear now
+            this.setChartDataToNull()
+            // trigger progress bar:
+            this.plotTrigered = true
+            this.showDiagramms = false
             //Returns promise:
             const tempFunction = async () => {
                 try {
-
                     // take the data
                     let year_to_retrieve_data = 2023 // this is temporary due to we will make it parameter:
                     const response = await axios.get(`${TARGET_IP}/api/get_electricity_measurements/${newValue}/${year_to_retrieve_data}`);
@@ -382,8 +383,7 @@ export default {
                     this.co2SeriesData = Object.values(dataFromApi['carbon_intensity_gco2_eq_kwh_direct']);
                     console.log("-----------------")
                     console.log(this.co2SeriesData)
-                    //setTimeout(()=>(null),10000000)
-                    // update char data:
+                    // update plots data:
                     let chartData = {
                         labels: this.takeLabelsforFactorPlot('month'),
                         datasets: [
@@ -418,19 +418,29 @@ export default {
 
             // read the promise using chaining
             tempFunction().then((chartData) => {
+                //UPDATE fossils for the current country:
+                this.ShowDiagramms = true
+                this.plotTrigered = false
                 this.chartData = chartData;
+                this.updateFossils(newValue)
             }).catch((e) => {
+                debugger
                 console.error("Failed to fetch chart data.");
                 this.chartData = null
                 this.errorMessageHourlyFactors = 'no hourly electricity data provided for this country'
-            });
+                //UPDATE fossils for the current country (will not give bug because all countries have fossils):
+                this.ShowDiagramms = true
+                this.plotTrigered = false
+                this.updateFossils(newValue)
 
-            // UPDATE fossils for the current country:
-            this.updateFossils(newValue)
-
+            })
         }
     },
     methods: {
+        setChartDataToNull(){
+            this.chartData = null
+            this.fossilsData = null
+        },
         updateFossils(newValue){
             // update also data for fossils:
             console.log(this.factorsdb)
@@ -501,338 +511,17 @@ export default {
                 this.pef = obj[0].primary_energy_factor
                 this.co2 = obj[0].co2_factor
                 this.id = obj[0].id
-                //this.year = obj[0].year
                 this.source = obj[0].source
                 this.comments = obj[0].comments
-
-                //after updating co2 for the Map:
-                console.log("there  data for this country fuel combination")
-                let countryname = this.getCountryCodeOrName(this.country)[1]
-                this.infoObj[countryname] = this.co2;
-                this.infoObj['LS'] = -100;
-                console.log("the country name is ==========", this.infoObj)
+                //this.year = obj[0].year
             } catch (e) {
                 console.log(e)
                 this.co2 = null;
                 this.pef = null;
                 this.id = null
-                //this.year = null
                 this.source = null
                 this.comments = null
-            }
-        },
-        getCountryCodeOrName(inputValue) {
-            var nameCountries = {
-                'Afghanistan': 'AF',
-                'Aland Islands': 'AX',
-                'Albania': 'AL',
-                'Algeria': 'DZ',
-                'American Samoa': 'AS',
-                'Andorra': 'AD',
-                'Angola': 'AO',
-                'Anguilla': 'AI',
-                'Antarctica': 'AQ',
-                'Antigua And Barbuda': 'AG',
-                'Argentina': 'AR',
-                'Armenia': 'AM',
-                'Aruba': 'AW',
-                'Australia': 'AU',
-                'Austria': 'AT',
-                'Azerbaijan': 'AZ',
-                'Bahamas': 'BS',
-                'Bahrain': 'BH',
-                'Bangladesh': 'BD',
-                'Barbados': 'BB',
-                'Belarus': 'BY',
-                'Belgium': 'BE',
-                'Belize': 'BZ',
-                'Benin': 'BJ',
-                'Bermuda': 'BM',
-                'Bhutan': 'BT',
-                'Bolivia': 'BO',
-                'Bosnia And Herzegovina': 'BA',
-                'Botswana': 'BW',
-                'Bouvet Island': 'BV',
-                'Brazil': 'BR',
-                'British Indian Ocean Territory': 'IO',
-                'Brunei Darussalam': 'BN',
-                'Bulgaria': 'BG',
-                'Burkina Faso': 'BF',
-                'Burundi': 'BI',
-                'Cambodia': 'KH',
-                'Cameroon': 'CM',
-                'Canada': 'CA',
-                'Cape Verde': 'CV',
-                'Cayman Islands': 'KY',
-                'Central African Republic': 'CF',
-                'Chad': 'TD',
-                'Chile': 'CL',
-                'China': 'CN',
-                'Christmas Island': 'CX',
-                'Cocos (Keeling) Islands': 'CC',
-                'Colombia': 'CO',
-                'Comoros': 'KM',
-                'Congo': 'CG',
-                'Congo, Democratic Republic': 'CD',
-                'Cook Islands': 'CK',
-                'Costa Rica': 'CR',
-                'Cote D\'Ivoire': 'CI',
-                'Croatia': 'HR',
-                'Cuba': 'CU',
-                'Cyprus': 'CY',
-                'Czech Republic': 'CZ',
-                'Denmark': 'DK',
-                'Djibouti': 'DJ',
-                'Dominica': 'DM',
-                'Dominican Republic': 'DO',
-                'Ecuador': 'EC',
-                'Egypt': 'EG',
-                'El Salvador': 'SV',
-                'Equatorial Guinea': 'GQ',
-                'Eritrea': 'ER',
-                'Estonia': 'EE',
-                'Ethiopia': 'ET',
-                'Falkland Islands (Malvinas)': 'FK',
-                'Faroe Islands': 'FO',
-                'Fiji': 'FJ',
-                'Finland': 'FI',
-                'France': 'FR',
-                'French Guiana': 'GF',
-                'French Polynesia': 'PF',
-                'French Southern Territories': 'TF',
-                'Gabon': 'GA',
-                'Gambia': 'GM',
-                'Georgia': 'GE',
-                'Germany': 'DE',
-                'Ghana': 'GH',
-                'Gibraltar': 'GI',
-                'Greece': 'GR',
-                'Greenland': 'GL',
-                'Grenada': 'GD',
-                'Guadeloupe': 'GP',
-                'Guam': 'GU',
-                'Guatemala': 'GT',
-                'Guernsey': 'GG',
-                'Guinea': 'GN',
-                'Guinea-Bissau': 'GW',
-                'Guyana': 'GY',
-                'Haiti': 'HT',
-                'Heard Island & Mcdonald Islands': 'HM',
-                'Holy See (Vatican City State)': 'VA',
-                'Honduras': 'HN',
-                'Hong Kong': 'HK',
-                'Hungary': 'HU',
-                'Iceland': 'IS',
-                'India': 'IN',
-                'Indonesia': 'ID',
-                'Iran, Islamic Republic Of': 'IR',
-                'Iraq': 'IQ',
-                'Ireland': 'IE',
-                'Isle Of Man': 'IM',
-                'Israel': 'IL',
-                'Italy': 'IT',
-                'Jamaica': 'JM',
-                'Japan': 'JP',
-                'Jersey': 'JE',
-                'Jordan': 'JO',
-                'Kazakhstan': 'KZ',
-                'Kenya': 'KE',
-                'Kiribati': 'KI',
-                'Korea': 'KR',
-                'Kuwait': 'KW',
-                'Kyrgyzstan': 'KG',
-                'Lao People\'s Democratic Republic': 'LA',
-                'Latvia': 'LV',
-                'Lebanon': 'LB',
-                'Lesotho': 'LS',
-                'Liberia': 'LR',
-                'Libyan Arab Jamahiriya': 'LY',
-                'Liechtenstein': 'LI',
-                'Lithuania': 'LT',
-                'Luxembourg': 'LU',
-                'Macao': 'MO',
-                'Macedonia': 'MK',
-                'Madagascar': 'MG',
-                'Malawi': 'MW',
-                'Malaysia': 'MY',
-                'Maldives': 'MV',
-                'Mali': 'ML',
-                'Malta': 'MT',
-                'Marshall Islands': 'MH',
-                'Martinique': 'MQ',
-                'Mauritania': 'MR',
-                'Mauritius': 'MU',
-                'Mayotte': 'YT',
-                'Mexico': 'MX',
-                'Micronesia, Federated States Of': 'FM',
-                'Moldova': 'MD',
-                'Monaco': 'MC',
-                'Mongolia': 'MN',
-                'Montenegro': 'ME',
-                'Montserrat': 'MS',
-                'Morocco': 'MA',
-                'Mozambique': 'MZ',
-                'Myanmar': 'MM',
-                'Namibia': 'NA',
-                'Nauru': 'NR',
-                'Nepal': 'NP',
-                'Netherlands': 'NL',
-                'Netherlands Antilles': 'AN',
-                'New Caledonia': 'NC',
-                'New Zealand': 'NZ',
-                'Nicaragua': 'NI',
-                'Niger': 'NE',
-                'Nigeria': 'NG',
-                'Niue': 'NU',
-                'Norfolk Island': 'NF',
-                'Northern Mariana Islands': 'MP',
-                'Norway': 'NO',
-                'Oman': 'OM',
-                'Pakistan': 'PK',
-                'Palau': 'PW',
-                'Palestinian Territory, Occupied': 'PS',
-                'Panama': 'PA',
-                'Papua New Guinea': 'PG',
-                'Paraguay': 'PY',
-                'Peru': 'PE',
-                'Philippines': 'PH',
-                'Pitcairn': 'PN',
-                'Poland': 'PL',
-                'Portugal': 'PT',
-                'Puerto Rico': 'PR',
-                'Qatar': 'QA',
-                'Reunion': 'RE',
-                'Romania': 'RO',
-                'Russian Federation': 'RU',
-                'Rwanda': 'RW',
-                'Saint Barthelemy': 'BL',
-                'Saint Helena': 'SH',
-                'Saint Kitts And Nevis': 'KN',
-                'Saint Lucia': 'LC',
-                'Saint Martin': 'MF',
-                'Saint Pierre And Miquelon': 'PM',
-                'Saint Vincent And Grenadines': 'VC',
-                'Samoa': 'WS',
-                'San Marino': 'SM',
-                'Sao Tome And Principe': 'ST',
-                'Saudi Arabia': 'SA',
-                'Senegal': 'SN',
-                'Serbia': 'RS',
-                'Seychelles': 'SC',
-                'Sierra Leone': 'SL',
-                'Singapore': 'SG',
-                'Slovakia': 'SK',
-                'Slovenia': 'SI',
-                'Solomon Islands': 'SB',
-                'Somalia': 'SO',
-                'South Africa': 'ZA',
-                'South Georgia And Sandwich Isl.': 'GS',
-                'Spain': 'ES',
-                'Sri Lanka': 'LK',
-                'Sudan': 'SD',
-                'Suriname': 'SR',
-                'Svalbard And Jan Mayen': 'SJ',
-                'Swaziland': 'SZ',
-                'Sweden': 'SE',
-                'Switzerland': 'CH',
-                'Syrian Arab Republic': 'SY',
-                'Taiwan': 'TW',
-                'Tajikistan': 'TJ',
-                'Tanzania': 'TZ',
-                'Thailand': 'TH',
-                'Timor-Leste': 'TL',
-                'Togo': 'TG',
-                'Tokelau': 'TK',
-                'Tonga': 'TO',
-                'Trinidad And Tobago': 'TT',
-                'Tunisia': 'TN',
-                'Turkey': 'TR',
-                'Turkmenistan': 'TM',
-                'Turks And Caicos Islands': 'TC',
-                'Tuvalu': 'TV',
-                'Uganda': 'UG',
-                'Ukraine': 'UA',
-                'United Arab Emirates': 'AE',
-                'United Kingdom': 'GB',
-                'United States': 'US',
-                'United States Outlying Islands': 'UM',
-                'Uruguay': 'UY',
-                'Uzbekistan': 'UZ',
-                'Vanuatu': 'VU',
-                'Venezuela': 'VE',
-                'Viet Nam': 'VN',
-                'Virgin Islands, British': 'VG',
-                'Virgin Islands, U.S.': 'VI',
-                'Wallis And Futuna': 'WF',
-                'Western Sahara': 'EH',
-                'Yemen': 'YE',
-                'Zambia': 'ZM',
-                'Zimbabwe': 'ZW'
-            }
-
-            var errorCode = "";
-
-            if (inputValue === undefined || Boolean(inputValue.match(/^[^,'& ()-]{1}([a-zA-Z\s',&()-]){0,80}$/)) === false) { errorCode = "5555" }
-            var inlength = inputValue.length;
-            if (errorCode === "5555") {
-                return ["ErrorCode 5555: Unsupported Data, return input value in array 1", inputValue];
-            }
-
-            if (inlength === 2) {
-                var outValue = inputValue.toUpperCase();
-                var countryName = "";
-                for (var name in nameCountries) {
-                    if (nameCountries[name] === outValue) {
-                        countryName = name;
-                    }
-                }
-                switch (true) {
-                    case Boolean(countryName === ""):
-                        return ["Country code does not match database record: return input value in array 1", inputValue];
-                        break;
-
-                    default:
-                        return [outValue, countryName];
-                        break;
-                }
-
-            }
-
-            if (inlength > 2) {
-                var outValue = inputValue.toLowerCase();
-
-                switch (true) {
-                    case Boolean(outValue.match(/^[Gg][Uu][Ii][Nn][Ee][Aa][-][Bb][Ii][Ss][Ss][Aa][Uu]$/)):
-                        outValue = "Guinea-Bissau";
-                        break;
-
-                    case Boolean(outValue.match(/^[Hh][Oo][Ll][Yy][ ][Ss][Ee][Ee][ ][(][Vv][Aa][Tt][Ii][Cc][Aa][Nn][ ][Cc][Ii][Tt][Yy][ ][Ss][Tt][Aa][Tt][Ee][)]$/)):
-                        outValue = "Holy See (Vatican City State)";
-                        break;
-
-                    case Boolean(outValue.match(/[Ff][Aa][Ll][Kk][Ll][Aa][Nn][Dd][ ][Ii][Ss][Ll][Aa][Nn][Dd][Ss][ ][(][Mm][Aa][Ll][Vv][Ii][Nn][Aa][Ss][)]$/)):
-                        outValue = "Falkland Islands (Malvinas)";
-                        break;
-
-                    case Boolean(outValue.match(/^[Ii][Rr][Aa][Nn]$/)):
-                        outValue = "Iran, Islamic Republic Of";
-                        break;
-
-                    default:
-                        var arrCName = outValue.split(" ");
-                        var cNameJoin = "";
-                        for (var i in arrCName) {
-                            cNameJoin += arrCName[i].charAt(0).toUpperCase() + arrCName[i].slice(1) + " ";
-                        }
-                        outValue = cNameJoin.trim();
-                        break;
-                }
-
-
-                return [
-                    (nameCountries.hasOwnProperty(outValue) ? outValue : "Input country doesn't match database: returned input in array 1"),
-                    (nameCountries.hasOwnProperty(outValue) ? nameCountries[outValue] : inputValue)
-                ];
+                //this.year = null
             }
         },
         takeDaysoftheYear() {
@@ -925,10 +614,6 @@ export default {
         }
     }
 }
-
-
-
-
 </script>
 
 
