@@ -439,7 +439,7 @@ export default {
     methods: {
         setChartDataToNull(){
             this.chartData = null
-            this.fossilsData = null
+            this.chartDataFossils = null
         },
         updateFossils(newValue){
             // update also data for fossils:
