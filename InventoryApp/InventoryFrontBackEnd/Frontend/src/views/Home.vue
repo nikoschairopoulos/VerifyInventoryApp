@@ -12,7 +12,7 @@
 
       <div style="" class="container mt-5">
         <button id="redirectButton" class="btn btn-primary" @click="goToVerify" >Go to VERIFY-B App</button>
-        <a :href="`${URL_FORM}input_data.xlsx`">
+        <a :href="`${URL_FORM}VERIFY LCA INVENTORY_v6.xlsx`">
         <button id="downloadButton" class="btn btn-info">Download LCI Form</button>
         </a>
         <hr style="height: 15px; color: #054673;">
