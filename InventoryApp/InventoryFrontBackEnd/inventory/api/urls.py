@@ -16,7 +16,8 @@ from inventory.api.views import (
           get_hourly_electricity_fuel_factors,
           ImportElectricityDataYearly,
           get_yearly_electricity_fuel_factors,
-          get_countries_hourly_yearly_electricity_factors
+          get_countries_hourly_yearly_electricity_factors,
+          get_components_logs
         )
 
 #from django.urls import path
@@ -45,7 +46,8 @@ urlpatterns = [
     path('get_electricity_measurements/<str:country>/<int:year>', get_hourly_electricity_fuel_factors.as_view(),name='get_electricity_factors'),
     path('load_electricity_measurements_yearly',ImportElectricityDataYearly.as_view(),name='import_electricity_data_yearly'),
     path('get_electricity_measurements_yearly/<str:country>',get_yearly_electricity_fuel_factors.as_view(),name='get_yearly_electricity_factors'),
-    path('get_countries_hourly_yearly', get_countries_hourly_yearly_electricity_factors.as_view(),name='countries_electricity_support')
+    path('get_countries_hourly_yearly', get_countries_hourly_yearly_electricity_factors.as_view(),name='countries_electricity_support'),
+    path('get_components_logs/<int:lci_id>',get_components_logs.as_view(),name='logs')
 ]
 
 

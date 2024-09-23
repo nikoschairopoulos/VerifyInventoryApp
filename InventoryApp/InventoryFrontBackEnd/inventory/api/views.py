@@ -5,8 +5,10 @@ from inventory.api.serializers import (ComponentSerializer,
                                        InventorySerializer,
                                        FactorSerializer,
                                        CarbonIntensityDataSerializer,
-                                       CarbonIntensityDataSerializerYear)
-from inventory.models import Component,Inventory
+                                       CarbonIntensityDataSerializerYear,
+                                       LogsSerializer)
+
+from inventory.models import Component,Inventory,LoggingComponent
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
@@ -349,4 +351,27 @@ class get_countries_hourly_yearly_electricity_factors(APIView):
         return Response(response_data)
 
 
+##############################################
+#Take the logs for all components 
+#note: here is one to many --> take the component of the log --> take its information --> map to the response as you want
+###############################################
+class get_components_logs(APIView):
+    def get(self,request,lci_id):
+        query_set = LoggingComponent.objects.filter(fk_id=lci_id)
+        serializer = LogsSerializer(query_set,many=True)
+        logs = serializer.data
+        response_data = []
+        for log in logs:
+            response_data.append({'messages':[ {attribute:m for attribute,m in 
+                                                json.loads(log['message']).items()}],
+                                  'created_at':log['created_at']})
+        return Response( response_data )
 
+##############################################
+#at this method given specific time window
+#will retrieve the pictrure of component
+#in order to aquire informations about a components
+#values for a specific project
+##############################################
+class give_picture_of_component_from_timestamp:
+    pass

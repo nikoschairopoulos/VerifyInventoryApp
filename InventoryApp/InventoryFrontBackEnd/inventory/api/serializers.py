@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.utils.timesince import timesince
 from rest_framework import serializers
-from inventory.models import Inventory,Component,Factor,CarbonIntensityData,FactorElectricityYear
+from inventory.models import Inventory,Component,Factor,CarbonIntensityData,FactorElectricityYear,LoggingComponent
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 
@@ -112,3 +112,9 @@ class CarbonIntensityDataSerializerYear(serializers.ModelSerializer):
     
 
     
+class LogsSerializer(serializers.ModelSerializer):
+    #you must add all custom fields ==> at fields:
+    fk = ComponentSerializer(read_only=True)
+    class Meta:
+        model = LoggingComponent
+        fields =['message','fk','created_at']

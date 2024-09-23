@@ -8,6 +8,9 @@ from .logging_conf import LOGGING
 import logging
 import os 
 import datetime
+from .models import LoggingComponent
+from .api.serializers import LogsSerializer
+import json
 
 log_dir = 'logs'
 if not os.path.exists(log_dir):
@@ -63,7 +66,15 @@ def log_component_update(sender, instance, created, **kwargs):
         try:
             del changes['_state']
             if changes:
+                #Add to Log file
                 logger.info(f'Component with lci_id: {instance.pk} {datetime.datetime.now()} has been updated with the following changes: {changes}')
+            
+                log_entry_to_db = LoggingComponent(
+                    message = json.dumps(changes),
+                    fk = instance                    #here add the entire instance
+                )
+                #Add to log record to DB:
+                log_entry_to_db.save()
         except KeyError:
             pass
 

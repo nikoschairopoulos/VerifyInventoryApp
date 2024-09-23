@@ -159,3 +159,9 @@ class FactorElectricityYear(models.Model):
         app_label = 'inventory'
     def __str__(self):
         return f"{self.country} {self.year} {self.measurement_co2}"
+
+
+class LoggingComponent(models.Model):
+    message = models.JSONField()
+    fk = models.ForeignKey(Component,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
