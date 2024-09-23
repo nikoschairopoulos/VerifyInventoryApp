@@ -47,6 +47,7 @@ class Component(models.Model):
     functional_unit = models.CharField(null=True,blank=True)
 
 
+
     class Meta:
         app_label = 'inventory'
 
