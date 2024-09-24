@@ -28,6 +28,7 @@ import json
 import pandas as pd 
 from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
+from copy import deepcopy
 
 def error404(request):
     raise NotFound(detail="Error 404, page not found", code=404)
@@ -357,7 +358,7 @@ class get_countries_hourly_yearly_electricity_factors(APIView):
 ###############################################
 class get_components_logs(APIView):
     def get(self,request,lci_id):
-        query_set = LoggingComponent.objects.filter(fk_id=lci_id)
+        query_set = LoggingComponent.objects.filter(fk_id=lci_id).order_by('-created_at')
         serializer = LogsSerializer(query_set,many=True)
         logs = serializer.data
         response_data = []
@@ -373,5 +374,47 @@ class get_components_logs(APIView):
 #in order to aquire informations about a components
 #values for a specific project
 ##############################################
-class give_picture_of_component_from_timestamp:
-    pass
+class give_picture_of_component_from_timestamp(APIView):
+
+    def get(self,request,lci_id):
+        all_reconstructions = self.create_all_reconstructions(lci_id=lci_id)
+        return all_reconstructions
+
+    def create_all_reconstructions(self,lci_id):
+        try:
+            #take the component:
+            isinstance = Component.objects.get(pk=lci_id)
+            #serialize the component
+            component = ComponentSerializer(isinstance).data
+            #take its logs:
+            query_set = LoggingComponent.objects.filter(fk_id=lci_id).order_by('-created_at') #These are already order by desceding order
+            logs = LogsSerializer(query_set,many=True).data
+            #add every reconstruction at this list:
+            reconstructions = []
+            current = component
+            #add the current state:
+            reconstructions.append({"timestamp":'now','reconstuction':deepcopy(current)})
+            ################
+            #logs are ordered from the latest to the older
+            ################
+            for log in logs:
+                #Take the message key from log:
+                message = json.loads(log['message'])
+                #take all old values:
+                old_values =  { atribute: message[atribute]['old_value']  
+                                for atribute in  message.keys() }
+                #replace the current values with the old values:
+                current.update(old_values)
+                #add the reconstruction to reconstructions list
+                reconstructions.append({'timestamp':log['created_at'],
+                                        'reconstruction':deepcopy(current)})
+            return Response(reconstructions)
+        except Exception as e:
+            return Response({'error':e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    #        
+    def go_to_previous_component():
+        pass
+
+    #here we want to take in descending order the components
+    def group_by_timestamp(self):
+        pass
