@@ -1,7 +1,14 @@
 from datetime import datetime
 from django.utils.timesince import timesince
 from rest_framework import serializers
-from inventory.models import Inventory,Component,Factor,CarbonIntensityData,FactorElectricityYear,LoggingComponent
+from inventory.models import (Inventory,
+                              Component,
+                              Factor,
+                              CarbonIntensityData,
+                              FactorElectricityYear,
+                              LoggingComponent,
+                              RegressionValues,
+                              SimaPro_runs)
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 
@@ -110,11 +117,64 @@ class CarbonIntensityDataSerializerYear(serializers.ModelSerializer):
         model = FactorElectricityYear
         fields = '__all__'
     
-
-    
+  
 class LogsSerializer(serializers.ModelSerializer):
     #you must add all custom fields ==> at fields:
     fk = ComponentSerializer(read_only=True)
     class Meta:
         model = LoggingComponent
         fields =['message','fk','created_at']
+
+
+##############################
+# Regression Values Serializer
+##############################
+class RegressionValuesSerializer(serializers.ModelSerializer):
+    component_lci_id = serializers.IntegerField(write_only=True)
+    related_lci_id = serializers.IntegerField(source='fk.id', read_only=True)
+    related_component_name = serializers.CharField(source='fk.name',read_only=True)
+    class Meta:
+        model = RegressionValues
+        fields = ["component_lci_id",
+                  "embodied_primary_energy",
+                  "embodied_co2",
+                  "functional_unit",
+                  "rating",
+                  "related_lci_id",
+                  "related_component_name"
+                  ]
+    
+    def create(self, validated_data):
+        component_lci_id = validated_data.pop('component_lci_id')
+        try:
+            related_component_instance = Component.objects.get(pk=component_lci_id)
+        except ObjectDoesNotExist:
+            raise Exception(f'There is no component with lci id = {component_lci_id}')
+        new_regression_instance = RegressionValues.objects.create(fk = related_component_instance, **validated_data)
+        return new_regression_instance
+
+##############################
+# SimaPro_runs Serializer
+##############################
+class SimaPro_runsSerializer(serializers.ModelSerializer):
+    component_lci_id = serializers.IntegerField(write_only=True)
+    FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
+    #related_component_name = serializers.CharField(source='fk.name',read_only=True)
+    class Meta:
+        model = SimaPro_runs
+        exclude = ['vcomponent_id']
+    
+    def create(self, validated_data):
+        component_lci_id = validated_data.pop('component_lci_id',None)
+        try:
+            related_component_instance = Component.objects.get(pk=component_lci_id)
+        except ObjectDoesNotExist:
+            raise Exception(f'There is no component with lci id = {component_lci_id}')
+        #pass the related instance:
+        new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = related_component_instance, **validated_data)
+        return new_regression_instance
+
+
+
+        
+
