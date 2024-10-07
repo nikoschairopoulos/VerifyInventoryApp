@@ -6,9 +6,16 @@ from inventory.api.serializers import (ComponentSerializer,
                                        FactorSerializer,
                                        CarbonIntensityDataSerializer,
                                        CarbonIntensityDataSerializerYear,
-                                       LogsSerializer)
+                                       LogsSerializer,
+                                       RegressionValuesSerializer,
+                                       SimaPro_runsSerializer)
 
-from inventory.models import Component,Inventory,LoggingComponent
+from inventory.models import (Component,
+                              Inventory,
+                              LoggingComponent,
+                              RegressionValues,
+                              SimaPro_runs)
+
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
@@ -50,7 +57,9 @@ class ComponentViewSet(ModelViewSet):
              return{'success':{'component has been deleted'}}
         message = {f'warn_{index}':warn  for index,warn in enumerate(warning)}
         return message
-
+    
+    # this is called when a delete request
+    # is done -> this method calls perform destroy
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         result = self.perform_destroy(instance)
@@ -101,6 +110,28 @@ class FactorViewSet(ModelViewSet):
     queryset = Factor.objects.all()
     serializer_class = FactorSerializer
     #permission_classes = [IsAuthenticated]
+
+class RegressionValuesViewSet(ModelViewSet):
+    queryset = RegressionValues.objects.all()
+    serializer_class = RegressionValuesSerializer
+    permission_classes = [IsAuthenticated]
+    #this called form create method when post request is called
+    #calls create method of serializer (by default - if you want you can add totaly custom logic)
+    # with the validated data
+    def perform_create(self,serializer):
+        serializer.save()  
+
+class SimaPro_runsViewSet(ModelViewSet):
+    queryset = SimaPro_runs.objects.all()
+    serializer_class = SimaPro_runsSerializer
+    #permission_classes = [IsAuthenticated]
+    #this called form create method when post request is called
+    #calls create method of serializer (by default - if you want you can add totaly custom logic)
+    # with the validated data
+    def perform_create(self,serializer):
+        serializer.save()  
+    
+    
 
 
                                             ####CUSTOM VIEWS (NON MODELS)####:
@@ -418,3 +449,33 @@ class give_picture_of_component_from_timestamp(APIView):
     #here we want to take in descending order the components
     def group_by_timestamp(self):
         pass
+
+
+#################################
+#At this view, all regression
+#are taken for a specific lci id
+#################################
+class regression_values(APIView):
+    def get(self,request,lci_id):
+        queryset = RegressionValues.objects.filter(fk=lci_id)
+        serializer = RegressionValuesSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+
+################################
+#to do: here create one method 
+#that given the lci id --> embodied co2, 
+#embodied pe , eol_co2 , col_pe (these two will be average of measurement entris prercentages)
+################################
+class get_embobied_eol_values(APIView):
+    def get(self,request,lci_id,rating):
+        rating_float = float(rating)
+        data =  {   
+                    'embodied_co2':rating_float * lci_id,
+                    'embodied_pe':rating_float * lci_id,
+                    'eol_co2':rating_float * lci_id,
+                    'eol_pe':rating_float * lci_id
+                }
+        
+        return Response(data)
+        

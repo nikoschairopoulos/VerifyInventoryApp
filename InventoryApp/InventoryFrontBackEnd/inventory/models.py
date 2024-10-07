@@ -45,12 +45,8 @@ class Component(models.Model):
     ia_method_pe    = models.CharField(null=True,blank=True)
     lca_db          = models.CharField(null=True,blank=True)
     functional_unit = models.CharField(null=True,blank=True)
-
-
-
     class Meta:
         app_label = 'inventory'
-
 
     def __str__(self):
         return f"{self.name} {self.component_type} {self.component_subtype}"
@@ -165,3 +161,47 @@ class LoggingComponent(models.Model):
     message = models.JSONField()
     fk = models.ForeignKey(Component,on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class RegressionValues(models.Model):
+    rating = models.FloatField()
+    embodied_primary_energy = models.FloatField()
+    embodied_co2 = models.FloatField()
+    functional_unit = models.TextField()
+    ## add FK:
+    fk = models.ForeignKey(Component,on_delete=models.CASCADE)
+    def __str__(self):
+        return f"co2:{self.embodied_co2} pe:{self.embodied_primary_energy} fu:{self.functional_unit} rating:{self.rating}"
+
+class SimaPro_runs(models.Model):
+    name = models.TextField()
+    fu_quantity = models.FloatField()
+    fu_measurement_unit = models.TextField()
+    stage_A_gwp_kgco2eq = models.FloatField()
+    stage_A_embodied_pe_gj = models.FloatField()
+    stage_A_LCA_version = models.TextField()
+    stage_A_IA_method_GWP = models.TextField()
+    stage_A_IA_method_PE = models.TextField()
+    stage_A_comments = models.TextField()
+    eol_gwp_pc = models.FloatField()
+    eol_embodied_pe_pc = models.FloatField()
+    waste_treatment = models.TextField()
+    stage_C_LCA_version = models.TextField()
+    stage_C_IA_method_GWP = models.TextField()
+    stage_C_IA_method_PE = models.TextField()
+    stage_C_comments = models.TextField()
+    general_comments = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    #########################################################################
+    # the 2 bellow fields must be the same as (parent component - FK), 
+    # at component Table:
+    ##########################################################################
+    sheet_type = models.CharField(250) 
+    is_main_inventory = models.BooleanField()
+    ##############################
+    ##Add Foreign key restriciton:
+    ##############################
+    vcomponent_id = models.ForeignKey(Component,on_delete=models.CASCADE)   
+    # dunders:
+    def _str_(self):
+        return f"{self.name} {self.fu_quantity}"
