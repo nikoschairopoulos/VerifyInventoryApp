@@ -20,6 +20,7 @@ from django.shortcuts import get_object_or_404
 from copy import deepcopy
 import requests
 import json
+import pandas as pd
 
 #from folder.subfolder.myfile import tade
 
@@ -211,7 +212,7 @@ for item in gasoline_objects:
 #    factor.save()
 '''
 
-
+'''
 # make eol equal to zero:
 for element in Component.objects.all():
     element.eol_co2_cost = 0
@@ -230,3 +231,65 @@ for country in s1:
                   co2_factor=0.314,
                   primary_energy_factor=1.1)
     obj1.save()
+'''
+
+def create_format_for_simapro_runs(components_list):
+    simapro_runs = []
+    for single_component_dict in components_list:
+        simapro_run_record = get_format_dict()
+        #update fields:
+        simapro_run_record['name'] = single_component_dict['name']
+        simapro_run_record["stage_A_gwp_kgco2eq"] = single_component_dict['embodied_co2_per_ugs']
+        simapro_run_record["stage_A_embodied_pe_gj"] = single_component_dict['embodied_pe_per_ugs']
+        simapro_run_record["vcomponent_id"] = single_component_dict['id']
+        simapro_run_record['component_type'] = single_component_dict['component_type']
+        simapro_run_record['component_subtype'] = single_component_dict['component_subtype']
+        simapro_run_record['SHEET_TYPE'] = single_component_dict['SHEET_TYPE']
+        simapro_run_record['IS_MAIN_INVENTORY'] = single_component_dict['IS_MAIN_INVENTORY']
+        #for debug reasons, we keep the label:
+        simapro_run_record['scale_env'] = single_component_dict['scale_env']
+        simapro_runs.append(simapro_run_record)
+    return simapro_runs
+
+def get_format_dict():
+    return {
+    "name": None,
+    "component_type": None,
+    "component_subtype": None,
+    "fu_quantity": None,
+    "fu_measurement_unit": None,
+    "stage_A_gwp_kgco2eq": None,
+    "vcomponent_id": None,
+    "stage_A_embodied_pe_gj": None,
+    "stage_A_LCA_version": None,
+    "stage_A_IA_method_GWP": None,
+    "stage_A_IA_method_PE": None,
+    "stage_A_comments": None,
+    "eol_gwp_pc": None,
+    "eol_embodied_pe_pc": None,
+    "waste_treatment": None,
+    "stage_C_LCA_version": None,
+    "stage_C_IA_method_GWP": None,
+    "stage_C_IA_method_PE": None,
+    "stage_C_comments": None,
+    "general_comments": None,
+    "IS_MAIN_INVENTORY": None,
+    "SHEET_TYPE": None
+}
+
+def create_dataframe(scale_env_zero_or_one):
+    custom_components_scale_env = Component.objects.filter(IS_MAIN_INVENTORY=False,scale_env=scale_env_zero_or_one)
+    serializer = ComponentSerializer(custom_components_scale_env,many=True)
+    components_dict = serializer.data
+    simapro_runs_transformed = create_format_for_simapro_runs(components_dict)
+    df = pd.DataFrame(simapro_runs_transformed)
+    #df.to_csv(f'simapro_run_scale_env_equal_{scale_env_zero_or_one}_custom_components.csv')
+    return df 
+
+#create 2 excells
+df_simapro_runs_0 = create_dataframe(scale_env_zero_or_one=0)
+df_simapro_runs_1 = create_dataframe(scale_env_zero_or_one=1)
+#breakpoint()
+df_all = pd.concat([df_simapro_runs_0,df_simapro_runs_1],axis=0,ignore_index=True)
+#breakpoint()
+df_all.to_csv('custom_components_from_component_to_simapro_runs.csv')
