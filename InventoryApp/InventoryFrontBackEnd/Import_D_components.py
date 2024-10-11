@@ -310,7 +310,7 @@ def update_some_fields_simapro_run():
     simapro_runs_queryset = SimaPro_runs.objects.all()
     for instance in simapro_runs_queryset:
         #take visual component fk:
-        vc = Component.objects.filter(pk = instance.vcomponent_id)
+        vc = Component.objects.filter(pk = instance.vcomponent_id.id)
         #update components:
         instance.SHEET_TYPE = vc[0].SHEET_TYPE
         instance.IS_MAIN_INVENTORY = vc[0].IS_MAIN_INVENTORY
@@ -318,7 +318,7 @@ def update_some_fields_simapro_run():
         instance.component_subtype = vc[0].component_subtype
         instance.save()
 
-
+update_some_fields_simapro_run()
 
 '''
 def update_some_fields_simapro_run():
