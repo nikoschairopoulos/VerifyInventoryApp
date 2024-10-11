@@ -488,16 +488,17 @@ class get_embobied_eol_values(APIView):
         
 class get_embobied_eol_values(APIView):
 
-    def __init__(self, **kwargs: json.Any) -> None:
-        self.result = {}
-        super().__init__(**kwargs)
-
     def get(self,request,lci_id,rating):
+        
+        self.result = {}
+        
+        component_rating  = float(rating)
+        lci_id = int(lci_id)
         queryset = SimaPro_runs.objects.filter(vcomponent_id=lci_id)
         if not queryset:
             return Response({'message':'there is no simapro runs for lci_id = {lci_id}'},
                             status=status.HTTP_404_NOT_FOUND)
-        if rating<=0:
+        if component_rating<=0:
             return Response({'message':'rating must be positive number'},
                             status=status.HTTP_400_BAD_REQUEST)
         
@@ -510,25 +511,27 @@ class get_embobied_eol_values(APIView):
         serializer = SimaPro_runsSerializer(queryset,many=True)
         entries_list = serializer.data
 
-        #set eol:
-        self.set_eol(entries_list[0]) # take the first record for EoL because are all the same:
-
         #iterate to take the values for Embodied Co2 and Pe scaling:
         for record in entries_list:
             co2_values.append((record["fu_quantity"],record['stage_A_gwp_kgco2eq']))
             pe_values.append((record["fu_quantity"],record["stage_A_embodied_pe_gj"]))
         
         #make them with asceding order
-        co2_values_new = self.asceding_order(co2_values)
-        pe_values_new  = self.asceding_order(pe_values)
+        co2_values_new = self.sort_tuples_by_first_element(co2_values)
+        pe_values_new  = self.sort_tuples_by_first_element(pe_values)
+
         #do regression for each one of co2 and pe
-        embodied_co2 = self.do_regression(co2_values_new)
-        embodied_pe  = self.do_regression(pe_values_new)
+        embodied_co2 = self.do_regression(co2_values_new,component_rating=component_rating)
+        embodied_pe  = self.do_regression(pe_values_new,component_rating=component_rating)
         
         self.result.update({
             "embodied_co2": embodied_co2,
-            "embodied_pe": embodied_pe
+            "embodied_pe": embodied_pe *(1000/3.6)
         })
+
+           #set eol:
+        self.set_eol(entries_list[0]) # take the first record for EoL because are all the same:
+
         #return the result:
         return Response(self.result)
         
@@ -540,14 +543,12 @@ class get_embobied_eol_values(APIView):
                 point = index
         
         if point is None:
+            #keep the last linear segment:
             point = -1
 
         x2, x1 = measurements_list[point][0] , measurements_list[point-1][0]
         y2, y1 = measurements_list[point][1] , measurements_list[point-1][1]
         
-        #TO DO  to take the linear of last part
-
-
         embodied_value = self.get_regression_value(y2,y1,x2,x1,component_rating)
         return embodied_value
     
@@ -561,15 +562,16 @@ class get_embobied_eol_values(APIView):
 
     
     def set_eol(self,record):
+        embodied_co2, embodied_pe = self.result['embodied_co2'], self.result['embodied_pe']
         # you only need to update for the first record
         # is correct because these are common for 
         # specific lci id 
         self.result.update({
-            "eol_gwp_pc": record["eol_gwp_pc"],
-            "eol_embodied_pe_pc":record["eol_embodied_pe_pc"]
+            "eol_co2": record["eol_gwp_pc"] * embodied_co2/100,
+            "eol_pe":record["eol_embodied_pe_pc"] * embodied_pe/100
         })
     
-    def sort_tuples_by_first_element(tuple_list):
+    def sort_tuples_by_first_element(self,tuple_list):
         # Sort the list of tuples by the first element in each tuple
         return sorted(tuple_list, key=lambda x: x[0])
 
