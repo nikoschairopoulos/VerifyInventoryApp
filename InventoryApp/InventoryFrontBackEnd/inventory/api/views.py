@@ -472,6 +472,7 @@ class regression_values(APIView):
 #that given the lci id --> embodied co2, 
 #embodied pe , eol_co2 , col_pe (these two will be average of measurement entris prercentages)
 ################################
+'''
 class get_embobied_eol_values(APIView):
     def get(self,request,lci_id,rating):
         rating_float = float(rating)
@@ -483,24 +484,93 @@ class get_embobied_eol_values(APIView):
                 }
         
         return Response(data)
-
-'''        
+'''
+        
 class get_embobied_eol_values(APIView):
+
+    def __init__(self, **kwargs: json.Any) -> None:
+        self.result = {}
+        super().__init__(**kwargs)
+
     def get(self,request,lci_id,rating):
         queryset = SimaPro_runs.objects.filter(vcomponent_id=lci_id)
         if not queryset:
-            return Response({'message':'there is no simapro runs for lci_id = {lci_id}'})
-        else:
-            serializer = SimaPro_runsSerializer(queryset,many=True)
-            entries_list = serializer.data
-            data = self.calculate_embodied_co2_pe(entries_list)
-            return Response(data)
-    @staticmethod
-    def calculate_embodied_co2_pe(entries_list):
-        return  { 
-                    'embodied_co2':1,
-                    'embodied_pe':1,
-                    'eol_co2':1,
-                    'eol_pe':1
-                }
-'''     
+            return Response({'message':'there is no simapro runs for lci_id = {lci_id}'},
+                            status=status.HTTP_404_NOT_FOUND)
+        if rating<=0:
+            return Response({'message':'rating must be positive number'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        
+        # these will insert tuples (rating,embodied)
+        # Assume first point is the (0,0)        
+        co2_values = [(0,0)]
+        pe_values  = [(0,0)]
+        
+        #take all records into a list of dicts:
+        serializer = SimaPro_runsSerializer(queryset,many=True)
+        entries_list = serializer.data
+
+        #set eol:
+        self.set_eol(entries_list[0]) # take the first record for EoL because are all the same:
+
+        #iterate to take the values for Embodied Co2 and Pe scaling:
+        for record in entries_list:
+            co2_values.append((record["fu_quantity"],record['stage_A_gwp_kgco2eq']))
+            pe_values.append((record["fu_quantity"],record["stage_A_embodied_pe_gj"]))
+        
+        #make them with asceding order
+        co2_values_new = self.asceding_order(co2_values)
+        pe_values_new  = self.asceding_order(pe_values)
+        #do regression for each one of co2 and pe
+        embodied_co2 = self.do_regression(co2_values_new)
+        embodied_pe  = self.do_regression(pe_values_new)
+        
+        self.result.update({
+            "embodied_co2": embodied_co2,
+            "embodied_pe": embodied_pe
+        })
+        #return the result:
+        return Response(self.result)
+        
+    
+    def do_regression(self,measurements_list,component_rating):
+        point = None
+        for index, (current_rating, _ ) in enumerate(measurements_list):
+            if component_rating <= current_rating and (not point):
+                point = index
+        
+        if point is None:
+            point = -1
+
+        x2, x1 = measurements_list[point][0] , measurements_list[point-1][0]
+        y2, y1 = measurements_list[point][1] , measurements_list[point-1][1]
+        
+        #TO DO  to take the linear of last part
+
+
+        embodied_value = self.get_regression_value(y2,y1,x2,x1,component_rating)
+        return embodied_value
+    
+    def get_regression_value(self,y2,y1,x2,x1,rating):
+        #create_slope:
+        slope = (y2-y1)/(x2-x1)
+        # create the linear function:
+        linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
+        #return result:
+        return linear_func(rating,slope,y1,x1)
+
+    
+    def set_eol(self,record):
+        # you only need to update for the first record
+        # is correct because these are common for 
+        # specific lci id 
+        self.result.update({
+            "eol_gwp_pc": record["eol_gwp_pc"],
+            "eol_embodied_pe_pc":record["eol_embodied_pe_pc"]
+        })
+    
+    def sort_tuples_by_first_element(tuple_list):
+        # Sort the list of tuples by the first element in each tuple
+        return sorted(tuple_list, key=lambda x: x[0])
+
+     
