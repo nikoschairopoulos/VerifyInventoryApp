@@ -472,7 +472,6 @@ class regression_values(APIView):
 #that given the lci id --> embodied co2, 
 #embodied pe , eol_co2 , col_pe (these two will be average of measurement entris prercentages)
 ################################
-'''
 class get_embobied_eol_values(APIView):
     def get(self,request,lci_id,rating):
         rating_float = float(rating)
@@ -484,8 +483,8 @@ class get_embobied_eol_values(APIView):
                 }
         
         return Response(data)
-'''
-        
+
+'''        
 class get_embobied_eol_values(APIView):
     def get(self,request,lci_id,rating):
         queryset = SimaPro_runs.objects.filter(vcomponent_id=lci_id)
@@ -504,5 +503,4 @@ class get_embobied_eol_values(APIView):
                     'eol_co2':1,
                     'eol_pe':1
                 }
-
-        
+'''     
