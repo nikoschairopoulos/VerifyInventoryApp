@@ -306,7 +306,6 @@ df_all.to_csv('custom_components_from_component_to_simapro_runs.csv')
 
 
 ## this method will much the FK -> sheet type , type , subtype , IS_MAIN_INVENTORY 
-'''
 def update_some_fields_simapro_run():
     simapro_runs_queryset = SimaPro_runs.objects.all()
     for instance in simapro_runs_queryset:
@@ -318,7 +317,7 @@ def update_some_fields_simapro_run():
         instance.component_type = vc[0].component_type
         instance.component_subtype = vc[0].component_subtype
         instance.save()
-'''
+
 
 
 '''
