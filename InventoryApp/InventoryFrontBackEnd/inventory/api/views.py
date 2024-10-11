@@ -128,8 +128,13 @@ class SimaPro_runsViewSet(ModelViewSet):
     #this called form create method when post request is called
     #calls create method of serializer (by default - if you want you can add totaly custom logic)
     # with the validated data
-    def perform_create(self,serializer):
-        serializer.save()  
+    
+    #def perform_create(self,serializer):
+    #    serializer.save()  
+    
+    #def create(self, request, *args, **kwargs):
+    #    request.data = json.loads(request.data)
+    #    super().create(request,*args,**kwargs)
     
     
 
@@ -467,6 +472,7 @@ class regression_values(APIView):
 #that given the lci id --> embodied co2, 
 #embodied pe , eol_co2 , col_pe (these two will be average of measurement entris prercentages)
 ################################
+'''
 class get_embobied_eol_values(APIView):
     def get(self,request,lci_id,rating):
         rating_float = float(rating)
@@ -478,4 +484,25 @@ class get_embobied_eol_values(APIView):
                 }
         
         return Response(data)
+'''
+        
+class get_embobied_eol_values(APIView):
+    def get(self,request,lci_id,rating):
+        queryset = SimaPro_runs.objects.filter(vcomponent_id=lci_id)
+        if not queryset:
+            return Response({'message':'there is no simapro runs for lci_id = {lci_id}'})
+        else:
+            serializer = SimaPro_runsSerializer(queryset,many=True)
+            entries_list = serializer.data
+            data = self.calculate_embodied_co2_pe(entries_list)
+            return Response(data)
+    @staticmethod
+    def calculate_embodied_co2_pe(entries_list):
+        return  { 
+                    'embodied_co2':1,
+                    'embodied_pe':1,
+                    'eol_co2':1,
+                    'eol_pe':1
+                }
+
         

@@ -32,7 +32,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'inventoryapi.settings')
 django.setup()
 from inventory.models import (Component, 
                                 Factor,
-                                CarbonIntensityData)
+                                CarbonIntensityData,
+                                SimaPro_runs)
+
 from inventory.api.serializers import ComponentSerializer
 #import pandas as pd 
 
@@ -232,7 +234,10 @@ for country in s1:
                   primary_energy_factor=1.1)
     obj1.save()
 '''
+############################################################
+############################################################
 
+'''
 def create_format_for_simapro_runs(components_list):
     simapro_runs = []
     for single_component_dict in components_list:
@@ -274,7 +279,9 @@ def get_format_dict():
     "stage_C_comments": None,
     "general_comments": None,
     "IS_MAIN_INVENTORY": None,
-    "SHEET_TYPE": None
+    "SHEET_TYPE": None,
+    "stage_A_LCA_DB":None,
+    "stage_C_LCA_DB":None
 }
 
 def create_dataframe(scale_env_zero_or_one):
@@ -293,3 +300,40 @@ df_simapro_runs_1 = create_dataframe(scale_env_zero_or_one=1)
 df_all = pd.concat([df_simapro_runs_0,df_simapro_runs_1],axis=0,ignore_index=True)
 #breakpoint()
 df_all.to_csv('custom_components_from_component_to_simapro_runs.csv')
+'''
+
+
+
+
+## this method will much the FK -> sheet type , type , subtype , IS_MAIN_INVENTORY 
+'''
+def update_some_fields_simapro_run():
+    simapro_runs_queryset = SimaPro_runs.objects.all()
+    for instance in simapro_runs_queryset:
+        #take visual component fk:
+        vc = Component.objects.filter(pk = instance.vcomponent_id)
+        #update components:
+        instance.SHEET_TYPE = vc[0].SHEET_TYPE
+        instance.IS_MAIN_INVENTORY = vc[0].IS_MAIN_INVENTORY
+        instance.component_type = vc[0].component_type
+        instance.component_subtype = vc[0].component_subtype
+        instance.save()
+'''
+
+
+'''
+def update_some_fields_simapro_run():
+    simapro_runs_queryset = SimaPro_runs.objects.filter(pk=417)
+    for instance in simapro_runs_queryset:
+        #take visual component fk:
+        vc = Component.objects.filter(pk=3)
+        breakpoint()
+        #update components:
+        instance.SHEET_TYPE = vc[0].SHEET_TYPE
+        instance.IS_MAIN_INVENTORY = vc[0].IS_MAIN_INVENTORY
+        instance.component_type = vc[0].component_type
+        instance.component_subtype = vc[0].component_subtype
+        #save instance:
+        instance.save()
+update_some_fields_simapro_run()
+'''

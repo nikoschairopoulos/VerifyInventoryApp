@@ -175,29 +175,35 @@ class RegressionValues(models.Model):
 
 class SimaPro_runs(models.Model):
     name = models.TextField()
+    component_type = models.CharField(max_length=100,db_column='type',null=True)
+    component_subtype = models.CharField(max_length=100,db_column='subtype',null=True)
+    #basics:
     fu_quantity = models.FloatField()
     fu_measurement_unit = models.TextField()
     stage_A_gwp_kgco2eq = models.FloatField()
     stage_A_embodied_pe_gj = models.FloatField()
-    stage_A_LCA_version = models.TextField()
-    stage_A_IA_method_GWP = models.TextField()
-    stage_A_IA_method_PE = models.TextField()
-    stage_A_comments = models.TextField()
     eol_gwp_pc = models.FloatField()
     eol_embodied_pe_pc = models.FloatField()
-    waste_treatment = models.TextField()
-    stage_C_LCA_version = models.TextField()
-    stage_C_IA_method_GWP = models.TextField()
-    stage_C_IA_method_PE = models.TextField()
-    stage_C_comments = models.TextField()
-    general_comments = models.TextField()
+    #extra:
+    stage_A_LCA_version = models.TextField(null=True)
+    stage_A_IA_method_GWP = models.TextField(null=True)
+    stage_A_IA_method_PE = models.TextField(null=True)
+    stage_A_comments = models.TextField(null=True)
+    waste_treatment = models.TextField(null=True)
+    stage_C_LCA_version = models.TextField(null=True)
+    stage_C_IA_method_GWP = models.TextField(null=True)
+    stage_C_IA_method_PE = models.TextField(null=True)
+    stage_C_comments = models.TextField(null=True)
+    general_comments = models.TextField(null=True)
     date = models.DateTimeField(auto_now_add=True)
+    stage_A_LCA_DB = models.TextField(null=True)
+    stage_C_LCA_DB = models.TextField(null=True)
     #########################################################################
     # the 2 bellow fields must be the same as (parent component - FK), 
     # at component Table:
     ##########################################################################
-    sheet_type = models.CharField(250) 
-    is_main_inventory = models.BooleanField()
+    SHEET_TYPE = models.CharField(max_length=100,null=True) 
+    IS_MAIN_INVENTORY = models.BooleanField(null=True)
     ##############################
     ##Add Foreign key restriciton:
     ##############################
