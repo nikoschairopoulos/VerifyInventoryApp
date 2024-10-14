@@ -557,7 +557,7 @@ class get_embobied_eol_values(APIView):
         # create the linear function:
         linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
         #return result:
-        return linear_func(rating,slope,y1,x1)
+        return linear_func(rating,slope,x1,y1)
 
     
     def set_eol(self,record):
