@@ -489,14 +489,13 @@ class get_embobied_eol_values(APIView):
 class get_embobied_eol_values(APIView):
 
     def get(self,request,lci_id,rating):
-        
         self.result = {}
-        
         component_rating  = float(rating)
         lci_id = int(lci_id)
+        
         queryset = SimaPro_runs.objects.filter(vcomponent_id=lci_id)
         if not queryset:
-            return Response({'message':'there is no simapro runs for lci_id = {lci_id}'},
+            return Response({f'message':'there is no simapro runs for lci_id = {lci_id}'},
                             status=status.HTTP_404_NOT_FOUND)
         if component_rating<=0:
             return Response({'message':'rating must be positive number'},
