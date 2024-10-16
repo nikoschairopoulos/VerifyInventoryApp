@@ -566,8 +566,8 @@ class get_embobied_eol_values(APIView):
         # is correct because these are common for 
         # specific lci id 
         self.result.update({
-            "eol_co2": record["eol_gwp_pc"] * embodied_co2/100,
-            "eol_pe":record["eol_embodied_pe_pc"] * embodied_pe/100
+            "eol_co2": record["eol_gwp_pc"] * (embodied_co2/100),
+            "eol_pe":record["eol_embodied_pe_pc"] * (embodied_pe/100)
         })
     
     def sort_tuples_by_first_element(self,tuple_list):

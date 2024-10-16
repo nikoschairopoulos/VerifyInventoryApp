@@ -16,27 +16,27 @@ class Component(models.Model):
     name = models.CharField(max_length=250,unique=True)
     # here add the attributes as at excell inventory:
     #installed_ugs =  models.FloatField() 
-    component_type = models.CharField(max_length=250,db_column='type')
-    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True)
-    capex_per_ugs =  models.FloatField(db_column='capex/u.g.s.') 
-    opex_per_capex = models.FloatField(db_column='opex_per_capex') 
-    embodied_co2_per_ugs = models.FloatField(db_column='embodied_co2/u.g.s.') 
-    embodied_pe_per_ugs = models.FloatField(db_column='embodied_pe/u.g.s.') 
-    lifetime = models.FloatField() 
-    pref_cost = models.FloatField(db_column='Pref_cost') 
-    pref_env = models.FloatField(db_column='Pref_env') 
-    scale_cost = models.FloatField() 
-    scale_env = models.FloatField() 
-    major_upgrade_point = models.FloatField() 
-    major_upgrade_share = models.FloatField() 
-    annual_performance_degradation = models.FloatField() 
-    replace_or_die = models.CharField(max_length=250)
-    SHEET_TYPE = models.CharField(max_length=250)             # HERE WE DECLERE THE SHEET_TYPE  e.g El.Generators,Insulation etc
+    component_type = models.CharField(max_length=250,db_column='type')  ##
+    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True) ##
+    capex_per_ugs =  models.FloatField(db_column='capex/u.g.s.',null=True,blank=True) 
+    opex_per_capex = models.FloatField(db_column='opex_per_capex',null=True,blank=True) 
+    embodied_co2_per_ugs = models.FloatField(db_column='embodied_co2/u.g.s.',null=True,blank=True) 
+    embodied_pe_per_ugs = models.FloatField(db_column='embodied_pe/u.g.s.',null=True,blank=True) 
+    lifetime = models.FloatField()  ## 
+    pref_cost = models.FloatField(db_column='Pref_cost',null=True,blank=True) 
+    pref_env = models.FloatField(db_column='Pref_env',null=True,blank=True) 
+    scale_cost = models.FloatField(null=True,blank=True) 
+    scale_env = models.FloatField(null=True,blank=True) 
+    major_upgrade_point = models.FloatField(null=True,blank=True) 
+    major_upgrade_share = models.FloatField(null=True,blank=True) 
+    annual_performance_degradation = models.FloatField()  ## 
+    replace_or_die = models.CharField(max_length=250) ##
+    SHEET_TYPE = models.CharField(max_length=250)  ##         # HERE WE DECLERE THE SHEET_TYPE  e.g El.Generators,Insulation etc
     IS_MAIN_INVENTORY = models.BooleanField()                 # HERE WE DECLARE IF IT IS AT THE MAIN INVENTORY
     bibliography = models.TextField(blank=True,null=True)
     description = models.TextField(blank=True,null=True)
-    thermal_properties = models.JSONField(null=True, blank=True)
-    IS_B_COMPONENT = models.BooleanField()
+    thermal_properties = models.JSONField(null=True, blank=True) ##
+    IS_B_COMPONENT = models.BooleanField() ##
     eol_pe_cost = models.FloatField(null=True,blank=True)
     eol_co2_cost = models.FloatField(null=True,blank=True)
     ######## (new attributes to confront with new Database Fields:)
@@ -185,19 +185,19 @@ class SimaPro_runs(models.Model):
     eol_gwp_pc = models.FloatField()
     eol_embodied_pe_pc = models.FloatField()
     #extra:
-    stage_A_LCA_version = models.TextField(null=True)
-    stage_A_IA_method_GWP = models.TextField(null=True)
-    stage_A_IA_method_PE = models.TextField(null=True)
-    stage_A_comments = models.TextField(null=True)
-    waste_treatment = models.TextField(null=True)
-    stage_C_LCA_version = models.TextField(null=True)
-    stage_C_IA_method_GWP = models.TextField(null=True)
-    stage_C_IA_method_PE = models.TextField(null=True)
-    stage_C_comments = models.TextField(null=True)
-    general_comments = models.TextField(null=True)
-    date = models.DateTimeField(auto_now_add=True)
-    Stage_A_LCA_DB = models.TextField(null=True)
-    Stage_C_LCA_DB = models.TextField(null=True)
+    stage_A_LCA_version = models.TextField(null=True,blank=True)
+    stage_A_IA_method_GWP = models.TextField(null=True,blank=True)
+    stage_A_IA_method_PE = models.TextField(null=True,blank=True)
+    stage_A_comments = models.TextField(null=True,blank=True)
+    waste_treatment = models.TextField(null=True,blank=True)
+    stage_C_LCA_version = models.TextField(null=True,blank=True)
+    stage_C_IA_method_GWP = models.TextField(null=True,blank=True)
+    stage_C_IA_method_PE = models.TextField(null=True,blank=True)
+    stage_C_comments = models.TextField(null=True,blank=True)
+    general_comments = models.TextField(null=True,blank=True)
+    date = models.DateTimeField(auto_now_add=True,blank=True)
+    Stage_A_LCA_DB = models.TextField(null=True,blank=True)
+    Stage_C_LCA_DB = models.TextField(null=True,blank=True)
     #########################################################################
     # the 2 bellow fields must be the same as (parent component - FK), 
     # at component Table:
@@ -211,3 +211,8 @@ class SimaPro_runs(models.Model):
     # dunders:
     def _str_(self):
         return f"{self.name} {self.fu_quantity}"
+    
+
+
+
+
