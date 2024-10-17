@@ -36,6 +36,7 @@ import pandas as pd
 from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 from copy import deepcopy
+from inventory.component_form_reprentation_verify_app import json_form_behaviour
 
 def error404(request):
     raise NotFound(detail="Error 404, page not found", code=404)
@@ -573,5 +574,10 @@ class get_embobied_eol_values(APIView):
     def sort_tuples_by_first_element(self,tuple_list):
         # Sort the list of tuples by the first element in each tuple
         return sorted(tuple_list, key=lambda x: x[0])
+    
 
+class FormRepresentationVerifyApp(APIView):
+    def get(self,request):
+        result = json_form_behaviour
+        return Response(result)
      

@@ -22,7 +22,8 @@ from inventory.api.views import (
           give_picture_of_component_from_timestamp,
           regression_values,
           SimaPro_runsViewSet,
-          get_embobied_eol_values
+          get_embobied_eol_values,
+          FormRepresentationVerifyApp
         )
 
 #from django.urls import path
@@ -56,7 +57,8 @@ urlpatterns = [
     path('get_countries_hourly_yearly', get_countries_hourly_yearly_electricity_factors.as_view(),name='countries_electricity_support'),
     path('get_components_logs/<int:lci_id>',get_components_logs.as_view(),name='logs'),
     path('give_picture_of_component_from_timestamp/<int:lci_id>',give_picture_of_component_from_timestamp.as_view(),name='reconstructions'),
-    path('get_embodied_eol_values/<int:lci_id>/<str:rating>',get_embobied_eol_values.as_view(),name='embodied_eol')
+    path('get_embodied_eol_values/<int:lci_id>/<str:rating>',get_embobied_eol_values.as_view(),name='embodied_eol'),
+    path('get_component_form_representation',FormRepresentationVerifyApp.as_view(),name='component_form_representation'),
     #path('regression_values_component/<int:lci_id>',regression_values.as_view(),name='regression_values')
     #path('/simapro_values',SimaPro_runsViewSet.as_view(),name = 'sima_pro_runs')
 ]
