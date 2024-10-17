@@ -23,7 +23,8 @@ from inventory.api.views import (
           regression_values,
           SimaPro_runsViewSet,
           get_embobied_eol_values,
-          FormRepresentationVerifyApp
+          FormRepresentationVerifyApp,
+          get_all_components_without_simapro_runs
         )
 
 #from django.urls import path
@@ -59,6 +60,7 @@ urlpatterns = [
     path('give_picture_of_component_from_timestamp/<int:lci_id>',give_picture_of_component_from_timestamp.as_view(),name='reconstructions'),
     path('get_embodied_eol_values/<int:lci_id>/<str:rating>',get_embobied_eol_values.as_view(),name='embodied_eol'),
     path('get_component_form_representation',FormRepresentationVerifyApp.as_view(),name='component_form_representation'),
+    path('get_all_components_without_simapro_runs',get_all_components_without_simapro_runs.as_view(),name='components_without_simaproruns'),
     #path('regression_values_component/<int:lci_id>',regression_values.as_view(),name='regression_values')
     #path('/simapro_values',SimaPro_runsViewSet.as_view(),name = 'sima_pro_runs')
 ]

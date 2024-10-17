@@ -580,4 +580,16 @@ class FormRepresentationVerifyApp(APIView):
     def get(self,request):
         result = json_form_behaviour
         return Response(result)
+    
+class get_all_components_without_simapro_runs(APIView):
+    def get(self,request):
+        #take all simapro runs FKs:
+        simapro_run_set = SimaPro_runs.objects.values_list('vcomponent_id',flat=True)
+        #exclude components that have simapro runs:
+        components = Component.objects.exclude(id__in = simapro_run_set)
+        data = ComponentSerializer(components,many=True).data
+        return Response(data)
+
+
+
      
