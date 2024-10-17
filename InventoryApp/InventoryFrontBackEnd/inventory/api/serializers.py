@@ -46,7 +46,8 @@ class ComponentSerializer(serializers.ModelSerializer):
             "lifetime",
             "description",
             "thermal_properties",
-            "id"
+            "id",
+            "IS_B_COMPONENT"
         }
         component_to_show = {k:v for k,v in component_view.items() 
                              if k in to_show}
