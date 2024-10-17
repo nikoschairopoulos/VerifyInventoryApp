@@ -28,7 +28,7 @@ class ComponentSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if data['lifetime'] < 0 :
             raise serializers.ValidationError({"lifetime": "must be greater than zero"})
-        if data['annual_performance_degradation']<0 or data['annual_performance_degradation']:
+        if data['annual_performance_degradation']<0 or data['annual_performance_degradation']>1:
             raise serializers.ValidationError({"degradation": "takes values 0 to 1"})
         
         return data
@@ -45,7 +45,8 @@ class ComponentSerializer(serializers.ModelSerializer):
             "IS_MAIN_INVENTORY",
             "lifetime",
             "description",
-            "thermal_properties"
+            "thermal_properties",
+            "id"
         }
         component_to_show = {k:v for k,v in component_view.items() 
                              if k in to_show}
