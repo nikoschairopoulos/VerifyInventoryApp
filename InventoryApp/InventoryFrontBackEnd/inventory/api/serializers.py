@@ -57,10 +57,12 @@ class ComponentSerializer(serializers.ModelSerializer):
         try:
             with transaction.atomic():  # Start a transaction
                 created_component = Component.objects.create(**validated_data)
-                for simapro_run in simapro_runs:
-                    self.update_simapro_run_json(record=simapro_run,
+                #if you have simapro runs iterate over them, to create the components simapro run
+                if simapro_runs:
+                    for simapro_run in simapro_runs:
+                        self.update_simapro_run_json(record=simapro_run,
                                                 component_validated_data=deepcopy(validated_data))
-                    SimaPro_runs.objects.create(vcomponent_id = created_component,**simapro_run) ##### ADD COMPONENT TYPE SUBTYPE ETC
+                        SimaPro_runs.objects.create(vcomponent_id = created_component,**simapro_run) ##### ADD COMPONENT TYPE SUBTYPE ETC
                 return created_component
         except Exception as e:
             print(e)
@@ -70,6 +72,7 @@ class ComponentSerializer(serializers.ModelSerializer):
         record['component_type'] = component_validated_data["component_type"]
         record['component_subtype'] = component_validated_data["component_subtype"]
         record['IS_MAIN_INVENTORY'] = component_validated_data["IS_MAIN_INVENTORY"]
+        record["SHEET_TYPE"] = component_validated_data["SHEET_TYPE"]
         #test:
         #record['IS_B_COMPONENT'] = component_validated_data["IS_B_COMPONENT"]
 
