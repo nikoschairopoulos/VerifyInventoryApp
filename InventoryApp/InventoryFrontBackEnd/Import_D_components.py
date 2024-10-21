@@ -318,7 +318,7 @@ def update_some_fields_simapro_run():
         instance.component_subtype = vc[0].component_subtype
         instance.save()
 
-update_some_fields_simapro_run()
+#pdate_some_fields_simapro_run()
 
 '''
 def update_some_fields_simapro_run():
@@ -336,3 +336,8 @@ def update_some_fields_simapro_run():
         instance.save()
 update_some_fields_simapro_run()
 '''
+
+simapro_run_set = SimaPro_runs.objects.values_list('vcomponent_id',flat=True)
+breakpoint()
+components = Component.objects.filter(id__in = simapro_run_set)
+breakpoint()

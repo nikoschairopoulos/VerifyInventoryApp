@@ -12,26 +12,84 @@ from inventory.models import (Inventory,
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 from rest_framework.exceptions import NotFound 
+from copy import deepcopy
+from django.db import transaction
 
 
+##############################
+# SimaPro_runs Serializer
+##############################
+class SimaPro_runsSerializer(serializers.ModelSerializer):
+    #component_lci_id = serializers.IntegerField(write_only=True)
+    FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
+    #related_component_name = serializers.CharField(source='fk.name',read_only=True)
+    class Meta:
+        model = SimaPro_runs
+        #exclude = ['vcomponent_id']
+        fields = '__all__'
+    def create(self, validated_data):
+        #component_lci_id = validated_data.pop('component_lci_id',None)
+        vcomponent_instance =  validated_data.pop('vcomponent_id',None)
+        if not vcomponent_instance:
+            raise NotFound(f'There is no related virtaul component with the given LCI id')
+        #pass the related instance:
+        new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = vcomponent_instance, **validated_data)
+        return new_regression_instance
+    
+    def validate_component_type(self, value):
+        if value == "":  # If the component_subtype is an empty string
+            return None  # Return None to store it as NULL in the database
+        return value
+
+    def validate_component_subtype(self, value):
+        if value == "":  # If the component_subtype is an empty string
+            return None  # Return None to store it as NULL in the database
+        return value   
 
 class ComponentSerializer(serializers.ModelSerializer):
-    #simapro_runs = SimaPro_runs(many=True,write_only=True)
+    simapro_runs = SimaPro_runsSerializer(many=True)
+    #simapro_runs = SimaPro_runsSerializer(many=True, required=False)
     class Meta:
         model=Component
         fields='__all__'
     def create(self, validated_data):
-        return super().create(validated_data)
+        simapro_runs = validated_data.pop('simapro_runs',None)
+        try:
+            with transaction.atomic():  # Start a transaction
+                created_component = Component.objects.create(**validated_data)
+                for simapro_run in simapro_runs:
+                    self.update_simapro_run_json(record=simapro_run,
+                                                component_validated_data=deepcopy(validated_data))
+                    SimaPro_runs.objects.create(vcomponent_id = created_component,**simapro_run) ##### ADD COMPONENT TYPE SUBTYPE ETC
+                return created_component
+        except Exception as e:
+            print(e)
+            raise serializers.ValidationError({'error': str(e)})
+    
+    def update_simapro_run_json(self,record,component_validated_data): 
+        record['component_type'] = component_validated_data["component_type"]
+        record['component_subtype'] = component_validated_data["component_subtype"]
+        record['IS_MAIN_INVENTORY'] = component_validated_data["IS_MAIN_INVENTORY"]
+        #test:
+        #record['IS_B_COMPONENT'] = component_validated_data["IS_B_COMPONENT"]
+
     def update(self, instance, validated_data):
+        validated_data.pop('simapro_runs',None)
         obj =  super().update(instance, validated_data)
         return obj
+    
     def validate(self, data):
         if data['lifetime'] < 0 :
             raise serializers.ValidationError({"lifetime": "must be greater than zero"})
         if data['annual_performance_degradation']<0 or data['annual_performance_degradation']>1:
             raise serializers.ValidationError({"degradation": "takes values 0 to 1"})
-        
         return data
+    
+    def validate_component_subtype(self, value):
+        if value == "":  # If the component_subtype is an empty string
+            return None  # Return None to store it as NULL in the database
+        return value
+
 
     def to_representation(self, instance):
         component_view = super().to_representation(instance)
@@ -47,7 +105,8 @@ class ComponentSerializer(serializers.ModelSerializer):
             "description",
             "thermal_properties",
             "id",
-            "IS_B_COMPONENT"
+            "IS_B_COMPONENT",
+            "simapro_runs"
         }
         component_to_show = {k:v for k,v in component_view.items() 
                              if k in to_show}
@@ -176,10 +235,21 @@ class RegressionValuesSerializer(serializers.ModelSerializer):
             raise NotFound(f'There is no component with lci id = {component_lci_id}')
         new_regression_instance = RegressionValues.objects.create(fk = related_component_instance, **validated_data)
         return new_regression_instance
+    
+    def validate_component_type(self, value):
+        if value == "":  # If the component_subtype is an empty string
+            return None  # Return None to store it as NULL in the database
+        return value
+
+    def validate_component_subtype(self, value):
+        if value == "":  # If the component_subtype is an empty string
+            return None  # Return None to store it as NULL in the database
+        return value
 
 ##############################
 # SimaPro_runs Serializer
 ##############################
+'''
 class SimaPro_runsSerializer(serializers.ModelSerializer):
     #component_lci_id = serializers.IntegerField(write_only=True)
     FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
@@ -196,7 +266,7 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
         #pass the related instance:
         new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = vcomponent_instance, **validated_data)
         return new_regression_instance
-
+'''
 
 ###############################
 #To implement nested Attributes 

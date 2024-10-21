@@ -37,6 +37,7 @@ from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 from copy import deepcopy
 from inventory.component_form_reprentation_verify_app import json_form_behaviour
+from rest_framework.exceptions import ValidationError
 
 def error404(request):
     raise NotFound(detail="Error 404, page not found", code=404)
@@ -95,6 +96,8 @@ class ComponentViewSet(ModelViewSet):
                         if v is not None}
                 warnings.append(record)        
         return warnings
+    
+    
 
  
 
@@ -488,7 +491,6 @@ class get_embobied_eol_values(APIView):
 '''
         
 class get_embobied_eol_values(APIView):
-
     def get(self,request,lci_id,rating):
         self.result = {}
         component_rating  = float(rating)
@@ -504,8 +506,8 @@ class get_embobied_eol_values(APIView):
         
         # these will insert tuples (rating,embodied)
         # Assume first point is the (0,0)        
-        co2_values = [(0,0)]
-        pe_values  = [(0,0)]
+        co2_values = []
+        pe_values  = []
         
         #take all records into a list of dicts:
         serializer = SimaPro_runsSerializer(queryset,many=True)
@@ -516,7 +518,36 @@ class get_embobied_eol_values(APIView):
             co2_values.append((record["fu_quantity"],record['stage_A_gwp_kgco2eq']))
             pe_values.append((record["fu_quantity"],record["stage_A_embodied_pe_gj"]))
         
-        #make them with asceding order
+        #Validations:
+        #1. if does not have correct format raise exception
+        #2. if has fake simapro run return all zeros
+        #3. if none of 1,2 continue -> is a regural scaling procedure
+        check = self.check_points(co2_values=co2_values,pe_values=pe_values)
+        if check:
+            #if it is a '0 rating' component return 0 at all keys else continue:
+            return Response(
+                {
+                    "embodied_co2": 0,
+                    "embodied_pe": 0,
+                    "eol_co2": 0,
+                    "eol_pe": 0
+                }
+            )
+        
+        #continue regression after validations:
+        self.continue_regression(co2_values=co2_values,
+                                 pe_values=pe_values,
+                                 component_rating=component_rating,
+                                 entries_for_eol=entries_list[0])
+        
+        #return the result:
+        return Response(self.result)
+
+    def continue_regression(self,co2_values,pe_values,component_rating,entries_for_eol):
+        # Continue making them with asceding order adding (0,0) for regression first point:
+        co2_values.append((0,0))
+        pe_values.append((0,0))
+        # sort the lists in asceding order:
         co2_values_new = self.sort_tuples_by_first_element(co2_values)
         pe_values_new  = self.sort_tuples_by_first_element(pe_values)
 
@@ -528,14 +559,29 @@ class get_embobied_eol_values(APIView):
             "embodied_co2": embodied_co2,
             "embodied_pe": embodied_pe *(1000/3.6)
         })
+        #set eol:
+        self.set_eol(entries_for_eol) # take the first record for EoL because are all the same:
 
-           #set eol:
-        self.set_eol(entries_list[0]) # take the first record for EoL because are all the same:
 
-        #return the result:
-        return Response(self.result)
+    
+    def check_points(self,co2_values,pe_values):
+        #raise exception here else None
+        #self.has_not_correct_point(co2_values)
+        #self.has_not_correct_point(pe_values)
+        
+        #handle same points in case there are point with same rating:
+        #TODO: handle to take the most newer for same rating
+
+        #check if the only simapro run is (0,0) -> is an assumption simapro run for District Heating etc
+        has_only_co2_x_0_y_0 = self.get_zero_values_if_only_zero_fu_provided_at_simapro_run(co2_values)
+        has_only_pe_x_0_y_0 = self.get_zero_values_if_only_zero_fu_provided_at_simapro_run(pe_values)
+        return has_only_pe_x_0_y_0 and has_only_co2_x_0_y_0
         
     
+    def get_zero_values_if_only_zero_fu_provided_at_simapro_run(self,values):
+        return set(values) == {(0,0)} 
+
+
     def do_regression(self,measurements_list,component_rating):
         point = None
         for index, (current_rating, _ ) in enumerate(measurements_list):
@@ -554,11 +600,14 @@ class get_embobied_eol_values(APIView):
     
     def get_regression_value(self,y2,y1,x2,x1,rating):
         #create_slope:
-        slope = (y2-y1)/(x2-x1)
-        # create the linear function:
-        linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
-        #return result:
-        return linear_func(rating,slope,x1,y1)
+        try:
+            slope = (y2-y1)/(x2-x1)
+            # create the linear function:
+            linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
+            #return result:
+            return linear_func(rating,slope,x1,y1)
+        except ZeroDivisionError:
+            raise ValidationError({'detail': 'Division by zero encountered during regression calculation.'})
 
     
     def set_eol(self,record):

@@ -17,7 +17,7 @@ class Component(models.Model):
     # here add the attributes as at excell inventory:
     #installed_ugs =  models.FloatField() 
     component_type = models.CharField(max_length=250,db_column='type')  ##
-    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True) ##
+    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True,blank=True) ##
     capex_per_ugs =  models.FloatField(db_column='capex/u.g.s.',null=True,blank=True) 
     opex_per_capex = models.FloatField(db_column='opex_per_capex',null=True,blank=True) 
     embodied_co2_per_ugs = models.FloatField(db_column='embodied_co2/u.g.s.',null=True,blank=True) 
@@ -175,8 +175,8 @@ class RegressionValues(models.Model):
 
 class SimaPro_runs(models.Model):
     name = models.TextField()
-    component_type = models.CharField(max_length=100,db_column='type',null=True)
-    component_subtype = models.CharField(max_length=100,db_column='subtype',null=True)
+    component_type = models.CharField(max_length=100,db_column='type',null=True,blank=True)
+    component_subtype = models.CharField(max_length=100,db_column='subtype',null=True,blank=True)
     #basics:
     fu_quantity = models.FloatField()
     fu_measurement_unit = models.TextField()
@@ -202,12 +202,12 @@ class SimaPro_runs(models.Model):
     # the 2 bellow fields must be the same as (parent component - FK), 
     # at component Table:
     ##########################################################################
-    SHEET_TYPE = models.CharField(max_length=100,null=True) 
-    IS_MAIN_INVENTORY = models.BooleanField(null=True)
+    SHEET_TYPE = models.CharField(max_length=100,null=True,blank=True) 
+    IS_MAIN_INVENTORY = models.BooleanField(null=True,blank=True)
     ##############################
     ##Add Foreign key restriciton:
     ##############################
-    vcomponent_id = models.ForeignKey(Component,on_delete=models.CASCADE)   
+    vcomponent_id = models.ForeignKey(Component,on_delete=models.CASCADE,related_name='simapro_runs',null=True)   
     # dunders:
     def _str_(self):
         return f"{self.name} {self.fu_quantity}"
