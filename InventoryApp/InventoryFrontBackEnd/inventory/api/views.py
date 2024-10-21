@@ -519,7 +519,7 @@ class get_embobied_eol_values(APIView):
             pe_values.append((record["fu_quantity"],record["stage_A_embodied_pe_gj"]))
         
         #Validations:
-        #1. if does not have correct format raise exception
+        #1. if does not have correct format raise exception (not applied)
         #2. if has fake simapro run return all zeros
         #3. if none of 1,2 continue -> is a regural scaling procedure
         check = self.check_points(co2_values=co2_values,pe_values=pe_values)

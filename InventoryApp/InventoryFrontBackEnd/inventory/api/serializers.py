@@ -22,6 +22,7 @@ from django.db import transaction
 class SimaPro_runsSerializer(serializers.ModelSerializer):
     #component_lci_id = serializers.IntegerField(write_only=True)
     FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
+    id = serializers.IntegerField()
     #related_component_name = serializers.CharField(source='fk.name',read_only=True)
     class Meta:
         model = SimaPro_runs
@@ -45,6 +46,15 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
         if value == "":  # If the component_subtype is an empty string
             return None  # Return None to store it as NULL in the database
         return value   
+    
+    def validate(self,data):
+        if data['fu_quantity'] < 0 :
+            raise serializers.ValidationError({"rating (fu_quantity)": "must be greater than zero"})
+        if data['eol_gwp_pc'] < 0 or data['eol_gwp_pc']>100 :
+            raise serializers.ValidationError({"eol co2":"eol gwp must be in interval [0,100]"})
+        if data['eol_embodied_pe_pc'] < 0 or data['eol_embodied_pe_pc']>100 :
+            raise serializers.ValidationError({"eol pe":"eol pe must be in interval [0,100]"})
+        return data
 
 class ComponentSerializer(serializers.ModelSerializer):
     simapro_runs = SimaPro_runsSerializer(many=True)
@@ -76,10 +86,33 @@ class ComponentSerializer(serializers.ModelSerializer):
         #test:
         #record['IS_B_COMPONENT'] = component_validated_data["IS_B_COMPONENT"]
 
+
+    #UPDATES EVERY SINGLE SIMAPRO RUN
+    #DOES ORM DIRECTLY BECAUSE DATA 
+    #ARE VALIDATED:
+    def update_simapro_runs(self, simapro_run_data):
+        instance = SimaPro_runs.objects.get(pk=simapro_run_data['id'])
+        simapro_run_data.pop('id')
+        # Update fields directly
+        for attr, value in simapro_run_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+    
     def update(self, instance, validated_data):
-        validated_data.pop('simapro_runs',None)
-        obj =  super().update(instance, validated_data)
-        return obj
+        try:
+            with transaction.atomic():
+                #get simapro runs:
+                simapro_runs_list = validated_data.pop('simapro_runs',None)
+                #iterate over them and update their values:
+                for record in simapro_runs_list:
+                    self.update_simapro_runs(record)
+                obj =  super().update(instance, validated_data)
+                return obj
+        except Exception as e:
+            print(e)
+            raise serializers.ValidationError({'error': str(e)})
+
+    
     
     def validate(self, data):
         if data['lifetime'] < 0 :
@@ -87,6 +120,7 @@ class ComponentSerializer(serializers.ModelSerializer):
         if data['annual_performance_degradation']<0 or data['annual_performance_degradation']>1:
             raise serializers.ValidationError({"degradation": "takes values 0 to 1"})
         return data
+    
     
     def validate_component_subtype(self, value):
         if value == "":  # If the component_subtype is an empty string
