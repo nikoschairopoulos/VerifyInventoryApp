@@ -102,7 +102,7 @@ class ComponentSerializer(serializers.ModelSerializer):
         try:
             with transaction.atomic():
                 #get simapro runs:
-                simapro_runs_list = validated_data.pop('simapro_runs',None)
+                simapro_runs_list = validated_data.pop('simapro_runs',[])
                 #iterate over them and update their values:
                 for record in simapro_runs_list:
                     self.update_simapro_runs(record)
