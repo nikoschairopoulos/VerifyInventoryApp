@@ -22,7 +22,7 @@ from django.db import transaction
 class SimaPro_runsSerializer(serializers.ModelSerializer):
     #component_lci_id = serializers.IntegerField(write_only=True)
     FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
-    id = serializers.IntegerField()
+    id = serializers.IntegerField(required=False)
     #related_component_name = serializers.CharField(source='fk.name',read_only=True)
     class Meta:
         model = SimaPro_runs
