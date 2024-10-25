@@ -365,8 +365,8 @@ all_components.extend(default_components)
 print(len(all_components))
 component_serializer = ComponentSerializer(all_components,many=True)
 '''
-
-arguments = {
+'''
+#arguments = {
             'is_superuser':False,
             'username':'test_user 2',
             'first_name':'test_name',
@@ -375,6 +375,36 @@ arguments = {
             'is_staff':False,
             'is_active':True
         }
-#create user:
-user_to_add = CustomUser(**arguments)
-user_to_add.save()
+'''
+from inventory.models import Inventory
+from django.contrib.auth import get_user_model
+
+CustomUser = get_user_model()
+
+def flatten(xss):
+    return [x for xs in xss for x in xs]
+
+users = CustomUser.objects.all()
+components = []
+for user in users:
+    # If the user has multiple inventories
+    if len(user.inventories.all()) > 1:
+        # collect all components
+        unify_inventory_components = [inventory.components.all() for inventory in user.inventories.all()]
+        unify_inventory_components_flat = flatten(unify_inventory_components)
+        
+        # delete
+        for inventory in user.inventories.all():
+            inventory.delete()
+        
+        # crete the new inventory
+        new_inventory = Inventory(
+            author=user,
+            name='custom_inventory',
+            project_name=f'{user.username}'
+        )
+        new_inventory.save()
+        
+        # Add all unique components to the new inventory
+        new_inventory.components.add(*unify_inventory_components_flat)
+        new_inventory.save()
