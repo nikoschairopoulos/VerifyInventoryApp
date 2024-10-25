@@ -24,8 +24,11 @@ from inventory.api.views import (
           SimaPro_runsViewSet,
           get_embobied_eol_values,
           FormRepresentationVerifyApp,
-          get_all_components_without_simapro_runs
+          get_all_components_without_simapro_runs,
+          Fetch_Specific_User_Custom_Plus_Defaults
         )
+#out of this app views
+from users.views import CreateUser
 
 #from django.urls import path
 from django.urls import include, path
@@ -61,6 +64,8 @@ urlpatterns = [
     path('get_embodied_eol_values/<int:lci_id>/<str:rating>',get_embobied_eol_values.as_view(),name='embodied_eol'),
     path('get_component_form_representation',FormRepresentationVerifyApp.as_view(),name='component_form_representation'),
     path('get_all_components_without_simapro_runs',get_all_components_without_simapro_runs.as_view(),name='components_without_simaproruns'),
+    path('user_components/<str:user_email>',Fetch_Specific_User_Custom_Plus_Defaults.as_view(),name='fetch_users_components'),
+    path('create_new_lci_user',CreateUser.as_view(),name = 'createUser')
     #path('regression_values_component/<int:lci_id>',regression_values.as_view(),name='regression_values')
     #path('/simapro_values',SimaPro_runsViewSet.as_view(),name = 'sima_pro_runs')
 ]

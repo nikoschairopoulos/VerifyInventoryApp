@@ -16,6 +16,8 @@ from inventory.models import (Component,
                               RegressionValues,
                               SimaPro_runs)
 
+from users.models import CustomUser
+
 from rest_framework.generics import get_object_or_404
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
@@ -36,8 +38,9 @@ import pandas as pd
 from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 from copy import deepcopy
-from inventory.component_form_reprentation_verify_app import json_form_behaviour
+from VerifyInventoryApp.InventoryApp.InventoryFrontBackEnd.inventory.VerifyWebAppForm.component_form_reprentation_verify_app import json_form_behaviour
 from rest_framework.exceptions import ValidationError
+from django.core.exceptions import MultipleObjectsReturned
 
 def error404(request):
     raise NotFound(detail="Error 404, page not found", code=404)
@@ -214,6 +217,27 @@ class Specific_inventory_plus_default(APIView):
         result = {"custom":component_inventory_1,"default":component_inventory_2}
         #result = component_inventory_1 + component_inventory_2 (fetch all without formating) / every component_inventory is a list of dicts
         return Response(result)
+
+class Fetch_Specific_User_Custom_Plus_Defaults(APIView):
+    def get(self,request,user_email):
+        all_components = []
+        try:
+            #take current user:
+            current_user = CustomUser.objects.get(email=user_email)
+            #take all its inventories:
+            inventories = current_user.inventories.all()
+            #add all custom components of the inventories:
+            for inventory in inventories:
+                all_components.extend(inventory.components.all()) 
+            default_components = Component.objects.filter(IS_MAIN_INVENTORY=True)
+            #create overall component List:
+            all_components.extend(default_components)
+            component_serializer = ComponentSerializer(all_components,many=True)
+            print(component_serializer.data)
+            #return components
+            return Response(component_serializer.data)
+        except MultipleObjectsReturned as e:
+            return Response(e)
 
 class only_main_inventory(APIView):
     def get(self,request):
@@ -623,13 +647,22 @@ class get_embobied_eol_values(APIView):
     def sort_tuples_by_first_element(self,tuple_list):
         # Sort the list of tuples by the first element in each tuple
         return sorted(tuple_list, key=lambda x: x[0])
-    
 
+
+#####################################
+#This is a form to add configurations
+#for verify web app lci input forms
+#####################################
 class FormRepresentationVerifyApp(APIView):
     def get(self,request):
         result = json_form_behaviour
         return Response(result)
-    
+
+
+#####################################
+#this gives all components 
+#without simapro run
+#####################################
 class get_all_components_without_simapro_runs(APIView):
     def get(self,request):
         #take all simapro runs FKs:

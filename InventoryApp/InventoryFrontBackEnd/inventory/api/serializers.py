@@ -14,6 +14,7 @@ from inventory.utils import send_email
 from rest_framework.exceptions import NotFound 
 from copy import deepcopy
 from django.db import transaction
+from users.models import CustomUser
 
 
 ##############################
@@ -21,7 +22,10 @@ from django.db import transaction
 ##############################
 class SimaPro_runsSerializer(serializers.ModelSerializer):
     #component_lci_id = serializers.IntegerField(write_only=True)
+    
+    #is the Vcomponent Id (only to return) (maybe not needed)
     FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
+    #is the pk of this simapro run record
     id = serializers.IntegerField(required=False)
     #related_component_name = serializers.CharField(source='fk.name',read_only=True)
     class Meta:
@@ -29,13 +33,17 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
         #exclude = ['vcomponent_id']
         fields = '__all__'
     def create(self, validated_data):
-        #component_lci_id = validated_data.pop('component_lci_id',None)
+        #Framework by it self mapping the id provided by json and
+        #an at validated data gives the vcomponent_instance
         vcomponent_instance =  validated_data.pop('vcomponent_id',None)
         if not vcomponent_instance:
             raise NotFound(f'There is no related virtaul component with the given LCI id')
         #pass the related instance:
         new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = vcomponent_instance, **validated_data)
         return new_regression_instance
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
     
     def validate_component_type(self, value):
         if value == "":  # If the component_subtype is an empty string
@@ -47,51 +55,136 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
             return None  # Return None to store it as NULL in the database
         return value   
     
+    
     def validate(self,data):
+        ## add extra validation in case component has assumption (0,0) simapro run like District Heating
+        ## Then can only have one simapro run -> with fu quantity = 0 and all the numerics other zeros:
+        #if 'vcomponent_id' in data:
+        #    pass
+            #framework does the retieving of the object automatically:
+            #so component is an instance
+        #    component = data['vcomponent_id']
+        #    self.check_default_0_0(data = data,vcomponent = component)
         if data['fu_quantity'] < 0 :
-            raise serializers.ValidationError({"rating (fu_quantity)": "must be greater than zero"})
-        if data['eol_gwp_pc'] < 0 or data['eol_gwp_pc']>100 :
-            raise serializers.ValidationError({"eol co2":"eol gwp must be in interval [0,100]"})
-        if data['eol_embodied_pe_pc'] < 0 or data['eol_embodied_pe_pc']>100 :
-            raise serializers.ValidationError({"eol pe":"eol pe must be in interval [0,100]"})
+            raise serializers.ValidationError({"message": " rating must be greater than zero"})
+        if data['eol_gwp_pc'] < 0 or data['eol_gwp_pc'] > 100 :
+            raise serializers.ValidationError({"message":"eol gwp must be in interval [0,100]"})
+        if data['eol_embodied_pe_pc'] < 0 or data['eol_embodied_pe_pc'] > 100 :
+            raise serializers.ValidationError({"message":"eol pe must be in interval [0,100]"})
+        ## add extra logic for data validation:
+        if data['fu_quantity'] == 0 and (data['stage_A_gwp_kgco2eq']!=0 or data['stage_A_embodied_pe_gj']!=0):
+            raise serializers.ValidationError({"message":"Point of Format (0,N) is not acceptaple"})
+        if data['fu_quantity'] != 0 and (data['stage_A_gwp_kgco2eq']==0 or data['stage_A_embodied_pe_gj']==0):
+            raise serializers.ValidationError({"message":"Point of Format (N,0) is not acceptaple"})
+        #you have pass all validations so return:
         return data
+
+    def allow_zero_numerics_if_you_are_the_only_component(self,data):
+        '''
+        Here handle what happends if you change 
+        the unique simapro run 
+        of a component
+        '''
+        pass
+
+
+    #This method is added here but is used
+    #at component serializer for validations,
+    #during creations and updates simultaneously:
+    '''
+    1. does not allows if you have list of json that are not valid to be created
+    3. does not allows if you try to update a list of json that is not valid to updated
+    '''
+    @staticmethod
+    def check_default_0_0(data,vcomponent):
+        # take reverse query set:
+        simapro_runs = vcomponent.simapro_runs.all()
+        
+        #if you try to add fu = 0 but vcomponent has and other measurements raise Exception
+        #all this is done to prevent violate the assumption for example District Heating Components:
+        if data['fu_quantity'] == 0 and simapro_runs.exists():
+            raise serializers.ValidationError({'message':f'try to add record with 0 rating having other  rating measurements - CHECK YOUR MEASUREMENTS - lci_id =  {vcomponent.id}'})
+        
+        #an extra validation in case you try to add an extra simapro run
+        #for a component that have already 0 rating
+        for instance in simapro_runs:
+            if instance.fu_quantity == 0:
+                raise serializers.ValidationError({'message':f'has point with FU = 0 - Must have only that simapro run -  CHECK YOUR MEASUREMENTS - lci_id =  {vcomponent.id}'})
+
+
 
 class ComponentSerializer(serializers.ModelSerializer):
     simapro_runs = SimaPro_runsSerializer(many=True)
+    user_email = serializers.CharField(write_only = True, required = False)
     #simapro_runs = SimaPro_runsSerializer(many=True, required=False)
     class Meta:
         model=Component
         fields='__all__'
     def create(self, validated_data):
         simapro_runs = validated_data.pop('simapro_runs',None)
+        user_email = validated_data.pop('user_email',None)
         try:
             with transaction.atomic():  # Start a transaction
                 created_component = Component.objects.create(**validated_data)
                 #if you have simapro runs iterate over them, to create the components simapro run
                 if simapro_runs:
                     for simapro_run in simapro_runs:
-                        self.update_simapro_run_json(record=simapro_run,
+                        #make an extra validation:
+                        #SimaPro_runsSerializer.check_default_0_0(data=simapro_run,vcomponent=created_component)
+                        
+                        #update json
+                        self.inform_simapro_run_json(record=simapro_run,
                                                 component_validated_data=deepcopy(validated_data))
+                        #create:
                         SimaPro_runs.objects.create(vcomponent_id = created_component,**simapro_run) ##### ADD COMPONENT TYPE SUBTYPE ETC
+                #in case you have send user email add it at users inventory:
+                self.set_component_at_user_inventory(user_email,created_component)
+                #return component:
                 return created_component
         except Exception as e:
             print(e)
             raise serializers.ValidationError({'error': str(e)})
     
-    def update_simapro_run_json(self,record,component_validated_data): 
+    def add_custom_component_at_users_inventory(self,email,inventory_id):
+        pass
+        #users = CustomUser.objects.all()
+    
+    def inform_simapro_run_json(self,record,component_validated_data): 
         record['component_type'] = component_validated_data["component_type"]
         record['component_subtype'] = component_validated_data["component_subtype"]
         record['IS_MAIN_INVENTORY'] = component_validated_data["IS_MAIN_INVENTORY"]
         record["SHEET_TYPE"] = component_validated_data["SHEET_TYPE"]
         #test:
         #record['IS_B_COMPONENT'] = component_validated_data["IS_B_COMPONENT"]
+    
+    def set_component_at_user_inventory(self,user_email,component_instance):
+        if user_email is not None:
+            current_user = CustomUser.objects.get(email=user_email)
+            inventories = current_user.inventories.all()
+            if len(inventories) > 1:
+                raise serializers.ValidationError(f'user: {user_email}, has more than one inventories - something goes wrong')
+            if component_instance.IS_MAIN_INVENTORY:
+                raise serializers.ValidationError({'message':'you try to add main inventory component at custom inventory'})
+            unique_inventory  = inventories[0]
+            unique_inventory.components.add(component_instance)
+            unique_inventory.save()
 
 
     #UPDATES EVERY SINGLE SIMAPRO RUN
     #DOES ORM DIRECTLY BECAUSE DATA 
     #ARE VALIDATED:
     def update_simapro_runs(self, simapro_run_data):
-        instance = SimaPro_runs.objects.get(pk=simapro_run_data['id'])
+        if 'id' not in simapro_run_data:
+            raise serializers.ValidationError({'error': 'ID is required to update simapro_run.'})
+        try:
+        # Try fetching the existing instance by ID
+            instance = SimaPro_runs.objects.get(pk=simapro_run_data['id'])
+        except ObjectDoesNotExist:
+        # If the ID is not found, raise an error and don't create
+            raise serializers.ValidationError(
+                {'error': f"SimaPro_run with id {simapro_run_data['id']} does not exist."}
+            )
+        #dont update id
         simapro_run_data.pop('id')
         # Update fields directly
         for attr, value in simapro_run_data.items():
@@ -105,6 +198,11 @@ class ComponentSerializer(serializers.ModelSerializer):
                 simapro_runs_list = validated_data.pop('simapro_runs',[])
                 #iterate over them and update their values:
                 for record in simapro_runs_list:
+                    #make extra validation:
+                    #SimaPro_runsSerializer.check_default_0_0(data=record,vcomponent=instance)
+                    #inform the record with its parent component for the common fields:
+                    self.inform_simapro_run_json(record,component_validated_data=deepcopy(validated_data))
+                    #update current simapro run instance:
                     self.update_simapro_runs(record)
                 obj =  super().update(instance, validated_data)
                 return obj

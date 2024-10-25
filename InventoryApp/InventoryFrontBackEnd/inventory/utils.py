@@ -3,6 +3,10 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
+################################################
+# util 1.
+#sends mail when component changes (not used now)
+#################################################
 def send_email(to_email, subject, html_content):
     message = Mail(
         from_email='nikoschairop@gmail.com                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ',

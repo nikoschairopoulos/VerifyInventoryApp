@@ -35,6 +35,8 @@ from inventory.models import (Component,
                                 CarbonIntensityData,
                                 SimaPro_runs)
 
+from users.models import (CustomUser)
+
 from inventory.api.serializers import ComponentSerializer
 #import pandas as pd 
 
@@ -337,7 +339,42 @@ def update_some_fields_simapro_run():
 update_some_fields_simapro_run()
 '''
 
-simapro_run_set = SimaPro_runs.objects.values_list('vcomponent_id',flat=True)
-breakpoint()
-components = Component.objects.filter(id__in = simapro_run_set)
-breakpoint()
+#simapro_run_set = SimaPro_runs.objects.values_list('vcomponent_id',flat=True)
+#breakpoint()
+#components = Component.objects.filter(id__in = simapro_run_set)
+#breakpoint()
+
+#users = CustomUser.objects.all()
+#for user in CustomUser:
+#breakpoint()
+#inventories =  users[2].inventories.all()
+#breakpoint()
+'''
+all_components = []
+#take current user:
+current_user = CustomUser.objects.get(email='rehouse@verify.gr')
+#take all its inventories:
+inventories = current_user.inventories.all()
+#add all custom components of the inventories:
+for inventory in inventories:
+    all_components.extend(inventory.components.all()) 
+print(len(all_components))
+default_components = Component.objects.filter(IS_MAIN_INVENTORY=True)
+#create overall component List:
+all_components.extend(default_components)
+print(len(all_components))
+component_serializer = ComponentSerializer(all_components,many=True)
+'''
+
+arguments = {
+            'is_superuser':False,
+            'username':'test_user 2',
+            'first_name':'test_name',
+            'last_name':'test_lastname',
+            'email':'test_email',
+            'is_staff':False,
+            'is_active':True
+        }
+#create user:
+user_to_add = CustomUser(**arguments)
+user_to_add.save()

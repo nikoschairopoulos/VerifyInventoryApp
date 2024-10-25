@@ -59,21 +59,7 @@ json_form_behaviour = {
                         "text": "solar thermal panel",
                         "value": "solar",
                         "subtypes": None
-                    }, {
-                        "text": "geo thermal",
-                        "value": "geo",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "district heating",
-                        "value": "district_heating",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "fan coil",
-                        "value": "fan",
-                        "subtypes": None
-                    },
+                    }
                 ],
             },
             {
@@ -135,45 +121,13 @@ json_form_behaviour = {
                 ],
             },
             {
-                "text": 'Ventilation',
-                "value": 'Ventilation',
-                "IS_B_COMPONENT":True,
-                "types": [
-                    {
-                        "text": "mixing ventilation",
-                        "value": "mixing_ventilation",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "displacement ventilation",
-                        "value": "displacement_ventilation",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "stratum ventilation",
-                        "value": "stratum_ventilation ",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "natural ventilation",
-                        "value": "natural_ventilation",
-                        "subtypes": None
-                    },
-                    {
-                        "text": "micro ventilation",
-                        "value": "micro_ventilation",
-                        "subtypes": None
-                    }
-                ],
-            },
-            {
-                "text": 'Electrical Storage (ESS)',
+                "text": 'Energy Storage',
                 "value": "El. Storage",
                 "IS_B_COMPONENT":True,
                 "types": [
                     {
-                        "text": "flywheel",
-                        "value": "flywheel",
+                        "text": "hydrogen storage",
+                        "value": "hydrogen_storage",
                         "subtypes": None
                     },
                 ],
@@ -216,7 +170,12 @@ json_form_behaviour = {
                         "subtypes": None
                     },
                     {
-                        "text": 'Geothermal / Hydro Plant',
+                        "text": 'Geothermal Plant',
+                        "value": "geothermal_hydro_plant",
+                        "subtypes": None
+                    },
+                    {
+                        "text": 'Hydro Plant',
                         "value": "geothermal_hydro_plant",
                         "subtypes": None
                     },
