@@ -7,8 +7,13 @@ json_form_behaviour = {
                 "IS_B_COMPONENT":True,
                 "types": [
                     {
-                        "text": "photovoltaic panel",
+                        "text": "photovoltaic installation",
                         "value": "pv",
+                        "subtypes": None
+                    },
+                                      {
+                        "text": "photovoltaic material",
+                        "value": "pv_material",
                         "subtypes": None
                     },
                     {
