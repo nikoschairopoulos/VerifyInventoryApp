@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import mixins
+from rest_framework import serializers
 from inventory.api.serializers import (ComponentSerializer,
                                        InventorySerializer,
                                        FactorSerializer,
@@ -38,9 +39,10 @@ import pandas as pd
 from inventory.models import CarbonIntensityData,FactorElectricityYear
 #from inventory.api.permissions import IsAdminUserOrReadOnly
 from copy import deepcopy
-from VerifyInventoryApp.InventoryApp.InventoryFrontBackEnd.inventory.VerifyWebAppForm.component_form_reprentation_verify_app import json_form_behaviour
+from inventory.VerifyWebAppForm.component_form_reprentation_verify_app import json_form_behaviour
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import MultipleObjectsReturned
+
 
 def error404(request):
     raise NotFound(detail="Error 404, page not found", code=404)
@@ -672,6 +674,23 @@ class get_all_components_without_simapro_runs(APIView):
         data = ComponentSerializer(components,many=True).data
         return Response(data)
 
+
+##########################################
+#Get all components for Verify B
+#Dataframe - Calculations Modules Creation
+##########################################
+class GetComponentsForCalculationModule(APIView):
+    class ComponentSerializerLocal(serializers.ModelSerializer):
+        class Meta:
+            model = Component
+            fields = '__all__'
+
+    def get(self, request):
+        query_set = Component.objects.all()
+        # Use the nested serializer class
+        serializer = self.ComponentSerializerLocal(query_set, many=True)
+        return Response(serializer.data)
+        
 
 
      
