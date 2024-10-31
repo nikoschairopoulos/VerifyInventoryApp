@@ -715,7 +715,6 @@ export default {
   },
   watch: {
     SHEET_TYPE(newValue) {
-
         // at every change of sheet type make it null:
         this.ugs_header = null
         
