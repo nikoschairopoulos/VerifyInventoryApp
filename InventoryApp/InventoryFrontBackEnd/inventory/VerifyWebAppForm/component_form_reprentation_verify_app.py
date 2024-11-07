@@ -1,3 +1,11 @@
+########################################
+''''''
+#SOS -> Generic Passive at building level 
+# must be the Last record at json List
+''''''
+########################################
+
+
 json_form_behaviour = {
     "building_level": {
         "technologies": [
@@ -161,7 +169,7 @@ json_form_behaviour = {
             },
             {
                 "text": "Building Level - Auxiliary Assets",
-                "value": "generic_passive",
+                "value": "auxiliary",
                 "IS_B_COMPONENT":True,
                 "types": [],
             }
@@ -217,7 +225,7 @@ json_form_behaviour = {
                     },
                     {
                         "text": "Auxilialy",
-                        "value": "generic_passive",
+                        "value": "auxiliary",
                         "subtypes": None
                     }
                 ]}
@@ -239,7 +247,7 @@ json_form_behaviour = {
                     },
                     {
                         "text": "Auxilialy",
-                        "value": "generic_passive",
+                        "value": "auxiliary",
                         "subtypes": None
                     }
                 ],
@@ -271,7 +279,7 @@ json_form_behaviour = {
                     },
                     {
                         "text": "Auxilialy",
-                        "value": "generic_passive",
+                        "value": "auxiliary",
                         "subtypes": None
                     }
                 ],
@@ -303,7 +311,7 @@ json_form_behaviour = {
                     },
                     {
                         "text": "Auxilialy",
-                        "value": "generic_passive",
+                        "value": "auxiliary",
                         "subtypes": None
                     }
                 ],
