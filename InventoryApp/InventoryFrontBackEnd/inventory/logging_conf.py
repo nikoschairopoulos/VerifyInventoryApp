@@ -46,5 +46,10 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'serialzers':{
+            'handlers': ['console'],
+            'level': 'INFO',  # Control the minimum level for myapp logger
+            'propagate': False,
+        }
     }
 }
