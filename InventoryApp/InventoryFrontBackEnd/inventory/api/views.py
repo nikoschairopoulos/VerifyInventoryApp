@@ -657,7 +657,10 @@ class get_embobied_eol_values(APIView):
 #####################################
 class FormRepresentationVerifyApp(APIView):
     def get(self,request):
-        result = json_form_behaviour
+        result  = deepcopy(json_form_behaviour)
+        result['building_level']['technologies'][-1]['types'] = [{'text':elem['text'],'value':elem['value']} 
+                                                                for elem in json_form_behaviour['building_level']['technologies']
+                                                                if elem['text']!='Building Level - Auxiliary Assets']
         return Response(result)
 
 

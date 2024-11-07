@@ -158,6 +158,12 @@ json_form_behaviour = {
                         "subtypes": None
                     },
                 ],
+            },
+            {
+                "text": "Building Level - Auxiliary Assets",
+                "value": "generic_passive",
+                "IS_B_COMPONENT":True,
+                "types": [],
             }
         ]
     },
@@ -208,6 +214,11 @@ json_form_behaviour = {
                         "text": "Wind Park",
                         "value": "wind_park",
                         "subtypes": None
+                    },
+                    {
+                        "text": "Auxilialy",
+                        "value": "generic_passive",
+                        "subtypes": None
                     }
                 ]}
             ,
@@ -224,6 +235,11 @@ json_form_behaviour = {
                     {
                         "text": 'Conventional Vehicle',
                         "value": "conventional_vehicle",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Auxilialy",
+                        "value": "generic_passive",
                         "subtypes": None
                     }
                 ],
@@ -252,6 +268,11 @@ json_form_behaviour = {
                         "text": 'Interconnection',
                         "value": "interconnection",
                         "subtypes": None
+                    },
+                    {
+                        "text": "Auxilialy",
+                        "value": "generic_passive",
+                        "subtypes": None
                     }
                 ],
             },
@@ -267,17 +288,22 @@ json_form_behaviour = {
                     },
                     {
                         "text": "battery lead acid",
-                        "value": "lead_acid",
+                        "value": "battery_lead_acid",
                         "subtype": None
                     },
                     {
                         "text": "battery flow",
-                        "value": "flow",
+                        "value": "battery_flow",
                         "subtypes": None
                     },
                     {
                         "text": "flywheel",
                         "value": "flywheel",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Auxilialy",
+                        "value": "generic_passive",
                         "subtypes": None
                     }
                 ],
