@@ -42,6 +42,7 @@ from copy import deepcopy
 from inventory.VerifyWebAppForm.component_form_reprentation_verify_app import json_form_behaviour
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def error404(request):
@@ -658,7 +659,7 @@ class get_embobied_eol_values(APIView):
 class FormRepresentationVerifyApp(APIView):
     def get(self,request):
         result  = deepcopy(json_form_behaviour)
-        result['building_level']['technologies'][-1]['types'] = [{'text':elem['text'],'value':elem['value']} 
+        result['building_level']['technologies'][-1]['types'] = [{'text':elem['text'],'value':elem['value'],'subtypes':None} 
                                                                 for elem in json_form_behaviour['building_level']['technologies']
                                                                 if elem['text']!='Building Level - Auxiliary Assets']
         return Response(result)
@@ -693,7 +694,82 @@ class GetComponentsForCalculationModule(APIView):
         # Use the nested serializer class
         serializer = self.ComponentSerializerLocal(query_set, many=True)
         return Response(serializer.data)
+    
+##########################################
+#  Return information about components
+#  for the automated forms
+'''
+STAGE A
+- LCA software used
+- GWP Impact Assessment Method
+- PE Impact Assessment Method
+- Database
+- Comments
+
+STAGE C
+- LCA software used
+- GWP Impact Assessment Method
+- PE Impact Assessment Method
+- Database
+- Comments
+'''
+##########################################
+
+class ReportInfoComponents(APIView):
+    def post(self, request):
+        # Take JSON (request.data is already parsed to a dictionary)
+        form_data = request.data
         
+        result = {scenario_name: {'STAGE_A': [], 'STAGE_C': [], 'components': []} for scenario_name in form_data.keys()}
 
+        # Iterate over scenarios
+        for scenario_name, components in form_data.items():
+            for component in components:
+                try:
+                    # Fetch component from the database
+                    comp_instance = Component.objects.get(pk=component)
+                    comp_serializer = ComponentSerializer(comp_instance)
+                    result[scenario_name]['components'].append(comp_serializer.data)
+                except ObjectDoesNotExist:
+                    return Response({'error': 'There is no component with this specific id'}, status=status.HTTP_404_NOT_FOUND)
+                except MultipleObjectsReturned:
+                    return Response({'error': 'Multiple components found for the same id'}, status=status.HTTP_409_CONFLICT)
 
-     
+            # Distribute the stage data for A and C stages
+            for stage_type in {'A', 'C'}:
+                components_of_scenario = result[scenario_name]['components']
+                result[scenario_name][f'STAGE_{stage_type}'] = self.distribute_the_stages(components_of_scenario, stage_type=stage_type)
+            
+            # Remove 'components' key from the result for each scenario
+            del result[scenario_name]['components']
+
+        return Response(result)
+
+    def distribute_the_stages(self, scenario_components, stage_type):
+        result = {}
+        attributes_to_include = [
+            'LCA_version',
+            'IA_method_GWP',
+            'IA_method_PE',
+            'comments',
+            'LCA_DB',
+        ]
+        
+        # create the correct columns to search
+        filtered = [f'stage_{stage_type}_' + attr for attr in attributes_to_include] + ['vcomponent_id','fu_quantity']
+        db_index = [index for index,comp in enumerate(filtered) if comp[-2:] == 'DB'][0]
+        filtered[db_index] = f'Stage_{stage_type}_LCA_DB' 
+        # Iterate over each component in the scenario to distribute stage data
+        for component in scenario_components:
+            # Apply min function to get the Simapro run with the minimum fu_quantity
+            min_simapro_run = min(component['simapro_runs'], key=lambda x: x.get('fu_quantity', float('inf')))
+            
+            # Update the result with filtered stage data
+            result[component['name']] = {
+                k: v for k, v in min_simapro_run.items() if k in filtered
+            }
+
+        
+        return result
+
+            
