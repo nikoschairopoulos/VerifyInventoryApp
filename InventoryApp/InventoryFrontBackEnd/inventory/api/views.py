@@ -557,7 +557,7 @@ class get_embobied_eol_values(APIView):
                     "embodied_co2": 0,
                     "embodied_pe": 0,
                     "eol_co2": 0,
-                    "eol_pe": 0
+                    "eol_pe": 0,
                 }
             )
         
@@ -567,6 +567,10 @@ class get_embobied_eol_values(APIView):
                                  component_rating=component_rating,
                                  entries_for_eol=entries_list[0])
         
+        #Add extra info:
+        AUTOMATED_FORM_INFO = {f'STAGE_{stage_type}':self.distribute_the_stages([lci_id],stage_type=stage_type) 
+                                                    for stage_type in{'A','C'}}
+        self.result.update({'extra_info':AUTOMATED_FORM_INFO})
         #return the result:
         return Response(self.result)
 
@@ -650,6 +654,35 @@ class get_embobied_eol_values(APIView):
     def sort_tuples_by_first_element(self,tuple_list):
         # Sort the list of tuples by the first element in each tuple
         return sorted(tuple_list, key=lambda x: x[0])
+
+    def distribute_the_stages(self, lci_id, stage_type):
+        comp_instance = Component.objects.get(pk=lci_id[0])
+        scenario_components =   [ComponentSerializer(comp_instance).data]
+        
+        result = {}
+        attributes_to_include = [
+            'LCA_version',
+            'IA_method_GWP',
+            'IA_method_PE',
+            'comments',
+            'LCA_DB',
+        ]
+        
+        # create the correct columns to search
+        filtered = [f'stage_{stage_type}_' + attr for attr in attributes_to_include] + ['vcomponent_id','fu_quantity']
+        db_index = [index for index,comp in enumerate(filtered) if comp[-2:] == 'DB'][0]
+        filtered[db_index] = f'Stage_{stage_type}_LCA_DB' 
+        # Iterate over each component in the scenario to distribute stage data
+        for component in scenario_components:
+            # Apply min function to get the Simapro run with the minimum fu_quantity
+            min_simapro_run = min(component['simapro_runs'], key=lambda x: x.get('fu_quantity', float('inf')))
+            
+            # Update the result with filtered stage data
+            result[component['name']] = {
+                k: v for k, v in min_simapro_run.items() if k in filtered
+            }
+
+        return result
 
 
 #####################################
@@ -744,7 +777,8 @@ class ReportInfoComponents(APIView):
             del result[scenario_name]['components']
 
         return Response(result)
-
+    
+    @staticmethod
     def distribute_the_stages(self, scenario_components, stage_type):
         result = {}
         attributes_to_include = [
@@ -771,5 +805,7 @@ class ReportInfoComponents(APIView):
 
         
         return result
+
+
 
             
