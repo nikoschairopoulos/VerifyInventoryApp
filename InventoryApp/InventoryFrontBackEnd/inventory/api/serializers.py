@@ -15,6 +15,14 @@ from rest_framework.exceptions import NotFound
 from copy import deepcopy
 from django.db import transaction
 from users.models import CustomUser
+from inventory.logging_conf import LOGGING
+
+#Add logging
+import logging
+# Configure logging using the loaded configuration
+logging.config.dictConfig(LOGGING)
+# Get the new logger
+logger = logging.getLogger('serializers')
 
 
 ##############################
@@ -33,12 +41,16 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
         #exclude = ['vcomponent_id']
         fields = '__all__'
     def create(self, validated_data):
+        #print('i am inside serializer create')
         #Framework by it self mapping the id provided by json and
         #an at validated data gives the vcomponent_instance
         vcomponent_instance =  validated_data.pop('vcomponent_id',None)
         if not vcomponent_instance:
             raise NotFound(f'There is no related virtaul component with the given LCI id')
-        #pass the related instance:
+        #update common data with its parent component
+        #for attribute in vars(vcomponent_instance).keys() & validated_data.keys() - {"name"}:
+        #    validated_data[attribute] = getattr(vcomponent_instance,attribute)
+        #pass the related instance and create the component:
         new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = vcomponent_instance, **validated_data)
         return new_regression_instance
 
@@ -57,6 +69,8 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
     
     
     def validate(self,data):
+        #print('i am inside serializer create')
+        #logger.info('message:isnide simapro run serializer validator')
         ## add extra validation in case component has assumption (0,0) simapro run like District Heating
         ## Then can only have one simapro run -> with fu quantity = 0 and all the numerics other zeros:
         #if 'vcomponent_id' in data:
