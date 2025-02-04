@@ -43,7 +43,6 @@ from inventory.VerifyWebAppForm.component_form_reprentation_verify_app import js
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.cache import cache
 
 
 def error404(request):
@@ -53,25 +52,6 @@ class ComponentViewSet(ModelViewSet):
     queryset = Component.objects.all()
     serializer_class = ComponentSerializer
     #permission_classes = [IsAuthenticated]
-    # set the cache key:
-    cache_key = 'component'
-
-    def list(self, request, *args, **kwargs):
-        # Create a unique cache key based on the query parameters or the request
-        #cache_key = self.get_cache_key(request)
-        # Try to get the cached data
-        cached_data = cache.get(self.cache_key)
-
-        if cached_data is None:
-            # If the data is not in the cache, fetch it from the database
-            response = super().list(request, *args, **kwargs)
-            # Cache the data for 15 M (60*15 seconds)
-            cache.set(self.cache_key, response.data, timeout=60*15)
-            return response
-        else:
-            # If the data is found in the cache, return the cached data
-            return Response(cached_data)
-        
 
     def perform_destroy(self, instance):
         try:
@@ -81,7 +61,7 @@ class ComponentViewSet(ModelViewSet):
             return {'exception':'lci id is not provided at delete request - something went wrong'}
         # if there is no warnings delete the components:
         if not warning:
-             instance.delete(self.cache_key)
+             instance.delete()
              return{'success':{'component has been deleted'}}
         message = {f'warn_{index}':warn  for index,warn in enumerate(warning)}
         return message
@@ -95,7 +75,6 @@ class ComponentViewSet(ModelViewSet):
             return Response(result['exception'],status.HTTP_400_BAD_REQUEST)
         #successfull Deletion: 
         elif 'success' in result:
-            cache.delete(self.cache_key) 
             return Response(status=status.HTTP_204_NO_CONTENT)
         #component has usage -> show warns at vue js modals
         else:
@@ -123,26 +102,10 @@ class ComponentViewSet(ModelViewSet):
                         if v is not None}
                 warnings.append(record)        
         return warnings
+    
+    
 
-    def update(self, request, *args, **kwargs):
-        response_instance = super().update(request,*args,**kwargs)
-        if response_instance.status_code in {200, 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    
-    def create(self, request, *args, **kwargs):
-        response_instance = super().create(request,*args,**kwargs)
-        if response_instance.status_code in {200, 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    
-    def destroy(self, request, *args, **kwargs):
-        response_instance = super().destroy(request, *args, **kwargs)
-        if response_instance.status_code in {200 , 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    
-    
+ 
 
 class InventoryViewSet(ModelViewSet):
     queryset=Inventory.objects.all()
@@ -171,23 +134,6 @@ class RegressionValuesViewSet(ModelViewSet):
 class SimaPro_runsViewSet(ModelViewSet):
     queryset = SimaPro_runs.objects.all()
     serializer_class = SimaPro_runsSerializer
-    cache_key = 'component'
-    def create(self, request, *args, **kwargs):
-        response_instance = super().create(request, *args, **kwargs)
-        if response_instance.status_code in {200 , 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    def update(self, request, *args, **kwargs):
-        response_instance = super().update(request, *args, **kwargs)
-        if response_instance.status_code in {200 , 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    def destroy(self, request, *args, **kwargs):
-        response_instance = super().destroy(request, *args, **kwargs)
-        if response_instance.status_code in {200 , 201, 204}:
-            cache.delete(self.cache_key)
-        return response_instance
-    
     #permission_classes = [IsAuthenticated]
     #this called form create method when post request is called
     #calls create method of serializer (by default - if you want you can add totaly custom logic)
@@ -624,7 +570,6 @@ class get_embobied_eol_values(APIView):
         #Add extra info:
         AUTOMATED_FORM_INFO = {f'STAGE_{stage_type}':self.distribute_the_stages([lci_id],stage_type=stage_type) 
                                                     for stage_type in{'A','C'}}
-        
         self.result.update({'extra_info':AUTOMATED_FORM_INFO})
         #return the result:
         return Response(self.result)
@@ -681,18 +626,17 @@ class get_embobied_eol_values(APIView):
         x2, x1 = measurements_list[point][0] , measurements_list[point-1][0]
         y2, y1 = measurements_list[point][1] , measurements_list[point-1][1]
         
-        embodied_value = self.get_regression_value(y2,y1,x2,x1,component_rating,
-                                                   point = point,
-                                                   component_rating = component_rating)
+        embodied_value = self.get_regression_value(y2,y1,x2,x1,component_rating)
         return embodied_value
     
-    def get_regression_value(self, y2, y1, x2, x1, rating, point, component_rating):
+    def get_regression_value(self,y2,y1,x2,x1,rating):
+        #create_slope:
         try:
-            slope = (y2 - y1) / (x2 - x1)
-            if point != -1:
-                return slope * (rating - x1) + y1
-            else:
-                return (y2 / x2) * component_rating
+            slope = (y2-y1)/(x2-x1)
+            # create the linear function:
+            linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
+            #return result:
+            return linear_func(rating,slope,x1,y1)
         except ZeroDivisionError:
             raise ValidationError({'detail': 'Division by zero encountered during regression calculation.'})
 
