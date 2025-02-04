@@ -552,14 +552,8 @@ class get_embobied_eol_values(APIView):
         check = self.check_points(co2_values=co2_values,pe_values=pe_values)
         if check:
             #if it is a '0 rating' component return 0 at all keys else continue:
-            return Response(
-                {
-                    "embodied_co2": 0,
-                    "embodied_pe": 0,
-                    "eol_co2": 0,
-                    "eol_pe": 0,
-                }
-            )
+            embodied_plus_extra_info = self.fill_with_null_extra_info(lci_id=lci_id)
+            return Response(embodied_plus_extra_info)
         
         #continue regression after validations:
         self.continue_regression(co2_values=co2_values,
@@ -573,6 +567,44 @@ class get_embobied_eol_values(APIView):
         self.result.update({'extra_info':AUTOMATED_FORM_INFO})
         #return the result:
         return Response(self.result)
+
+    # is for district heating component etc
+    def fill_with_null_extra_info(self,lci_id):
+        component = Component.objects.get(pk = lci_id)
+        
+        # add zeros at embodied - eol
+        result = {"embodied_co2": 0,
+                     "embodied_pe": 0,
+                     "eol_co2": 0,
+                     "eol_pe": 0
+                 }
+        
+        # add null to extra info
+        result['extra_info'] =  {
+            "STAGE_A": {
+                f"{component.name}": {
+                    "fu_quantity": None,
+                    "stage_A_LCA_version": None,
+                    "stage_A_IA_method_GWP": None,
+                    "stage_A_IA_method_PE": None,
+                    "stage_A_comments": None,
+                    "vcomponent_id": None,
+                    "stage_A_LCA_DB": None
+                }
+            },
+            "STAGE_C":{
+            f"{component.name}": {
+                    "fu_quantity": None,
+                    "stage_C_LCA_version": None,
+                    "stage_C_IA_method_GWP": None,
+                    "stage_C_IA_method_PE": None,
+                    "stage_C_comments": None,
+                    "vcomponent_id": None,
+                    "stage_C_LCA_DB": None
+                }
+            }
+        }                    
+        return result
 
     def continue_regression(self,co2_values,pe_values,component_rating,entries_for_eol):
         # Continue making them with asceding order adding (0,0) for regression first point:
