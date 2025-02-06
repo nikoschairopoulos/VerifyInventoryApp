@@ -8,7 +8,8 @@ from inventory.models import (Inventory,
                               FactorElectricityYear,
                               LoggingComponent,
                               RegressionValues,
-                              SimaPro_runs)
+                              SimaPro_runs,
+                              DeletedComponent) 
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 from rest_framework.exceptions import NotFound 
@@ -381,31 +382,11 @@ class RegressionValuesSerializer(serializers.ModelSerializer):
             return None  # Return None to store it as NULL in the database
         return value
 
-##############################
-# SimaPro_runs Serializer
-##############################
-'''
-class SimaPro_runsSerializer(serializers.ModelSerializer):
-    #component_lci_id = serializers.IntegerField(write_only=True)
-    FK_lci_id = serializers.IntegerField(source='vcomponent_id.id', read_only=True)
-    #related_component_name = serializers.CharField(source='fk.name',read_only=True)
+class DeletedComponentSerializer(serializers.ModelSerializer):
+    # for post request -> dont take into account:
+    simapro_runs_records = serializers.JSONField(required=False)
     class Meta:
-        model = SimaPro_runs
-        #exclude = ['vcomponent_id']
+        model = DeletedComponent
         fields = '__all__'
-    def create(self, validated_data):
-        #component_lci_id = validated_data.pop('component_lci_id',None)
-        vcomponent_instance =  validated_data.pop('vcomponent_id',None)
-        if not vcomponent_instance:
-            raise NotFound(f'There is no related virtaul component with the given LCI id')
-        #pass the related instance:
-        new_regression_instance = SimaPro_runs.objects.create(vcomponent_id = vcomponent_instance, **validated_data)
-        return new_regression_instance
-'''
-
-###############################
-#To implement nested Attributes 
-#between component and simaproRuns  (#TODO)
-###############################
         
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import serializers
-from inventory.api.serializers import (ComponentSerializer,
+from inventory.api.serializers import (ComponentSerializer, DeletedComponentSerializer,
                                        InventorySerializer,
                                        FactorSerializer,
                                        CarbonIntensityDataSerializer,
@@ -15,7 +15,8 @@ from inventory.models import (Component,
                               Inventory,
                               LoggingComponent,
                               RegressionValues,
-                              SimaPro_runs)
+                              SimaPro_runs,
+                              DeletedComponent)
 
 from users.models import CustomUser
 
@@ -145,6 +146,10 @@ class SimaPro_runsViewSet(ModelViewSet):
     #def create(self, request, *args, **kwargs):
     #    request.data = json.loads(request.data)
     #    super().create(request,*args,**kwargs)
+
+class DeletedComponentsViewSet(ModelViewSet):
+    queryset = DeletedComponent.objects.all()
+    serializer_class = DeletedComponentSerializer
     
     
 

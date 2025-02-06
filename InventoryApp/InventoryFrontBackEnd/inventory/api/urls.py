@@ -27,7 +27,8 @@ from inventory.api.views import (
           get_all_components_without_simapro_runs,
           Fetch_Specific_User_Custom_Plus_Defaults,
           GetComponentsForCalculationModule,
-          ReportInfoComponents
+          ReportInfoComponents,
+          DeletedComponentsViewSet
         )
 #out of this app views
 from users.views import CreateUser
@@ -42,6 +43,7 @@ router.register(r"component",ComponentViewSet )
 router.register(r"inventory", InventoryViewSet)
 router.register(r"factor",FactorViewSet)
 router.register(r"simapro_runs",SimaPro_runsViewSet)
+router.register(r"deleted_component",DeletedComponentsViewSet)
 #router.register(r"regression_values",RegressionValuesViewSet)
 
 urlpatterns = [

@@ -1,7 +1,7 @@
 import logging
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, pre_delete
 from django.dispatch import receiver
-from .models import Component
+from .models import Component, DeletedComponent
 from pathlib import Path
 import json 
 from .logging_conf import LOGGING
@@ -77,4 +77,14 @@ def log_component_update(sender, instance, created, **kwargs):
                 log_entry_to_db.save()
         except KeyError:
             pass
+
+@receiver(pre_delete,sender=Component)
+def create_copy_of_the_component(sender,instance,**kwargs):
+    try:
+        deleted_component_to_be_commited_at_db = DeletedComponent(base_component = instance, create_ops = True)
+    except Exception as e:
+        print(e)
+        print(f' {instance.name} deleted component failed to be saved')
+        pass
+
 

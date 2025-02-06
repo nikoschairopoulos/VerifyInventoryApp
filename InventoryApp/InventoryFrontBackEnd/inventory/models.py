@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+import json
+#from inventory.api.serializers import SimaPro_runsSerializer
 
 '''
 models:  1.users
@@ -211,6 +213,92 @@ class SimaPro_runs(models.Model):
     # dunders:
     def _str_(self):
         return f"{self.name} {self.fu_quantity}"
+    
+#######
+# In this class every deleted component with its corresponding
+# simapro runs is loaded at this table in order 
+# to retrieve it, every time is needed
+
+#['inventories', 'loggingcomponent', 'regressionvalues', 'simapro_runs', 'deletedcomponent', 'id', 'name', 'component_type',
+#  'component_subtype', 'capex_per_ugs', 'opex_per_capex', 'embodied_co2_per_ugs', 'embodied_pe_per_ugs', 'lifetime', 'pref_cost', 
+# 'pref_env', 'scale_cost', 'scale_env', 'major_upgrade_point', 'major_upgrade_share', 'annual_performance_degradation', 'replace_or_die',
+#  'SHEET_TYPE', 'IS_MAIN_INVENTORY', 'bibliography', 'description', 'thermal_properties', 'IS_B_COMPONENT', 'eol_pe_cost', 'eol_co2_cost', 
+# 'simapro_version', 'ia_method_ghg', 'ia_method_pe', 'lca_db', 'functional_unit']
+#######
+
+class DeletedComponent(models.Model):
+    # add simapro runs field (new field):
+    simapro_runs_records =  models.JSONField(null=True,blank=True)
+    # add the other components:
+    name = models.CharField(max_length=250,unique=True)
+    component_type = models.CharField(max_length=250,db_column='type')  ##
+    component_subtype = models.CharField(max_length=250,db_column='subtype',null=True,blank=True) ##
+    capex_per_ugs =  models.FloatField(db_column='capex/u.g.s.',null=True,blank=True) 
+    opex_per_capex = models.FloatField(db_column='opex_per_capex',null=True,blank=True) 
+    embodied_co2_per_ugs = models.FloatField(db_column='embodied_co2/u.g.s.',null=True,blank=True) 
+    embodied_pe_per_ugs = models.FloatField(db_column='embodied_pe/u.g.s.',null=True,blank=True) 
+    lifetime = models.FloatField()  ## 
+    pref_cost = models.FloatField(db_column='Pref_cost',null=True,blank=True) 
+    pref_env = models.FloatField(db_column='Pref_env',null=True,blank=True) 
+    scale_cost = models.FloatField(null=True,blank=True) 
+    scale_env = models.FloatField(null=True,blank=True) 
+    major_upgrade_point = models.FloatField(null=True,blank=True) 
+    major_upgrade_share = models.FloatField(null=True,blank=True) 
+    annual_performance_degradation = models.FloatField()   
+    replace_or_die = models.CharField(max_length=250) 
+    SHEET_TYPE = models.CharField(null=True,max_length=250)          
+    IS_MAIN_INVENTORY = models.BooleanField(null=True)                 
+    bibliography = models.TextField(blank=True,null=True)
+    description = models.TextField(blank=True,null=True)
+    thermal_properties = models.JSONField(null=True) 
+    IS_B_COMPONENT = models.BooleanField(null=True) 
+    eol_pe_cost = models.FloatField(null=True,blank=True)
+    eol_co2_cost = models.FloatField(null=True,blank=True)
+    ######## (new attributes to confront with new Database Fields:)
+    simapro_version = models.CharField(null=True,blank=True)
+    ia_method_ghg   = models.CharField(null=True,blank=True)
+    ia_method_pe    = models.CharField(null=True,blank=True)
+    lca_db          = models.CharField(null=True,blank=True)
+    functional_unit = models.CharField(null=True,blank=True)
+    
+    class Meta:
+        app_label = 'inventory'
+
+    def __init__(self,*args,**kwargs):
+        # call base constructor:
+        super().__init__(*args)
+        if 'base_component' not in kwargs:
+            return
+        else:
+            component_to_delete = Component.objects.get(pk=kwargs['base_component'].id)
+            # continue you will create 
+            # a deleted object because from signals
+            # toy take create ops key:
+            # make initializations:
+            fields = [field.name for field in component_to_delete._meta.get_fields()]
+            for field in fields:
+                if field not in {'inventories', 'loggingcomponent', 'regressionvalues', 'simapro_runs', 'id'}:
+                    setattr(self,field,getattr(component_to_delete,field))
+
+            # handle simapro runs:
+            related_simapro_runs_quey_set = component_to_delete.simapro_runs.all()
+            SimaPro_runsSerializer = self.get_serializer()
+            ser = SimaPro_runsSerializer(related_simapro_runs_quey_set,many=True)
+            self.simapro_runs_records = ser.data
+            #self.simapro_runs_record = json.dumps(list(component_to_delete.simapro_runs.all().values()))
+            # commit to DB:
+            self.save()
+
+    #def __str__(self):
+    #    return f" deleted -> {self.name} {self.component_type} {self.component_subtype}"
+
+    def get_serializer(self):
+        from inventory.api.serializers import SimaPro_runsSerializer
+        return SimaPro_runsSerializer
+    
+
+
+
     
 
 
