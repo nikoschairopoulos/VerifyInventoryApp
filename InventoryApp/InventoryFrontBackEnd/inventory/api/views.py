@@ -663,17 +663,19 @@ class get_embobied_eol_values(APIView):
         x2, x1 = measurements_list[point][0] , measurements_list[point-1][0]
         y2, y1 = measurements_list[point][1] , measurements_list[point-1][1]
         
-        embodied_value = self.get_regression_value(y2,y1,x2,x1,component_rating)
+        embodied_value = self.get_regression_value(y2,y1,x2,x1,
+                                                   point = point,
+                                                   component_rating = component_rating)
         return embodied_value
     
-    def get_regression_value(self,y2,y1,x2,x1,rating):
+    def get_regression_value(self,y2,y1,x2,x1,point,component_rating):
         #create_slope:
         try:
-            slope = (y2-y1)/(x2-x1)
-            # create the linear function:
-            linear_func = lambda x , coeff, x0 , y0: coeff * (x - x0)  + y0   
-            #return result:
-            return linear_func(rating,slope,x1,y1)
+            slope = (y2 - y1) / (x2 - x1)
+            if point != -1:
+                return slope * (component_rating - x1) + y1
+            else:
+                return (y2 / x2) * component_rating
         except ZeroDivisionError:
             raise ValidationError({'detail': 'Division by zero encountered during regression calculation.'})
 

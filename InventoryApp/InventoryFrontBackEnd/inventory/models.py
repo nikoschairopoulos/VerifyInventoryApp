@@ -263,7 +263,9 @@ class DeletedComponent(models.Model):
     
     class Meta:
         app_label = 'inventory'
-
+    # args is when fetches from DB
+    # kwargs when a new object is created 
+    # from its base
     def __init__(self,*args,**kwargs):
         # call base constructor:
         super().__init__(*args)

@@ -33,7 +33,7 @@ django.setup()
 from inventory.models import (Component, 
                                 Factor,
                                 CarbonIntensityData,
-                                SimaPro_runs)
+                                SimaPro_runs,DeletedComponent)
 
 from users.models import (CustomUser)
 
@@ -306,7 +306,7 @@ df_all.to_csv('custom_components_from_component_to_simapro_runs.csv')
 
 
 
-
+'''
 ## this method will much the FK -> sheet type , type , subtype , IS_MAIN_INVENTORY 
 def update_some_fields_simapro_run():
     simapro_runs_queryset = SimaPro_runs.objects.all()
@@ -319,7 +319,7 @@ def update_some_fields_simapro_run():
         instance.component_type = vc[0].component_type
         instance.component_subtype = vc[0].component_subtype
         instance.save()
-
+'''
 #pdate_some_fields_simapro_run()
 
 '''
@@ -376,6 +376,8 @@ component_serializer = ComponentSerializer(all_components,many=True)
             'is_active':True
         }
 '''
+
+'''
 from inventory.models import Inventory
 from django.contrib.auth import get_user_model
 
@@ -408,3 +410,40 @@ for user in users:
         # Add all unique components to the new inventory
         new_inventory.components.add(*unify_inventory_components_flat)
         new_inventory.save()
+'''
+# if you add .all() you take all the query ser
+# otherwise you take only the Related manager
+# which is not iterable
+#test_component = Component.objects.get(pk=1)
+#print(list(test_component.simapro_runs.all().values()))
+#breakpoint()
+#d1 = DeletedComponent(base_component = test_component,create_ops = True)
+    #my_field = ._meta.get_field('my_field')
+    #print(o)
+    #print(o._meta.fields)
+
+
+#############
+# pv materieals change sheet type:
+# update its corresponding simapro runs:
+#############
+
+def update_some_fields_simapro_run():
+    queryset = SimaPro_runs.objects.all()
+    for instance in queryset:
+        if instance.SHEET_TYPE == "pv_materials":
+            instance.SHEET_TYPE =='El. Generators'
+            instance.save()
+
+def update_pv_materials():
+    queryset = Component.objects.all()
+    for instance in queryset:
+        if instance.SHEET_TYPE == "pv_materials":
+            instance.SHEET_TYPE = 'El. Generators'
+            instance.save()
+
+
+
+if __name__=="__main__":
+    update_pv_materials()
+    update_some_fields_simapro_run()
