@@ -709,8 +709,8 @@ class get_embobied_eol_values(APIView):
         
         # create the correct columns to search
         filtered = [f'stage_{stage_type}_' + attr for attr in attributes_to_include] + ['vcomponent_id','fu_quantity']
-        db_index = [index for index,comp in enumerate(filtered) if comp[-2:] == 'DB'][0]
-        filtered[db_index] = f'Stage_{stage_type}_LCA_DB' 
+        #db_index = [index for index,comp in enumerate(filtered) if comp[-2:] == 'DB'][0]
+        #filtered[db_index] = f'stage_{stage_type}_LCA_DB' 
         # Iterate over each component in the scenario to distribute stage data
         for component in scenario_components:
             # Apply min function to get the Simapro run with the minimum fu_quantity
@@ -831,7 +831,7 @@ class ReportInfoComponents(APIView):
         # create the correct columns to search
         filtered = [f'stage_{stage_type}_' + attr for attr in attributes_to_include] + ['vcomponent_id','fu_quantity']
         db_index = [index for index,comp in enumerate(filtered) if comp[-2:] == 'DB'][0]
-        filtered[db_index] = f'Stage_{stage_type}_LCA_DB' 
+        filtered[db_index] = f'stage_{stage_type}_LCA_DB' 
         # Iterate over each component in the scenario to distribute stage data
         for component in scenario_components:
             # Apply min function to get the Simapro run with the minimum fu_quantity
