@@ -198,8 +198,8 @@ class SimaPro_runs(models.Model):
     stage_C_comments = models.TextField(null=True,blank=True)
     general_comments = models.TextField(null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True,blank=True)
-    Stage_A_LCA_DB = models.TextField(null=True,blank=True)
-    Stage_C_LCA_DB = models.TextField(null=True,blank=True)
+    stage_A_LCA_DB = models.TextField(null=True,blank=True)
+    stage_C_LCA_DB = models.TextField(null=True,blank=True)
     #########################################################################
     # the 2 bellow fields must be the same as (parent component - FK), 
     # at component Table:
