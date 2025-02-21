@@ -46,10 +46,22 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         return super().update(instance, validated_data)
     
+    ##############
+    # validations:
+    ##############
+
     def validate_component_type(self, value):
         if value == "":  # If the component_subtype is an empty string
             return None  # Return None to store it as NULL in the database
         return value
+    
+    def validate_stage_A_LCA_version(self,value):
+        if value is None:
+            raise serializers.ValidationError("stage_A_LCA_version can not be null")
+    
+    def validate_stage_C_LCA_version(self,value):
+        if value is None:
+            raise serializers.ValidationError("stage_C_LCA_version can not be null")
 
     def validate_component_subtype(self, value):
         if value == "":  # If the component_subtype is an empty string
@@ -129,6 +141,7 @@ class ComponentSerializer(serializers.ModelSerializer):
                 created_component = Component.objects.create(**validated_data)
                 #if you have simapro runs iterate over them, to create the components simapro run
                 if simapro_runs:
+                    self.check_if_lca_version_is_none(simapro_runs=simapro_runs)
                     for simapro_run in simapro_runs:
                         #make an extra validation:
                         #SimaPro_runsSerializer.check_default_0_0(data=simapro_run,vcomponent=created_component)
@@ -145,6 +158,11 @@ class ComponentSerializer(serializers.ModelSerializer):
         except Exception as e:
             print(e)
             raise serializers.ValidationError({'error': str(e)})
+    # this method checks if 
+    def check_if_lca_version_is_none(self,simapro_runs):
+        for run in simapro_runs:
+            if run["stage_A_LCA_version"] is None or run["stage_C_LCA_version"] is None:
+                raise serializers.ValidationError({'error':'stage_A_LCA_version and "stage_C_LCA_version" must be non null - check your request body'})
     
     def add_custom_component_at_users_inventory(self,email,inventory_id):
         pass
