@@ -58,10 +58,12 @@ class SimaPro_runsSerializer(serializers.ModelSerializer):
     def validate_stage_A_LCA_version(self,value):
         if value is None:
             raise serializers.ValidationError("stage_A_LCA_version can not be null")
+        return value
     
     def validate_stage_C_LCA_version(self,value):
         if value is None:
             raise serializers.ValidationError("stage_C_LCA_version can not be null")
+        return value
 
     def validate_component_subtype(self, value):
         if value == "":  # If the component_subtype is an empty string
