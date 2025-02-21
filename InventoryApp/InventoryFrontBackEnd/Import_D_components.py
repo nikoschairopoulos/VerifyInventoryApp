@@ -445,7 +445,32 @@ def update_pv_materials():
 
 def update_simapro_version_pv_installations():
     #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
+    queryset = Component.objects.filter(component_type="pv", IS_MAIN_INVENTORY = True) # queryset[0] returns instance
+    breakpoint()
+    #'RelatedManager'
+    for instance in queryset:
+        for simapro_run in instance.simapro_runs.all():
+            simapro_run.stage_A_LCA_version = "SimaPro 9.5.0.2"
+            simapro_run.stage_C_LCA_version = "SimaPro 9.5.0.2"
+            # commit at DB
+            simapro_run.save()
+
+
+def make_null_simapro_version_pv_installations():
+    #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
     queryset = Component.objects.filter(component_type="pv") # queryset[0] returns instance
+    for instance in queryset:
+        for simapro_run in instance.simapro_runs.all():
+            simapro_run.stage_A_LCA_version = None
+            simapro_run.stage_C_LCA_version = None
+            # commit at DB
+            simapro_run.save()
+
+def update_simapro_version_pv_installations():
+    #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
+    queryset = Component.objects.filter(component_type="pv", IS_MAIN_INVENTORY = True) # queryset[0] returns instance
+    if queryset > 5:
+        raise Exception('you try to change something you should not')
     #'RelatedManager'
     for instance in queryset:
         for simapro_run in instance.simapro_runs.all():
@@ -456,4 +481,12 @@ def update_simapro_version_pv_installations():
 
 
 if __name__=="__main__":
-    update_simapro_version_pv_installations()
+    print("press 1 to make them null or 2 to inform the default components")
+    input = input()
+    if input == "1":
+        print("making them null")
+        make_null_simapro_version_pv_installations()
+    elif input == "2":
+        print("inform them with correct values")
+        update_simapro_version_pv_installations()
+
