@@ -427,7 +427,7 @@ for user in users:
 # pv materieals change sheet type:
 # update its corresponding simapro runs:
 #############
-
+'''
 def update_some_fields_simapro_run():
     queryset = SimaPro_runs.objects.all()
     for instance in queryset:
@@ -441,9 +441,19 @@ def update_pv_materials():
         if instance.SHEET_TYPE == "pv_materials":
             instance.SHEET_TYPE = 'El. Generators'
             instance.save()
+'''
 
+def update_simapro_version_pv_installations():
+    #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
+    queryset = Component.objects.filter(component_type="pv") # queryset[0] returns instance
+    #'RelatedManager'
+    for instance in queryset:
+        for simapro_run in instance.simapro_runs.all():
+            simapro_run.stage_A_LCA_version = "SimaPro 9.5.0.2"
+            simapro_run.stage_C_LCA_version = "SimaPro 9.5.0.2"
+            # commit at DB
+            simapro_run.save()
 
 
 if __name__=="__main__":
-    update_pv_materials()
-    update_some_fields_simapro_run()
+    update_simapro_version_pv_installations()
