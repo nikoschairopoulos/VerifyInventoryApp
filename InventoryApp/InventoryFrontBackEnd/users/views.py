@@ -6,9 +6,18 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from django.db import transaction
 from .conf import (WORD,KEY)
+from rest_framework import status
 
 class CreateUser(APIView):
     def post(self,request):
+
+        # check if there is user with this email
+        # in order to not create it again and give
+        # multiple objects return Exception
+        qyeryset = CustomUser.objects.filter(email=request.data['email'])
+        if qyeryset.exists():
+            return Response({'message':'there is already a user with this email'},status=status.HTTP_409_CONFLICT) 
+
         data = request.data
         #take project name
         project_name = data['user_email'].split('@')[0]
