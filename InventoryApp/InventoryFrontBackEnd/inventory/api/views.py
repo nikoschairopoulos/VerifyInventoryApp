@@ -566,9 +566,10 @@ class get_embobied_eol_values(APIView):
                                  component_rating=component_rating,
                                  entries_for_eol=entries_list[0])
         
-        #Add extra info:
+        # Add extra info:
         AUTOMATED_FORM_INFO = {f'STAGE_{stage_type}':self.distribute_the_stages([lci_id],stage_type=stage_type) 
                                                     for stage_type in{'A','C'}}
+        # Add the FORM 
         self.result.update({'extra_info':AUTOMATED_FORM_INFO})
         #return the result:
         return Response(self.result)
@@ -689,6 +690,12 @@ class get_embobied_eol_values(APIView):
             "eol_co2": record["eol_gwp_pc"] * (embodied_co2/100),
             "eol_pe":record["eol_embodied_pe_pc"] * (embodied_pe/100)
         })
+        # Add percentages of eol at results:
+        self.result.update({
+                        "eol_co2_ratio": record["eol_gwp_pc"],
+                        "eol_pe_ratio": record["eol_embodied_pe_pc"]
+        })
+
     
     def sort_tuples_by_first_element(self,tuple_list):
         # Sort the list of tuples by the first element in each tuple
