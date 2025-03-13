@@ -560,6 +560,28 @@ def string_operations_3():
             print('---------------------------')
             instance.save()
 
+def string_operations_4():
+    to_be_changed =    "Stage A embodied quantities were scaled linearly using corresponding SimaPro components"
+    replacement_text = "Stage A embodied quantities were scaled linearly using corresponding SimaPro components."
+    attributes = [
+        #"stage_C_comments",
+        "stage_A_comments"
+        #"general_comments",
+    ]    
+    queryset = SimaPro_runs.objects.all()
+    for instance in queryset:
+        updated = False
+        for attr in attributes:
+            value = getattr(instance,attr,None)
+            if value and (to_be_changed == value ) and (instance.IS_MAIN_INVENTORY == True):
+                setattr(instance,attr,replacement_text)
+                updated = True
+        if updated:
+            print('---------updated(2)-----------')
+            print(instance)
+            print('---------------------------')
+            instance.save()
+
 
 
 
@@ -580,7 +602,8 @@ if __name__=="__main__":
     #breakpoint()
     FUNCS = [#string_operations_1,
              string_operations_2,
-             string_operations_3]
+             string_operations_3,
+             string_operations_4]
     for func in FUNCS:
         print(f'----------------------{func.__name__}---------------------------------')
         func()
