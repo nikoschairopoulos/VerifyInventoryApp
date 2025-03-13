@@ -513,7 +513,7 @@ def string_operations_1():
 
 def string_operations_2():
     to_be_changed =    "This value is available in SimaPro"
-    replacement_text = "Stage A embodied quantities were scaled linearly using corresponding SimaPro components."
+    replacement_text = "Stage A embodied quantities were scaled linearly using corresponding SimaPro components"
     attributes = [
         #"stage_C_comments",
         "stage_A_comments"
@@ -524,7 +524,7 @@ def string_operations_2():
         updated = False
         for attr in attributes:
             value = getattr(instance,attr,None)
-            if value and to_be_changed == value and instance.IS_MAIN_INVENTORY == True:
+            if value and (to_be_changed in value) and (instance.IS_MAIN_INVENTORY == True):
                 setattr(instance,attr,replacement_text)
                 updated = True
         if updated:
@@ -532,6 +532,35 @@ def string_operations_2():
             print(instance)
             print('---------------------------')
             instance.save()
+
+def string_operations_3():
+    queryset = SimaPro_runs.objects.all()
+    attributes = [
+        "stage_A_LCA_version",
+        "stage_C_LCA_version",
+        "stage_C_comments",
+        "stage_A_comments",
+        "general_comments",
+    ]
+
+    for instance in queryset:
+        updated = False
+        
+        for attr in attributes:
+            # take none otherwise will return attribute error:
+            field = getattr(instance, attr, None)
+            if field and "Simapro" in field:
+                updated_field = field.replace("simapro", "SimaPro")
+                setattr(instance, attr, updated_field)
+                updated = True
+
+        if updated:
+            print('---------updated(1)-----------')
+            print(instance)
+            print('---------------------------')
+            instance.save()
+
+
 
 
 
@@ -549,8 +578,9 @@ if __name__=="__main__":
     #    update_simapro_version_pv_installations()
     #queryset = CustomUser.objects.filter(email='verify_web_user@verify.gr')
     #breakpoint()
-    FUNCS = [string_operations_1,
-             string_operations_2]
+    FUNCS = [#string_operations_1,
+             string_operations_2,
+             string_operations_3]
     for func in FUNCS:
         print(f'----------------------{func.__name__}---------------------------------')
         func()
