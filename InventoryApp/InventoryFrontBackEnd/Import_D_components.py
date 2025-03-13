@@ -484,6 +484,20 @@ def update_simapro_version_pv_installations():
 
 # this method replaces to all atributes 
 # the 'Simapro' --> 'SimaPro'
+
+def sychronize_components_with_simapro_runs():
+## this method will much the FK -> sheet type , type , subtype , IS_MAIN_INVENTORY 
+    simapro_runs_queryset = SimaPro_runs.objects.all()
+    for instance in simapro_runs_queryset:
+        #take visual component fk:
+        vc = Component.objects.filter(pk = instance.vcomponent_id.id)
+        #update components:
+        instance.SHEET_TYPE = vc[0].SHEET_TYPE
+        instance.IS_MAIN_INVENTORY = vc[0].IS_MAIN_INVENTORY
+        instance.component_type = vc[0].component_type
+        instance.component_subtype = vc[0].component_subtype
+        instance.save()
+
 def string_operations_1():
     queryset = SimaPro_runs.objects.all()
     attributes = [
@@ -500,6 +514,7 @@ def string_operations_1():
         for attr in attributes:
             # take none otherwise will return attribute error:
             field = getattr(instance, attr, None)
+            #print(f' {instance.id} {attr}:{field}')
             if field and "Simapro" in field:
                 updated_field = field.replace("Simapro", "SimaPro")
                 setattr(instance, attr, updated_field)
@@ -524,8 +539,10 @@ def string_operations_2():
         updated = False
         for attr in attributes:
             value = getattr(instance,attr,None)
+            #print(f'{instance.id} {attr}:{value}')
             if value and (to_be_changed in value) and (instance.IS_MAIN_INVENTORY == True):
-                setattr(instance,attr,replacement_text)
+                updated_field = value.replace(to_be_changed,replacement_text)
+                setattr(instance,attr,updated_field)
                 updated = True
         if updated:
             print('---------updated(2)-----------')
@@ -549,13 +566,14 @@ def string_operations_3():
         for attr in attributes:
             # take none otherwise will return attribute error:
             field = getattr(instance, attr, None)
+            #print(f' {instance.id} {attr}:{field}')
             if field and "Simapro" in field:
                 updated_field = field.replace("simapro", "SimaPro")
                 setattr(instance, attr, updated_field)
                 updated = True
 
         if updated:
-            print('---------updated(1)-----------')
+            print('---------updated(3)-----------')
             print(instance)
             print('---------------------------')
             instance.save()
@@ -573,11 +591,12 @@ def string_operations_4():
         updated = False
         for attr in attributes:
             value = getattr(instance,attr,None)
+            #print(f' {instance.id} {attr}:{value}')
             if value and (to_be_changed == value ) and (instance.IS_MAIN_INVENTORY == True):
                 setattr(instance,attr,replacement_text)
                 updated = True
         if updated:
-            print('---------updated(2)-----------')
+            print('---------updated(4)-----------')
             print(instance)
             print('---------------------------')
             instance.save()
@@ -600,9 +619,10 @@ if __name__=="__main__":
     #    update_simapro_version_pv_installations()
     #queryset = CustomUser.objects.filter(email='verify_web_user@verify.gr')
     #breakpoint()
-    FUNCS = [#string_operations_1,
-             string_operations_2,
+    FUNCS = [sychronize_components_with_simapro_runs,
+            string_operations_1,
              string_operations_3,
+             string_operations_2,
              string_operations_4]
     for func in FUNCS:
         print(f'----------------------{func.__name__}---------------------------------')
