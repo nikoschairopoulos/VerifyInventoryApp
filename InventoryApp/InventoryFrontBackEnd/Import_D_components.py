@@ -443,6 +443,7 @@ def update_pv_materials():
             instance.save()
 '''
 
+'''
 def update_simapro_version_pv_installations():
     #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
     queryset = Component.objects.filter(component_type="pv", IS_MAIN_INVENTORY = True) # queryset[0] returns instance
@@ -454,8 +455,9 @@ def update_simapro_version_pv_installations():
             simapro_run.stage_C_LCA_version = "SimaPro 9.5.0.2"
             # commit at DB
             simapro_run.save()
+'''
 
-
+'''
 def make_null_simapro_version_pv_installations():
     #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
     queryset = Component.objects.filter(component_type="pv") # queryset[0] returns instance
@@ -469,7 +471,7 @@ def make_null_simapro_version_pv_installations():
 def update_simapro_version_pv_installations():
     #queryset = Component.objects.filter(component_type="boiler").values_list() # qyeryset[0] returns tuple
     queryset = Component.objects.filter(component_type="pv", IS_MAIN_INVENTORY = True) # queryset[0] returns instance
-    if queryset > 5:
+    if len(queryset) > 5:
         raise Exception('you try to change something you should not')
     #'RelatedManager'
     for instance in queryset:
@@ -478,15 +480,79 @@ def update_simapro_version_pv_installations():
             simapro_run.stage_C_LCA_version = "SimaPro 9.5.0.2"
             # commit at DB
             simapro_run.save()
+'''
+
+# this method replaces to all atributes 
+# the 'Simapro' --> 'SimaPro'
+def string_operations_1():
+    queryset = SimaPro_runs.objects.all()
+    attributes = [
+        "stage_A_LCA_version",
+        "stage_C_LCA_version",
+        "stage_C_comments",
+        "stage_A_comments",
+        "general_comments",
+    ]
+
+    for instance in queryset:
+        updated = False
+        
+        for attr in attributes:
+            # take none otherwise will return attribute error:
+            field = getattr(instance, attr, None)
+            if field and "Simapro" in field:
+                updated_field = field.replace("Simapro", "SimaPro")
+                setattr(instance, attr, updated_field)
+                updated = True
+
+        if updated:
+            print('---------updated(1)-----------')
+            print(instance)
+            print('---------------------------')
+            instance.save()
+
+def string_operations_2():
+    to_be_changed =    "This value is available in SimaPro"
+    replacement_text = "Stage A embodied quantities were scaled linearly using corresponding SimaPro components."
+    attributes = [
+        #"stage_C_comments",
+        "stage_A_comments"
+        #"general_comments",
+    ]    
+    queryset = SimaPro_runs.objects.all()
+    for instance in queryset:
+        updated = False
+        for attr in attributes:
+            value = getattr(instance,attr,None)
+            if value and to_be_changed == value and instance.IS_MAIN_INVENTORY == True:
+                setattr(instance,attr,replacement_text)
+                updated = True
+        if updated:
+            print('---------updated(2)-----------')
+            print(instance)
+            print('---------------------------')
+            instance.save()
+
+
+
+
 
 
 if __name__=="__main__":
-    print("press 1 to make them null or 2 to inform the default components")
-    input = input()
-    if input == "1":
-        print("making them null")
-        make_null_simapro_version_pv_installations()
-    elif input == "2":
-        print("inform them with correct values")
-        update_simapro_version_pv_installations()
+    #print("press 1 to make them null or 2 to inform the default components")
+    #input = input()
+    #if input == "1":
+    #    print("making them null")
+    #    make_null_simapro_version_pv_installations()
+    #elif input == "2":
+    #    print("inform them with correct values")
+    #    update_simapro_version_pv_installations()
+    #queryset = CustomUser.objects.filter(email='verify_web_user@verify.gr')
+    #breakpoint()
+    FUNCS = [string_operations_1,
+             string_operations_2]
+    for func in FUNCS:
+        print(f'----------------------{func.__name__}---------------------------------')
+        func()
 
+    print('done......')
