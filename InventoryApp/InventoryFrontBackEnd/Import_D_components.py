@@ -567,7 +567,7 @@ def string_operations_3():
             # take none otherwise will return attribute error:
             field = getattr(instance, attr, None)
             #print(f' {instance.id} {attr}:{field}')
-            if field and "Simapro" in field:
+            if field and "simapro" in field:
                 updated_field = field.replace("simapro", "SimaPro")
                 setattr(instance, attr, updated_field)
                 updated = True
