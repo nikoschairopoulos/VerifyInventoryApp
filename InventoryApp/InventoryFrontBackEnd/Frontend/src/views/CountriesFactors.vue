@@ -63,7 +63,6 @@
             <div class="col-6">
                 <label for="Choose Fuel" class="form-label">Choose Fuel:</label>
                 <select id="Choose Fuel" class="form-control" style="background: darkseagreen" v-model="fuel" required>
-                    <option value="electricity">Electricity</option>
                     <option value="ngas">Net Gas</option>
                     <option value="diesel">Diesel</option>
                     <option value="biomass">Biomass</option>
@@ -165,7 +164,8 @@
         <br>
         <div v-if="plotTrigered">
             <div class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
             </div>
         </div>
         <br>
@@ -241,10 +241,10 @@ export default {
             yearMonthOption: 'month',
             co2SeriesData: null,
             errorMessageHourlyFactors: 'no country selected to plot data',
-            plotTrigered:false,
-            showDiagramms:false,
+            plotTrigered: false,
+            showDiagramms: false,
             chartData: null,
-            chartDataFossils:null,
+            chartDataFossils: null,
             options: {
                 scales: {
                     x: {
@@ -320,7 +320,7 @@ export default {
             console.log(e)
         }
     },
-    created() {},
+    created() { },
     watch: {
         fullName(newValue) {
             console.log("change at country-fuel combination have been detected")
@@ -328,19 +328,19 @@ export default {
         },
         yearMonthOption(newValue) {
             let chartData = {
-                        labels: this.takeLabelsforFactorPlot(newValue),
-                        datasets: [
-                            {
-                                label: 'CO2Eq',
-                                data: this.takeAveragePerMonthorDay(newValue).map((e) => e.y),  // Use the generated points
-                                backgroundColor: 'rgba(0, 123, 255, 0.7)',  // Single color for all bars
-                                fill: true,
-                                borderColor: 'rgba(255, 255, 0, 1)',
-                                barThickness: 10,         // Manually set bar width to control overall layout
-                                categoryPercentage: 0.5,  // Use 90% of available category width
-                                barPercentage: 0.8,       // Each bar takes up 80% of its category's width
-                            }
-                        ]
+                labels: this.takeLabelsforFactorPlot(newValue),
+                datasets: [
+                    {
+                        label: 'CO2Eq',
+                        data: this.takeAveragePerMonthorDay(newValue).map((e) => e.y),  // Use the generated points
+                        backgroundColor: 'rgba(0, 123, 255, 0.7)',  // Single color for all bars
+                        fill: true,
+                        borderColor: 'rgba(255, 255, 0, 1)',
+                        barThickness: 10,         // Manually set bar width to control overall layout
+                        categoryPercentage: 0.5,  // Use 90% of available category width
+                        barPercentage: 0.8,       // Each bar takes up 80% of its category's width
+                    }
+                ]
             }
             this.chartData = chartData
             /*
@@ -405,7 +405,7 @@ export default {
                                     projection: false
                                 }
                                 */
-                                
+
                             }
                         ]
                     }
@@ -437,19 +437,19 @@ export default {
         }
     },
     methods: {
-        setChartDataToNull(){
+        setChartDataToNull() {
             this.chartData = null
             this.chartDataFossils = null
         },
-        updateFossils(newValue){
+        updateFossils(newValue) {
             // update also data for fossils:
             console.log(this.factorsdb)
-            let fossilsData = this.factorsdb.filter((comp)=>comp.country==newValue && comp.fuel!='electricity')
+            let fossilsData = this.factorsdb.filter((comp) => comp.country == newValue && comp.fuel != 'electricity')
             console.log(`this is chart data:${fossilsData}`)
-            let labelsFossils = fossilsData.map((comp)=>comp.fuel)
+            let labelsFossils = fossilsData.map((comp) => comp.fuel)
             let co2Values = []
-            for (let fuel of labelsFossils){
-                let value = fossilsData.filter((comp)=>comp.fuel==fuel)[0].co2_factor
+            for (let fuel of labelsFossils) {
+                let value = fossilsData.filter((comp) => comp.fuel == fuel)[0].co2_factor
                 co2Values.push(value)
                 console.log(fuel)
                 console.log(value)
@@ -457,31 +457,31 @@ export default {
             }
             console.log(labelsFossils)
             this.chartDataFossils = {
-                    labels: labelsFossils,
-                    datasets: [
-                        {
-                            label: 'Non Electricity Fuels CO2Eq Emission Factor Data',
-                            data:  co2Values,  // Use the generated points
-                            backgroundColor: 'rgba(0, 123, 255, 0.7)',  // Single color for all bars
-                            fill: true,
-                            borderColor: 'rgba(255, 255, 0, 1)',
-                            barThickness: 10,  // Manually set bar width to control overall layout
-                            categoryPercentage: 0.5,  // Use 90% of available category width
-                            barPercentage: 0.8,  // Each bar takes up 80% of its category's width
-                            /*
-                            trendlineLinear: {
-                                colorMin: "red",
-                                colorMax: "green",
-                                lineStyle: "dotted|solid",
-                                width: 2,
-                                projection: false
-                            }
-                            */            
+                labels: labelsFossils,
+                datasets: [
+                    {
+                        label: 'Non Electricity Fuels CO2Eq Emission Factor Data',
+                        data: co2Values,  // Use the generated points
+                        backgroundColor: 'rgba(0, 123, 255, 0.7)',  // Single color for all bars
+                        fill: true,
+                        borderColor: 'rgba(255, 255, 0, 1)',
+                        barThickness: 10,  // Manually set bar width to control overall layout
+                        categoryPercentage: 0.5,  // Use 90% of available category width
+                        barPercentage: 0.8,  // Each bar takes up 80% of its category's width
+                        /*
+                        trendlineLinear: {
+                            colorMin: "red",
+                            colorMax: "green",
+                            lineStyle: "dotted|solid",
+                            width: 2,
+                            projection: false
                         }
-                    ]
-                }
+                        */
+                    }
+                ]
+            }
 
-        },        
+        },
         async handleSubmit() {
             try {
                 let dataObject = {
