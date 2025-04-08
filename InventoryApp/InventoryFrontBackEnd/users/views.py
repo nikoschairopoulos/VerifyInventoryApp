@@ -14,7 +14,7 @@ class CreateUser(APIView):
         # check if there is user with this email
         # in order to not create it again and give
         # multiple objects return Exception
-        qyeryset = CustomUser.objects.filter(email=request.data['email'])
+        qyeryset = CustomUser.objects.filter(email=request.data['user_email'])
         if qyeryset.exists():
             return Response({'message':'there is already a user with this email'},status=status.HTTP_409_CONFLICT) 
 
