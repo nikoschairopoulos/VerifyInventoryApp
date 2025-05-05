@@ -44,6 +44,7 @@ from inventory.VerifyWebAppForm.component_form_reprentation_verify_app import js
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.functions import ExtractYear
 
 
 def error404(request):
@@ -111,7 +112,7 @@ class ComponentViewSet(ModelViewSet):
 class InventoryViewSet(ModelViewSet):
     queryset=Inventory.objects.all()
     serializer_class = InventorySerializer
-    #permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     def perform_create(self, serializer):
         serializer.save(author=self.request.user) #Additionally author is added (this is added procedure after serializer) 
                                                   #adds the user at validated_data ==> .create(**validated_data)
@@ -199,7 +200,7 @@ class Components_by_technology(APIView):
         components = ComponentSerializer(items,many=True)           # serialize the components -> taking the serialize indide it .data have the dicts
         return Response(components.data)                            # return response
              
-#FOR Verify App (do not touch)
+# FOR Verify App (do not touch)
 class Inventory_technologies(APIView):
     def get(self,request):
         technologies = []
@@ -210,7 +211,7 @@ class Inventory_technologies(APIView):
                 technologies.append(comp['SHEET_TYPE'])
         return Response(technologies)
     
-#FOR Verify App (do not touch)
+# FOR Verify App (do not touch)
 class Specific_inventory_plus_default(APIView):
     def get(self,request,pk):
         #take the inventory:
@@ -253,7 +254,7 @@ class only_main_inventory(APIView):
         objects_main = ComponentSerializer(all_main_objects,many=True)
         return Response(objects_main.data)
 
-#for Verify App
+# for Verify App
 class inventory_without_components(APIView):
     def get(self,request):
         inventory_obj = Inventory.objects.all()
@@ -262,7 +263,7 @@ class inventory_without_components(APIView):
             del elem['components']
         return Response(result_inventory)
 
-#for Verify Calculatons app
+# for Verify Calculatons app
 class find_fuel_factors_specific_country(APIView):
     def get(self,request,country):
         fuel_json = {'pef':{},'co2':{}}
@@ -277,7 +278,7 @@ class find_fuel_factors_specific_country(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-#Create Components from Excell form - LCI APP:
+# Create Components from Excell form - LCI APP:
 class CreateComponentFromExcell(APIView):
     def post(self, request):
         components_list = request.data
@@ -289,7 +290,7 @@ class CreateComponentFromExcell(APIView):
         else:
             return Response(components_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#check if the user is staff user:
+# check if the user is staff user:
 class IsAdminUser(APIView):
     def get(self,request):
         return Response({'is_admin': request.user.is_staff}) 
@@ -410,8 +411,8 @@ class get_yearly_electricity_fuel_factors(APIView):
 
 
 #####################################
-#get countries that have yearly Data:
-#get countries that have hourly Data:
+# get countries that have yearly Data:
+# get countries that have hourly Data:
 #####################################
 class get_countries_hourly_yearly_electricity_factors(APIView):
     def get(self,request):
@@ -523,7 +524,7 @@ class get_embobied_eol_values(APIView):
 '''
         
 class get_embobied_eol_values(APIView):
-    def get(self,request,lci_id,rating):
+    def get(self,request,lci_id,rating,internal_request=None):
         self.result = {}
         component_rating  = float(rating)
         lci_id = int(lci_id)
@@ -541,11 +542,11 @@ class get_embobied_eol_values(APIView):
         co2_values = []
         pe_values  = []
         
-        #take all records into a list of dicts:
+        # take all records into a list of dicts:
         serializer = SimaPro_runsSerializer(queryset,many=True)
         entries_list = serializer.data
 
-        #iterate to take the values for Embodied Co2 and Pe scaling:
+        # iterate to take the values for Embodied Co2 and Pe scaling:
         for record in entries_list:
             co2_values.append((record["fu_quantity"],record['stage_A_gwp_kgco2eq']))
             pe_values.append((record["fu_quantity"],record["stage_A_embodied_pe_gj"]))
@@ -732,8 +733,8 @@ class get_embobied_eol_values(APIView):
 
 
 #####################################
-#This is a form to add configurations
-#for verify web app lci input forms
+# This is a form to add configurations
+# for verify web app lci input forms
 #####################################
 class FormRepresentationVerifyApp(APIView):
     def get(self,request):
@@ -745,8 +746,8 @@ class FormRepresentationVerifyApp(APIView):
 
 
 #####################################
-#this gives all components 
-#without simapro run
+# this gives all components 
+# without simapro run
 #####################################
 class get_all_components_without_simapro_runs(APIView):
     def get(self,request):
@@ -759,8 +760,8 @@ class get_all_components_without_simapro_runs(APIView):
 
 
 ##########################################
-#Get all components for Verify B
-#Dataframe - Calculations Modules Creation
+# Get all components for Verify B
+# Dataframe - Calculations Modules Creation
 ##########################################
 class GetComponentsForCalculationModule(APIView):
     class ComponentSerializerLocal(serializers.ModelSerializer):
@@ -849,8 +850,94 @@ class ReportInfoComponents(APIView):
                 k: v for k, v in min_simapro_run.items() if k in filtered
             }
 
-        
         return result
+    
+# This end point returns all hourly 
+# factors of a country, order by year
+# IN ASCENDING ORDER
+class fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country(APIView):
+    def get(self,request,country):
+        years = (CarbonIntensityData.objects.annotate(year = ExtractYear("datetime")).
+                                               values_list("year",flat=True).
+                                               distinct().
+                                               order_by("year"))
+        if years.exists():
+            return Response(data = years,status=status.HTTP_200_OK)
+        else:
+            return Response(status = status.HTTP_404_NOT_FOUND)
+        
+##########################
+'''
+this apiview is created to be given a district json
+and calculate the environmental and economical analytics
+for each component for each sector
+'''
+##########################
+class calculate_district_component_analytics(APIView):
+    def calculate_component_analytics(self,component):
+        try:
+            analytics = {}             
+            analytics['name'] = Component.objects.get(id=component['lci_id']).name
+            keys_to_return = ["embodied_co2","embodied_pe","eol_co2","eol_pe"]
+            # get the environmental:
+            # create an object of another apiview (the service with the embodied calculations)
+            embodied_obj = get_embobied_eol_values()
+            response = embodied_obj.get(request = None,
+                                        lci_id = component['lci_id'],
+                                        rating = component['installed_ugs'],
+                                        internal_request=True).data
+            analytics.update({key:response[key]
+                    for key in response if key in keys_to_return})
+            # add economics:
+            analytics.update({'capex':component['capex'],'annual_maintenance':component['maintenance_cost']})
+
+        except ObjectDoesNotExist:
+            print("------------------")
+            print(f"error: component with lci_id = {component['lci_id']}, does not exist")
+            print("------------------")
+            pass
+        return analytics
+    
+    def get(self, request):
+        # For GET requests, we'll just show the form
+        return render(request, '/home/nikos/Desktop/LCI_APP/VerifyInventoryApp/InventoryApp/InventoryFrontBackEnd/inventory/templates/inventory/input_form.html')
+    
+    def post(self,request):
+        web_json = request.data
+        response_data = {}
+        scenario_keys = ['base','var']
+        for scenario_key in scenario_keys:
+            response_data[scenario_key] = {}
+            if scenario_key in web_json:
+                sector_keys = [key for key in web_json[scenario_key] if '_sector' in key]
+                for sector_key in sector_keys:
+                    response_data[scenario_key][sector_key] = []
+                    # add components:
+                    if sector_key == "building_sector":
+                        for building in web_json[scenario_key][sector_key]['building']:
+                            for technology_key in building['components']:
+                                for component in building['components'][technology_key]:
+                                     response_data[scenario_key][sector_key].append(self.calculate_component_analytics(component))            
+                    else:   
+                        sector_components =web_json[scenario_key][sector_key]['components']
+                        for component in sector_components:
+                            response_data[scenario_key][sector_key].append(self.calculate_component_analytics(component))
+        #return Response(data=response_data)
+            # Either render to HTML template or return as JSON based on Accept header
+        # if 'text/html' in request.headers.get('Accept', ''):
+        #     return render(request, 'component_analytics_table.html', {
+        #         'data': response_data,
+        #     })
+        # else:
+        #     # Default to JSON response
+        #     return Response(data=response_data)
+        
+        # calucalte_building_components
+        # calculate district components
+        return render(request,'/home/nikos/Desktop/LCI_APP/VerifyInventoryApp/InventoryApp/InventoryFrontBackEnd/inventory/templates/inventory/component_analytics_table.html', {
+                 'data': response_data,
+             })
+
 
 
 

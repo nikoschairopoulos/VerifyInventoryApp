@@ -191,9 +191,9 @@ class ComponentSerializer(serializers.ModelSerializer):
             unique_inventory.save()
 
 
-    #UPDATES EVERY SINGLE SIMAPRO RUN
-    #DOES ORM DIRECTLY BECAUSE DATA 
-    #ARE VALIDATED:
+    # UPDATES EVERY SINGLE SIMAPRO RUN
+    # DOES ORM DIRECTLY BECAUSE DATA 
+    # ARE VALIDATED:
     def update_simapro_runs(self, simapro_run_data):
         if 'id' not in simapro_run_data:
             raise serializers.ValidationError({'error': 'ID is required to update simapro_run.'})
@@ -205,7 +205,7 @@ class ComponentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'error': f"SimaPro_run with id {simapro_run_data['id']} does not exist."}
             )
-        #dont update id
+        # dont update id
         simapro_run_data.pop('id')
         # Update fields directly
         for attr, value in simapro_run_data.items():

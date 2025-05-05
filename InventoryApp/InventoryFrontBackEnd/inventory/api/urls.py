@@ -8,6 +8,7 @@ from inventory.api.views import (
           Components_by_technology,
           Inventory_technologies,
           Specific_inventory_plus_default,
+          calculate_district_component_analytics,
           find_fuel_factors_specific_country,
           inventory_without_components,
           only_main_inventory,
@@ -28,7 +29,8 @@ from inventory.api.views import (
           Fetch_Specific_User_Custom_Plus_Defaults,
           GetComponentsForCalculationModule,
           ReportInfoComponents,
-          DeletedComponentsViewSet
+          DeletedComponentsViewSet,
+          fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country
         )
 #out of this app views
 from users.views import CreateUser
@@ -44,6 +46,7 @@ router.register(r"inventory", InventoryViewSet)
 router.register(r"factor",FactorViewSet)
 router.register(r"simapro_runs",SimaPro_runsViewSet)
 router.register(r"deleted_component",DeletedComponentsViewSet)
+
 #router.register(r"regression_values",RegressionValuesViewSet)
 
 urlpatterns = [
@@ -71,7 +74,9 @@ urlpatterns = [
     path('user_components/<str:user_email>',Fetch_Specific_User_Custom_Plus_Defaults.as_view(),name='fetch_users_components'),
     path('create_new_lci_user',CreateUser.as_view(),name = 'createUser'),
     path('get_components',GetComponentsForCalculationModule.as_view(),name='calculation_module_components'),
-    path('get_report_from_components',ReportInfoComponents.as_view(),name='report')
+    path('get_report_from_components',ReportInfoComponents.as_view(),name='report'),
+    path('get_distinct_years_for_electricity_factors/<str:country>',fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country.as_view(),name='hourly_factors_years'),
+    path('get_verify_d_components',calculate_district_component_analytics.as_view(),name="verify_d_analytics")
     #path('regression_values_component/<int:lci_id>',regression_values.as_view(),name='regression_values')
     #path('/simapro_values',SimaPro_runsViewSet.as_view(),name = 'sima_pro_runs')
 ]
