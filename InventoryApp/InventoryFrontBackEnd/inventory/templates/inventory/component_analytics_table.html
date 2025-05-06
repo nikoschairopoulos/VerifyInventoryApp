@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>District Component Analytics</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      td.number {
+        text-align: right;
+      }
+      .scenario {
+        margin-bottom: 30px;
+      }
+      .sector {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>District Component Analytics</h1>
+
+    {% for scenario_key, scenario_data in data.items %}
+    <div class="scenario">
+      <h2>Scenario: {{ scenario_key }}</h2>
+
+      {% for sector_key, components in scenario_data.items %}
+      <div class="sector">
+        <h3>{{ sector_key }}</h3>
+
+        {% if components %}
+        <table>
+          <tr>
+            <th>Verify Platform id</th>
+            <th>Vrify LCI id</th>
+            <th>Name</th>
+            <th>Installed Rating</th>
+            <th>Embodied CO2 [kg]</th>
+            <th>Embodied PE [kwh]</th>
+            <th>EoL CO2 [kg]</th>
+            <th>EoL PE [kwh]</th>
+            <th>CAPEX [euro]</th>
+            <th>Annual Maintenance [euro]</th>
+          </tr>
+
+          {% for component in components %}
+          <tr>
+            <td class="number">{{ component.verify_id|default:"-" }}</td>
+            <td class="number">{{ component.verify_lci_id|default:"-" }}</td>
+            <td>{{ component.name|default:"-" }}</td>
+            <td class="number">
+              {{ component.installed_ugs|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.embodied_co2|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.embodied_pe|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.eol_co2|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.eol_pe|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.capex|floatformat:5|default:"-" }}
+            </td>
+            <td class="number">
+              {{ component.annual_maintenance|floatformat:5|default:"-" }}
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p>No components available</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </body>
+</html>

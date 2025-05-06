@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>District Component Analytics - Input Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        line-height: 1.6;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+      textarea {
+        width: 100%;
+        min-height: 400px;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+      .status {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 4px;
+      }
+      .status.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .status.loading {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+      }
+      .hidden {
+        display: none;
+      }
+      .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: #3498db;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 10px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>District Component Analytics Input</h1>
+
+      <div class="form-group">
+        <label for="jsonData">Enter JSON Data:</label>
+        <textarea
+          id="jsonData"
+          placeholder="Paste your JSON data here..."
+        ></textarea>
+        <div class="buttons">
+          <button type="button" id="submitBtn">
+            Calculate Component Analytics
+          </button>
+        </div>
+      </div>
+
+      <div id="statusMessage" class="status hidden"></div>
+
+      <div id="resultContainer" class="hidden">
+        <h2>Results</h2>
+        <div id="resultContent"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(
+                  cookie.substring(name.length + 1)
+                );
+                break;
+              }
+            }
+          }
+          return cookieValue;
+        }
+
+        // Elements
+        const jsonDataElem = document.getElementById("jsonData");
+        const submitBtn = document.getElementById("submitBtn");
+        const statusMessage = document.getElementById("statusMessage");
+        const resultContainer = document.getElementById("resultContainer");
+        const resultContent = document.getElementById("resultContent");
+
+        // Submit data
+        submitBtn.addEventListener("click", function () {
+          const jsonData = jsonDataElem.value;
+
+          // Validate JSON
+          try {
+            JSON.parse(jsonData);
+          } catch (e) {
+            showStatus("error", "Invalid JSON: " + e.message);
+            return;
+          }
+
+          // Get CSRF token from cookies
+          const csrfToken = getCookie("csrftoken");
+
+          if (!csrfToken) {
+            showStatus(
+              "error",
+              "CSRF token not found in cookies. Make sure you are logged in to Django admin."
+            );
+            return;
+          }
+
+          // Show loading status
+          showStatus(
+            "loading",
+            '<div class="spinner"></div> Processing request...'
+          );
+
+          // Send POST request with CSRF token
+          fetch("http://127.0.0.1:8000/api/get_verify_d_components", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "text/html",
+              "X-CSRFToken": csrfToken,
+            },
+            credentials: "include", // Important for including cookies
+            body: jsonData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  "Server responded with status: " + response.status
+                );
+              }
+              return response.text();
+            })
+            .then((data) => {
+              // Hide loading status
+              statusMessage.classList.add("hidden");
+
+              // Show result
+              resultContainer.classList.remove("hidden");
+
+              // Check if response is HTML or JSON
+              if (
+                data.trim().startsWith("<!DOCTYPE html>") ||
+                data.trim().startsWith("<html")
+              ) {
+                // Create iframe to display HTML response
+                resultContent.innerHTML =
+                  '<iframe id="resultFrame" style="width:100%; height:600px; border:none;"></iframe>';
+                const iframe = document.getElementById("resultFrame");
+                iframe.srcdoc = data;
+              } else {
+                // Try to parse as JSON
+                try {
+                  const jsonResult = JSON.parse(data);
+                  resultContent.innerHTML =
+                    "<pre>" + JSON.stringify(jsonResult, null, 2) + "</pre>";
+                } catch (e) {
+                  // Display as text
+                  resultContent.innerHTML = "<pre>" + data + "</pre>";
+                }
+              }
+            })
+            .catch((error) => {
+              showStatus("error", "Error: " + error.message);
+            });
+        });
+
+        // Helper function to show status
+        function showStatus(type, message) {
+          statusMessage.className = "status " + type;
+          statusMessage.innerHTML = message;
+          statusMessage.classList.remove("hidden");
+
+          if (type === "error" || type === "success") {
+            // Auto-hide after 5 seconds for success/error messages
+            setTimeout(() => {
+              statusMessage.classList.add("hidden");
+            }, 5000);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
