@@ -876,8 +876,12 @@ for each component for each sector
 class calculate_district_component_analytics(APIView):
     def calculate_component_analytics(self,component):
         try:
-            analytics = {}             
-            analytics['name'] = Component.objects.get(id=component['lci_id']).name
+            analytics = {}          
+            analytics['name'] = Component.objects.get(id=component["lci_id"]).name
+            analytics['verify_id'] = component['id']
+            analytics['verify_lci_id'] = component['lci_id']
+            analytics['installed_ugs'] = component['installed_ugs']
+            print(analytics['name'])
             keys_to_return = ["embodied_co2","embodied_pe","eol_co2","eol_pe"]
             # get the environmental:
             # create an object of another apiview (the service with the embodied calculations)
@@ -896,11 +900,13 @@ class calculate_district_component_analytics(APIView):
             print(f"error: component with lci_id = {component['lci_id']}, does not exist")
             print("------------------")
             pass
+        except KeyError:
+            print('glazing component')
         return analytics
     
     def get(self, request):
         # For GET requests, we'll just show the form
-        return render(request, '/home/nikos/Desktop/LCI_APP/VerifyInventoryApp/InventoryApp/InventoryFrontBackEnd/inventory/templates/inventory/input_form.html')
+        return render(request, '../templates/inventory/input_form.html')
     
     def post(self,request):
         web_json = request.data
@@ -934,7 +940,7 @@ class calculate_district_component_analytics(APIView):
         
         # calucalte_building_components
         # calculate district components
-        return render(request,'/home/nikos/Desktop/LCI_APP/VerifyInventoryApp/InventoryApp/InventoryFrontBackEnd/inventory/templates/inventory/component_analytics_table.html', {
+        return render(request,'../templates/inventory/component_analytics_table.html', {
                  'data': response_data,
              })
 
