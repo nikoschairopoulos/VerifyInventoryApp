@@ -45,6 +45,7 @@ from rest_framework.exceptions import ValidationError
 from django.core.exceptions import MultipleObjectsReturned
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import ExtractYear
+from inventory.utils import get_local_ip
 
 
 def error404(request):
@@ -55,55 +56,56 @@ class ComponentViewSet(ModelViewSet):
     serializer_class = ComponentSerializer
     #permission_classes = [IsAuthenticated]
 
-    def perform_destroy(self, instance):
-        try:
-            id = self.kwargs['pk']
-            warning = self.check_for_component_usage(id)    
-        except Exception as e:
-            return {'exception':'lci id is not provided at delete request - something went wrong'}
-        # if there is no warnings delete the components:
-        if not warning:
-             instance.delete()
-             return{'success':{'component has been deleted'}}
-        message = {f'warn_{index}':warn  for index,warn in enumerate(warning)}
-        return message
+    # def perform_destroy(self, instance):
+    #     try:
+    #         id = self.kwargs['pk']
+    #         warning = self.check_for_component_usage(id)    
+    #     except Exception as e:
+    #         return {'exception':'lci id is not provided at delete request - something went wrong'}
+    #     # if there is no warnings delete the components:
+    #     if not warning:
+    #          instance.delete()
+    #          return{'success':{'component has been deleted'}}
+    #     message = {f'warn_{index}':warn  for index,warn in enumerate(warning)}
+    #     return message
     
     # this is called when a delete request
     # is done -> this method calls perform destroy
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        result = self.perform_destroy(instance)
-        if 'exception' in result:
-            return Response(result['exception'],status.HTTP_400_BAD_REQUEST)
-        #successfull Deletion: 
-        elif 'success' in result:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        #component has usage -> show warns at vue js modals
-        else:
-            return Response(result,status=status.HTTP_400_BAD_REQUEST)
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     result = self.perform_destroy(instance)
+    #     if 'exception' in result:
+    #         return Response(result['exception'],status.HTTP_400_BAD_REQUEST)
+    #     #successfull Deletion: 
+    #     elif 'success' in result:
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     #component has usage -> show warns at vue js modals
+    #     else:
+    #         return Response(result,status=status.HTTP_400_BAD_REQUEST)
         
 
         #super().destroy(request, *args, **kwargs)
         #return Response({'message':'hi'},status=400)
     
-    def check_for_component_usage(self,lci_id):
-        response = requests.get(f"http://192.168.101.31:3003/api/stored_lci_ids?component_id={lci_id}")
-        json_response = response.json()
-        warnings = []
-        for key in ('verify_buildings', 'verify_districts', 'verify_district_buildings'):
-            elements = json_response.get(key,None)
-            for comp in elements:
-                temp_dict = {'building_id':comp.get('building_id',None),
-                            'scenario_id':comp.get('scenario_id',None),
-                            'building_name':comp.get('building_name',None),
-                            'scenario_name':comp.get('scenario_name'),
-                            'district_id':comp.get('district_id',None),
-                            'district_name':comp.get('district_name',None)
-                            }
-                record = {k:v for k,v in temp_dict.items() 
-                        if v is not None}
-                warnings.append(record)        
-        return warnings
+    # def check_for_component_usage(self,lci_id):
+    #     ip = get_local_ip()
+    #     response = requests.get(f"http://{ip}:3003/api/stored_lci_ids?component_id={lci_id}")
+    #     json_response = response.json()
+    #     warnings = []
+    #     for key in ('verify_buildings', 'verify_districts', 'verify_district_buildings'):
+    #         elements = json_response.get(key,None)
+    #         for comp in elements:
+    #             temp_dict = {'building_id':comp.get('building_id',None),
+    #                         'scenario_id':comp.get('scenario_id',None),
+    #                         'building_name':comp.get('building_name',None),
+    #                         'scenario_name':comp.get('scenario_name'),
+    #                         'district_id':comp.get('district_id',None),
+    #                         'district_name':comp.get('district_name',None)
+    #                         }
+    #             record = {k:v for k,v in temp_dict.items() 
+    #                     if v is not None}
+    #             warnings.append(record)        
+    #     return warnings
     
     
 
