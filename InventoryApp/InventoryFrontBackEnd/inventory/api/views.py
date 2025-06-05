@@ -38,7 +38,7 @@ from django.http import HttpResponse
 import json 
 import pandas as pd 
 from inventory.models import CarbonIntensityData,FactorElectricityYear
-#from inventory.api.permissions import IsAdminUserOrReadOnly
+# from inventory.api.permissions import IsAdminUserOrReadOnly
 from copy import deepcopy
 from inventory.VerifyWebAppForm.component_form_reprentation_verify_app import json_form_behaviour
 from rest_framework.exceptions import ValidationError
@@ -585,7 +585,9 @@ class get_embobied_eol_values(APIView):
         result = {"embodied_co2": 0,
                      "embodied_pe": 0,
                      "eol_co2": 0,
-                     "eol_pe": 0
+                     "eol_pe": 0,
+                     "eol_co2_ratio" : 0,
+                     "eol_pe_ratio":0
                  }
         
         # add null to extra info
