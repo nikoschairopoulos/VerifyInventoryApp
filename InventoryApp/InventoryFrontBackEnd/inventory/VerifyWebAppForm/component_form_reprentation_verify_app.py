@@ -317,7 +317,33 @@ json_form_behaviour = {
                 ],
             }
 
-        ]}
+        ]},
+    "industry_level": {
+        "technologies": [
+            {
+                "text": 'Industrial Thermal',
+                "value": "Industrial Thermal",
+                "IS_B_COMPONENT":False,
+                "types": [
+                    {
+                        "text": "Microwave Heating Machine",
+                        "value": "microwave_heating",
+                        "subtypes": None
+                    },
+                                      {
+                        "text": "Boiler",
+                        "value": "boiler",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Induction Heating System",
+                        "value": "induction_heating",
+                        "subtypes": None
+                    }
+                ],
+            }
+        ]
+    },
 }
 
 
