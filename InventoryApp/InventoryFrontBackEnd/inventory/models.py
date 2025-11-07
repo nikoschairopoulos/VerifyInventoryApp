@@ -297,12 +297,11 @@ class DeletedComponent(models.Model):
     def get_serializer(self):
         from inventory.api.serializers import SimaPro_runsSerializer
         return SimaPro_runsSerializer
-    
 
 
+class ETS(models.Model):
+    current_datetime = models.DateTimeField(unique=True)
+    spot_price = models.FloatField()
 
-    
-
-
-
-
+    def __str__(self):
+        return f"On {self.current_datetime} with price {self.spot_price}."

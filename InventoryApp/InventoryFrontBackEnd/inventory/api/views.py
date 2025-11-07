@@ -9,14 +9,14 @@ from inventory.api.serializers import (ComponentSerializer, DeletedComponentSeri
                                        CarbonIntensityDataSerializerYear,
                                        LogsSerializer,
                                        RegressionValuesSerializer,
-                                       SimaPro_runsSerializer)
+                                       SimaPro_runsSerializer, EtsSerializer)
 
 from inventory.models import (Component,
                               Inventory,
                               LoggingComponent,
                               RegressionValues,
                               SimaPro_runs,
-                              DeletedComponent)
+                              DeletedComponent, ETS)
 
 from users.models import CustomUser
 
@@ -46,6 +46,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.functions import ExtractYear
 from inventory.utils import get_local_ip
+from datetime import datetime
 
 
 def error404(request):
@@ -949,6 +950,62 @@ class calculate_district_component_analytics(APIView):
              })
 
 
+class ETSListCreateAPIView(APIView):
+
+    def get(self, request):
+        try:
+            queryset = ETS.objects.all().order_by('current_datetime')
+            serializer = EtsSerializer(queryset, many=True)
+            df = pd.DataFrame(serializer.data)
+            # Check if df is emtpy
+            if df.empty:
+                # If empty return a proper error message
+                return Response({'error': 'No data retrieved --> something went wrong'},
+                                status=status.HTTP_404_NOT_FOUND)
+            # If not empty turn it to json and return it.
+            res = df.to_json()
+            return Response(res)
+        except Exception as e:
+            return Response({'error': str(e)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-            
+class BulkETSInsert(APIView):
+    def post(self, request):
+        url = "https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-2025-data.xlsx"
+
+        df_data = pd.read_excel(url, header=5, usecols=['Date', "Auction Price €/tCO2"], parse_dates=['Date'])
+        # Set Date as index
+        df_data = df_data.set_index('Date')
+
+        # Include all days along with weekends
+        all_days = pd.date_range(start=df_data.index.min(), end=df_data.index.max(), freq='D')
+        df_data = df_data.reindex(all_days)
+        df_data['Auction Price €/tCO2'] = df_data['Auction Price €/tCO2'].ffill()
+
+        # Create hourly index starting at define start hour
+        start_hour = 0
+        start = df_data.index.min() + pd.Timedelta(hours=start_hour)
+        end = pd.to_datetime(datetime.now().strftime('%Y-%m-%d %H:00:00'))
+
+        hourly_index = pd.date_range(start=start, end=end, freq='H')
+        hourly_df = df_data.reindex(hourly_index, method='ffill').reset_index().rename(columns={'index': 'Datetime'})
+        # Ensure timestamps are naive (no tzinfo)
+        hourly_df['Datetime'] = hourly_df['Datetime'].dt.tz_localize(None)
+
+        daily_ets_list = []
+        for _, row in hourly_df.iterrows():
+            record = ETS(
+                current_datetime=row['Datetime'].to_pydatetime(),
+                spot_price=row['Auction Price €/tCO2']
+            )
+            daily_ets_list.append(record)
+
+        try:
+            ETS.objects.bulk_create(daily_ets_list)
+            data = {'message': 'Success'}
+            return Response(data)  # Defaults to HTTP 200 OK
+        except Exception as e:
+            print(e)
+            data = {'error': 'Invalid data'}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+

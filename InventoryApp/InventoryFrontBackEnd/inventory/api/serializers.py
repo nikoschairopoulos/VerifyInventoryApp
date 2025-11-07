@@ -9,7 +9,7 @@ from inventory.models import (Inventory,
                               LoggingComponent,
                               RegressionValues,
                               SimaPro_runs,
-                              DeletedComponent) 
+                              DeletedComponent, ETS)
 from django.core.exceptions import ObjectDoesNotExist
 from inventory.utils import send_email 
 from rest_framework.exceptions import NotFound 
@@ -410,3 +410,8 @@ class DeletedComponentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 
+class EtsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ETS
+        # fields = "__all__"  # We want all the fields of our model
+        exclude = ("id",)

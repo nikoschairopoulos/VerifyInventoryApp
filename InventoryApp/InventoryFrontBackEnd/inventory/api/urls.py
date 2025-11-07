@@ -30,7 +30,8 @@ from inventory.api.views import (
           GetComponentsForCalculationModule,
           ReportInfoComponents,
           DeletedComponentsViewSet,
-          fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country
+          fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country,
+          ETSListCreateAPIView, BulkETSInsert
         )
 #out of this app views
 from users.views import CreateUser
@@ -76,7 +77,9 @@ urlpatterns = [
     path('get_components',GetComponentsForCalculationModule.as_view(),name='calculation_module_components'),
     path('get_report_from_components',ReportInfoComponents.as_view(),name='report'),
     path('get_distinct_years_for_electricity_factors/<str:country>',fetch_all_distinct_year_for_hourly_electricity_factors_for_a_country.as_view(),name='hourly_factors_years'),
-    path('get_verify_d_components',calculate_district_component_analytics.as_view(),name="verify_d_analytics")
+    path('get_verify_d_components',calculate_district_component_analytics.as_view(),name="verify_d_analytics"),
+    path('ets/', ETSListCreateAPIView.as_view(), name='ETS-list'),
+    path('bulk_insert_ETS/', BulkETSInsert.as_view(), name='bulk_insert')
     #path('regression_values_component/<int:lci_id>',regression_values.as_view(),name='regression_values')
     #path('/simapro_values',SimaPro_runsViewSet.as_view(),name = 'sima_pro_runs')
 ]
