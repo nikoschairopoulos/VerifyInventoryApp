@@ -28,17 +28,45 @@ def run():
 
     # rehouse_inv.components.add(query)
     # rehouse_inv.components.remove(query)
-    factors = Factor.objects.all()
+    # factors = Factor.objects.all()
+    #
+    # print(len(factors.values('country').distinct()))
+    # countries = [item["country"] for item in factors.values('country').distinct()]
+    # print(countries)
+    # for country in countries:
+    #     Factor.objects.create(
+    #         country=country,
+    #         fuel="nuclear",
+    #         co2_factor=0.0,
+    #         primary_energy_factor=1.0
+    #     )
+    # ================================================
+    # Update 11/2025 for PEF Factors for every country
+    # ------------------------------------------------
+    # Update with new PEF values as next:
+    # Netherlands: 1.9
+    # Portugal: 1.9
+    # Finland: 2.1
+    # France: 3
+    # Everywhere else: 2.1
+    special_updates = {
+        "Netherlands": 1.9,
+        "Portugal": 1.9,
+        "Finland": 2.1,
+        "France": 3.0,
+    }
+    # Update every row with fuel="electricity" where PEF is not None and does not belong in special_updates
+    updated_rows = Factor.objects.filter(
+        fuel="electricity",
+        primary_energy_factor__isnull=False
+    ).exclude(
+        country__in=special_updates.keys()
+    ).update(primary_energy_factor=2.1)
 
-    print(len(factors.values('country').distinct()))
-    countries = [item["country"] for item in factors.values('country').distinct()]
-    print(countries)
-    for country in countries:
-        Factor.objects.create(
+    for country, new_pef in special_updates.items():
+        rows_updated = Factor.objects.filter(
             country=country,
-            fuel="nuclear",
-            co2_factor=0.0,
-            primary_energy_factor=1.0
-        )
-
+            fuel="electricity",
+            primary_energy_factor__isnull=False
+        ).update(primary_energy_factor=new_pef)
 
