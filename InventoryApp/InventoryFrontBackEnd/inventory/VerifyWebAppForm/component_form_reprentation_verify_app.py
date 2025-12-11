@@ -341,6 +341,102 @@ json_form_behaviour = {
                         "subtypes": None
                     }
                 ],
+            },
+            {
+                "text": 'Producers',
+                "value": 'Producers',
+                "IS_B_COMPONENT":False,
+                "types": [
+                    {
+                        "text": 'Power Plant',
+                        "value": 'power_plant',
+                        "subtypes": None
+                    },
+                    {
+                        "text": 'Geothermal Plant',
+                        "value": "geothermal_hydro_plant",
+                        "subtypes": None
+                    },
+                    {
+                        "text": 'Hydro Plant',
+                        "value": "geothermal_hydro_plant",
+                        "subtypes": None
+                    },
+                    {
+                        "text": 'Incineration Plant',
+                        "value": 'incineration_plant',
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Tidal Plant",
+                        "value": "tidal_device_plant",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Fuel Cell Plant",
+                        "value": "fuel_cell_plant",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Solar Park",
+                        "value": "solar_park",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Wind Park",
+                        "value": "wind_park",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Auxilialy",
+                        "value": "auxiliary",
+                        "subtypes": None
+                    }
+                ],
+            },
+            {
+                "text": "Consumers",
+                "value": "Consumers",
+                "IS_B_COMPONENT":False,
+                "types": [
+                    {
+                        "text": "boiler",
+                        "value": "boiler",
+                        "subtypes": [
+                            {
+                                "text": "natural gas",
+                                "value": "ngas"
+                            },
+                            {
+                                "text": "diesel",
+                                "value": "diesel"
+                            },
+                            {
+                                "text": "biomass",
+                                "value": "biomass"
+                            },
+                            {
+                                "text": "oil",
+                                "value": "oil"
+                            }
+                        ]
+                    },
+                    {
+                        "text": "heatpump",
+                        "value": "heat_pump",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "aircondition",
+                        "value": "air_conditioning",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "solar thermal panel",
+                        "value": "solar",
+                        "subtypes": None
+                    }
+                ],
             }
         ]
     },
