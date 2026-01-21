@@ -11,7 +11,7 @@ def run():
     # q = ETS.objects.all()
     # q.delete()
 
-    url = "https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-2025-data.xlsx"
+    url = "https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-2026-data.xlsx"
     url_df = pd.read_excel(url, header=5, usecols=['Date', "Auction Price €/tCO2"], parse_dates=['Date'])
     url_df['Date'] = pd.to_datetime(url_df['Date'])
     # Reverse the order of days (so oldest appears first after expansion)
