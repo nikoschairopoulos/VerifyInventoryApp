@@ -5,21 +5,30 @@ from datetime import datetime, timedelta
 
 
 def run():
-    # cutoff_date = datetime(2025, 11, 4, 17)  # naive datetime, since your field is naive
-    # ETS.objects.filter(current_datetime__gt=cutoff_date).delete()
+    year_now = datetime.now().year
+    url = f"https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-{year_now}-data.xlsx"
+    try:
+        url_df = pd.read_excel(url, header=5, usecols=['Date', "Auction Price €/tCO2"], parse_dates=['Date'])
+        excel_year = year_now
+    except Exception as e:
+        print(f"Excel file for {year_now} not found, falling back to previous year.")
+        fallback_year = year_now - 1
+        fallback_url = f"https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-{fallback_year}-data.xlsx"
+        url_df = pd.read_excel(
+            fallback_url,
+            header=5,
+            usecols=['Date', "Auction Price €/tCO2"],
+            parse_dates=['Date']
+        )
+        excel_year = fallback_year
+    print(f"Using ETS excel file for year {excel_year}.")
 
-    # q = ETS.objects.all()
-    # q.delete()
-
-    url = "https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-2026-data.xlsx"
-    url_df = pd.read_excel(url, header=5, usecols=['Date', "Auction Price €/tCO2"], parse_dates=['Date'])
     url_df['Date'] = pd.to_datetime(url_df['Date'])
     # Reverse the order of days (so oldest appears first after expansion)
-    date = url_df.head(5).at[0, 'Date']
-    price = url_df.head(5).at[0, 'Auction Price €/tCO2']
-    last_date_online = date.date()
-    last_price_online = price
-    print(last_date_online)
+    first_row = url_df.iloc[0]
+    last_date_online = first_row["Date"].date()
+    last_price_online = float(first_row["Auction Price €/tCO2"])
+    # print(last_date_online)
 
     # Get all registries from ETS table in reverse order (more recent on top)
     etss = ETS.objects.order_by('current_datetime').reverse()
@@ -27,35 +36,22 @@ def run():
     last_ets = etss[0]
     last_date_on_db = last_ets.current_datetime.date()
     last_price_on_db = last_ets.spot_price
-    print(last_date_on_db)
-
-    # todays_entries = ETS.objects.filter(current_datetime__gte=last_date_on_db)
+    # print(last_date_on_db)
 
     # This is to ensure that there are not gaps more than 1 hour in db.
-    hours_from_last_entry = int((datetime.now() - last_ets.current_datetime.replace(tzinfo=None))/ timedelta(hours=1))
-    # print(hours_from_last_entry)
+    hours_from_last_entry = int((datetime.now() - last_ets.current_datetime) / timedelta(hours=1))
+
     if hours_from_last_entry >= 2:
         print("A gap more than one hour is detected.")
-        # etss = ETS.objects.order_by('current_datetime').reverse()
-        # Get the most recent ETS registry
-        # last_ets = etss[0]
-        cnt = 1
-        datetime_new = pd.to_datetime(f'{last_ets.current_datetime.replace(tzinfo=None).date()} '
-                        f'{last_ets.current_datetime.replace(tzinfo=None).hour + cnt}:00:00')
-        # print(datetime_new)
-        ETS.objects.create(
-            current_datetime=datetime_new,
-            spot_price=last_price_on_db
-        )
-        cnt += 1
-        while cnt < hours_from_last_entry:
-            datetime_new = pd.to_datetime(f'{datetime_new + timedelta(hours=1)}')
-            print(datetime_new)
+
+        base = last_ets.current_datetime.replace(minute=0, second=0, microsecond=0)
+
+        for i in range(1, hours_from_last_entry):
+            datetime_new = base + timedelta(hours=i)
             ETS.objects.create(
                 current_datetime=datetime_new,
                 spot_price=last_price_on_db
             )
-            cnt += 1
     else:
         print("No gaps detected in DB entries - hourly granularity.")
 
