@@ -4,92 +4,122 @@ from django.db import transaction
 from inventory.models import ETS
 
 
-def run():
-    """
-    This is a script created to handle inconsistencies created upon a year's change.
-    Specifically, it removes any values filled in 2026 taken from the old 2025 file and replace them with the
-    correct values for 2026.
-    """
-    cutoff = datetime(2026, 1, 1, 0, 0, 0)
-    deleted, _ = ETS.objects.filter(current_datetime__gte=cutoff).delete()
-    print(f"Deleted {deleted} ETS rows from 2026-01-01 and onwards.")
-    # --- CONFIG ---
-    URL_2026 = (
-        "https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-2026-data.xlsx"
+def _excel_url_for_year(year: int) -> str:
+    return (
+        f"https://public.eex-group.com/eex/eua-auction-report/emission-spot-primary-market-auction-report-{year}-data.xlsx"
     )
-    START_DATE = datetime(2026, 1, 1).date()  # first day of current year
-    COL_DATE = "Date"
-    COL_PRICE = "Auction Price €/tCO2"
 
-    # 1. Read daily prices from Excel
+
+def _read_daily_prices(year: int) -> pd.DataFrame:
+    url = _excel_url_for_year(year)
     df = pd.read_excel(
-        URL_2026,
+        url,
         header=5,
-        usecols=[COL_DATE, COL_PRICE],
-        parse_dates=[COL_DATE],
-    )
+        usecols=["Date", "Auction Price €/tCO2"],
+        parse_dates=["Date"],
+    ).dropna(subset=["Date", "Auction Price €/tCO2"])
 
-    df = df.dropna(subset=[COL_DATE, COL_PRICE]).copy()
-    df[COL_DATE] = pd.to_datetime(df[COL_DATE]).dt.date
-    df = df.sort_values(COL_DATE).rename(columns={COL_PRICE: "price"})
+    df["Date"] = pd.to_datetime(df["Date"]).dt.date
+    df = df.sort_values("Date").rename(columns={"Auction Price €/tCO2": "price"})
+    return df[["Date", "price"]]
 
-    # Get last available date from excel
-    END_DATE = df[COL_DATE].max()
 
-    # 2. Build full daily range and forward-fill missing days
-    full_days = pd.date_range(START_DATE, END_DATE, freq='D').date
-    daily = (
-        pd.DataFrame({COL_DATE: full_days})
-        .merge(df[[COL_DATE, "price"]], on=COL_DATE, how='left')
-        .sort_values(COL_DATE)
-    )
-    daily['price'] = daily["price"].ffill().bfill()
-
-    # 3. Expand to hourly rows (24 per day except today)
+def _build_hourly_rows(daily: pd.DataFrame, year: int) -> list[tuple[datetime, float]]:
+    """
+    24 rows/day. For today, writes until current hour.
+    """
     now = datetime.now()
     today = now.date()
-    current_hour = now.hour
-    hourly = []
-    for d, p in zip(daily[COL_DATE], daily["price"]):
-        if d < today:
-            # For days older than today fill the full day (24 hours)
-            hours = range(24)
-        elif d == today:
-            # If day is today, fill until current hour
-            hours = range(current_hour + 1)
+    max_hour_today = now.hour
+
+    rows = []
+    for d, p in zip(daily["Date"], daily["price"]):
+        if d > today:
+            continue    # no writing for future timestamps
+        if d == today and d.year == year:
+            hours = range(max_hour_today + 1)   # Timestamps only until current hour
         else:
-            # For future timestamps do nothing
-            continue
+            hours = range(24) # Timestamps for full day - 24 hours
 
         for h in hours:
-            hourly.append((datetime(d.year, d.month, d.day, h, 0, 0), float(p)))
+            rows.append((datetime(d.year, d.month, d.day, h, 0 , 0), float(p)))
 
-    # 4. Update or Insert to DB (bulk)
-    dts = [dt for dt, _ in hourly]
+    return rows
+
+
+def _upsert_hourly(rows: list[tuple[datetime, float]]):
+    dts = [dt for dt, _ in rows]
+
     existing = ETS.objects.filter(current_datetime__in=dts).values_list("current_datetime", "id")
     existing_map = {dt: _id for dt, _id in existing}
 
-    to_create = []
-    to_update = []
-
-    for dt, price in hourly:
+    to_create, to_update = [], []
+    for dt, price in rows:
         if dt in existing_map:
-            to_update.append(ETS(id=existing_map[dt], currnet_datetime=dt, sport_price=price))
+            to_update.append(ETS(id=existing_map[dt], current_datetime=dt, spot_price=price))
         else:
             to_create.append(ETS(current_datetime=dt, spot_price=price))
 
-    # Now Bulk update and create in DB according to the to_update and to_create, respectively.
     with transaction.atomic():
         if to_create:
             ETS.objects.bulk_create(to_create, ignore_conflicts=True, batch_size=5000)
         if to_update:
             ETS.objects.bulk_update(to_update, ["spot_price"], batch_size=5000)
 
-    print(
-        f"ETS 2026 upsert completed | "
-        f"Days: {len(daily)} | "
-        f"Rows: {len(hourly)} | "
-        f"Created: {len(to_create)} | "
-        f"Updated: {len(to_update)} | "
-        f"Range: {START_DATE} -> {END_DATE}"
-    )
+    return len(to_create), len(to_update)
+
+
+def _delete_year(year: int):
+    start = datetime(year, 1, 1, 0, 0, 0)
+    end = datetime(year + 1, 1, 1, 0, 0, 0)
+    deleted, _ = ETS.objects.filter(current_datetime__gte=start, current_datetime__lt=end).delete()
+    return deleted
+
+
+def run(*args):
+    """
+    Usage:
+        python manage.py runscript orm_scripts3 --script-args 2025 2026
+        python manage.py runscript orm_scripts3 --script-args reset 2025 2026
+
+    Default (no args): current year only.
+    """
+    args = list(args)
+
+    reset = False   # By default, no reset
+    # If reset is passed as input argument:
+    if args and args[0] == "reset":
+        reset = True    # Set reset flag to True
+        args = args[1:] # and get as input arguments the rest of args
+
+    if args:
+        years = [int(year) for year in args]
+    else:
+        years = [datetime.now().year]
+
+    for year in years:
+        if reset:
+            deleted = _delete_year(year)
+            print(f"[{year}] deleted rows: {deleted}")
+
+        df = _read_daily_prices(year)
+
+        start_date = datetime(year, 1, 1).date()
+        end_date = df['Date'].max()
+
+        full_days = pd.date_range(start_date, end_date, freq="D").date
+        daily = (
+            pd.DataFrame({"Date": full_days})
+            .merge(df, on="Date", how="left")
+            .sort_values("Date")
+        )
+        daily["price"] = daily["price"].ffill().bfill()
+
+        rows = _build_hourly_rows(daily, year)
+        created, updated = _upsert_hourly(rows)
+
+        print(
+            f"[{year}] range: {start_date} -> {min(end_date, datetime.now().date())} | "
+            f"days: {len(daily)} | rows: {len(rows)} | created: {created} | updated: {updated}"
+        )
+    return
