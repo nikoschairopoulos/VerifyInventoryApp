@@ -171,7 +171,13 @@ json_form_behaviour = {
                 "text": "Building Level - Auxiliary Assets",
                 "value": "auxiliary",
                 "IS_B_COMPONENT":True,
-                "types": [],
+                "types": [
+                    {
+                        "text": "lighting",
+                        "value": "lighting",
+                        "subtypes": None
+                    },
+                ],
             }
         ]
     },
