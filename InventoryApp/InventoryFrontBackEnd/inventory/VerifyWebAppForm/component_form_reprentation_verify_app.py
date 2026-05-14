@@ -441,6 +441,26 @@ json_form_behaviour = {
                         "text": "solar thermal panel",
                         "value": "solar",
                         "subtypes": None
+                    },
+                    {
+                        "text": "Microwave Heating Machine",
+                        "value": "microwave_heating",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Induction Heating System",
+                        "value": "induction_heating",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Rotocure",
+                        "value": "rotocure",
+                        "subtypes": None
+                    },
+                    {
+                        "text": "Mineral based oil",
+                        "value": "mineral_based_oil",
+                        "subtypes": None
                     }
                 ],
             }
